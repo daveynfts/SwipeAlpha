@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { TrendingUp, AlertCircle, Cpu, Trophy } from 'lucide-react';
+import { TrendingUp, AlertCircle, Cpu, Trophy, Landmark } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 import { TOKEN_ADDRESS, STAKING_ADDRESS, TOKEN_ABI, STAKING_ABI } from './constants';
@@ -233,6 +233,22 @@ function App() {
           </div>
         </div>
       )}
+
+      <div className="hero-section">
+        <div className="vault-icon-container">
+          <Landmark className="vault-icon" size={48} color="var(--primary)" />
+          <div className="pulse-ring"></div>
+          <div className="pulse-ring delay"></div>
+        </div>
+        <h2 className="hero-title">Mantle Yield Vault</h2>
+        <p className="hero-subtitle">Watch your wealth grow in real-time.</p>
+        <div className="live-yield-display">
+          <span className="live-dot"></span>
+          <span className="live-text">LIVE YIELD:</span>
+          <span className="live-amount">+{Number(realtimeRewards).toLocaleString(undefined, {minimumFractionDigits: 6, maximumFractionDigits: 6})}</span>
+          <span className="live-currency">$DAVEY</span>
+        </div>
+      </div>
 
       <main className="main-card">
         <div className="stats-grid">

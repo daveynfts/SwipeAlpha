@@ -99,6 +99,109 @@ body::after {
   color: var(--primary);
 }
 
+/* Hero Section */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 3rem;
+  margin-top: 1rem;
+}
+
+.vault-icon-container {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 239, 200, 0.1);
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 239, 200, 0.3);
+  box-shadow: 0 0 30px rgba(0, 239, 200, 0.15);
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  opacity: 0;
+  animation: pulseOut 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+.pulse-ring.delay {
+  animation-delay: 1s;
+}
+
+@keyframes pulseOut {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin: 0 0 2rem 0;
+}
+
+.live-yield-display {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 239, 200, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 0 20px rgba(0, 239, 200, 0.1) inset;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--primary);
+  animation: blink 1s ease-in-out infinite alternate;
+}
+
+@keyframes blink {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+.live-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.live-amount {
+  font-family: 'Inter', monospace;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-shadow: 0 0 15px rgba(0, 239, 200, 0.4);
+}
+
+.live-currency {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
 /* Glassmorphic Card */
 .main-card, .leaderboard-card {
   background: var(--panel-bg);
