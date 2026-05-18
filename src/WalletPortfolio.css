@@ -1,0 +1,498 @@
+/* ==========================================
+   Apple Premium HIG Wallet Portfolio Styling
+   ========================================== */
+
+/* ===== Overlay ===== */
+.wp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.wp-overlay.wp-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== Modal Card ===== */
+.wp-modal {
+  position: relative;
+  width: 94%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
+              0 0 1px rgba(255, 255, 255, 0.15) inset;
+  
+  /* Apple Premium frosted glass */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(28, 28, 30, 0.85); /* Apple systemGray6 with opacity */
+  
+  backdrop-filter: saturate(190%) blur(30px);
+  -webkit-backdrop-filter: saturate(190%) blur(30px);
+  transform: translateY(30px) scale(0.97);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wp-overlay.wp-open .wp-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* custom scrollbar */
+.wp-modal::-webkit-scrollbar {
+  width: 5px;
+}
+.wp-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+.wp-modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+/* ===== Header ===== */
+.wp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.wp-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.01em;
+}
+
+.wp-title-icon {
+  color: #0a84ff; /* Apple System Blue */
+}
+
+.wp-network-badge {
+  font-size: 9px;
+  font-weight: 700;
+  color: #30d158; /* Apple System Green */
+  background: rgba(48, 209, 88, 0.08);
+  border: 1px solid rgba(48, 209, 88, 0.2);
+  padding: 1px 6px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-left: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.wp-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #8e8e93;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.wp-close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* ===== Address Row ===== */
+.wp-address-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 20px;
+  font-family: "SF Mono", SFMono-Regular, Consolas, Menlo, monospace;
+  font-size: 13px;
+  color: #e5e5ea;
+}
+
+.wp-address-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.wp-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(10, 132, 255, 0.1);
+  color: #0a84ff;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+.wp-copy-btn:hover {
+  background: rgba(10, 132, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.wp-explorer-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: #a2a2a7;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.wp-explorer-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* ===== Summary Card ===== */
+.wp-summary {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 22px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.wp-summary-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8e8e93;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.wp-summary-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+/* ===== Section Titles ===== */
+.wp-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8e8e93;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.wp-section-icon {
+  width: 14px;
+  height: 14px;
+  color: #8e8e93;
+}
+
+/* ===== Token Holdings Table ===== */
+.wp-tokens {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 22px;
+}
+
+.wp-token-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  transition: background 0.2s;
+  cursor: default;
+}
+
+.wp-token-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.wp-token-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wp-token-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.wp-token-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.wp-token-symbol {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.wp-token-name {
+  font-size: 11px;
+  color: #8e8e93;
+}
+
+.wp-token-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.wp-token-amount {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e5e5ea;
+  font-variant-numeric: tabular-nums;
+}
+
+.wp-token-value {
+  font-size: 11px;
+  color: #8e8e93;
+  font-variant-numeric: tabular-nums;
+}
+
+.wp-token-pnl {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 58px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.wp-pnl-positive {
+  color: #30d158; /* Apple System Green */
+}
+
+.wp-pnl-negative {
+  color: #ff453a; /* Apple System Red */
+}
+
+/* ===== NFT Section ===== */
+.wp-nfts-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x mandatory;
+}
+
+.wp-nfts-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.wp-nfts-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.wp-nfts-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+.wp-nft-card {
+  flex: 0 0 135px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  scroll-snap-align: start;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.wp-nft-card:hover {
+  border-color: rgba(10, 132, 255, 0.35); /* Apple Blue hover border */
+  transform: translateY(-2px);
+}
+
+.wp-nft-image-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.wp-nft-image-wrap img,
+.wp-nft-image-wrap svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wp-nft-meta {
+  padding: 8px 10px;
+}
+
+.wp-nft-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e5e5ea;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.wp-nft-id {
+  font-size: 10px;
+  color: #8e8e93;
+}
+
+/* ===== States ===== */
+.wp-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0;
+  color: #8e8e93;
+  font-size: 13px;
+}
+
+.wp-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #0a84ff; /* Apple Blue spinner */
+  border-radius: 50%;
+  animation: wp-spin 0.8s linear infinite;
+}
+
+@keyframes wp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.wp-empty {
+  text-align: center;
+  padding: 18px 0;
+  color: #8e8e93;
+  font-size: 13px;
+}
+
+.wp-error {
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 69, 58, 0.08);
+  border: 1px solid rgba(255, 69, 58, 0.2);
+  color: #ff453a;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+/* ===== Simulated Phone Mockup Mode ===== */
+.wp-overlay.wp-in-mockup {
+  position: absolute;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 40px; /* match the simulated phone's inner corners */
+  overflow: hidden;
+}
+
+.wp-overlay.wp-in-mockup .wp-modal-in-mockup {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 90%; /* sheet style */
+  max-height: 90%;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 14px 10px 14px;
+  transform: translateY(100%);
+  opacity: 1; /* keep opacity 1, just slide up */
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+  
+  /* Apple Inline mockup glass */
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(28, 28, 30, 0.94);
+  backdrop-filter: saturate(190%) blur(25px);
+  -webkit-backdrop-filter: saturate(190%) blur(25px);
+}
+
+.wp-overlay.wp-in-mockup.wp-open .wp-modal-in-mockup {
+  transform: translateY(0);
+}
+
+/* Spacer at the bottom to fix clipping/overflow glitches */
+.wp-bottom-spacer {
+  height: 48px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .wp-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    padding: 20px 16px;
+  }
+
+  .wp-summary-value {
+    font-size: 28px;
+  }
+}

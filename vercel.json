@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/nansen/:modelName",
+      "destination": "/api/nansen?modelName=:modelName"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
