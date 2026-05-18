@@ -323,8 +323,8 @@ function App() {
       <main className="main-card">
         <div className="stats-grid">
           <div className="stat-box">
-            <div className="stat-label">Total Staked</div>
-            <div className="stat-value">{Number(totalStaked).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY</div>
+            <div className="stat-label">My Staked</div>
+            <div className="stat-value">{Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY</div>
           </div>
           <div className="stat-box">
             <div className="stat-label">Current APY</div>
@@ -398,9 +398,17 @@ function App() {
 
       {leaderboard.length > 0 && (
         <div className="leaderboard-card">
-          <div className="leaderboard-header">
-            <Trophy color="var(--primary)" size={24} />
-            <h3>Top Stakers</h3>
+          <div className="leaderboard-header" style={{ justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <Trophy color="var(--primary)" size={24} />
+              <h3>Top Stakers</h3>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Global Total Staked</div>
+              <div style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem', textShadow: '0 0 10px rgba(0, 239, 200, 0.2)' }}>
+                {Number(totalStaked).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY
+              </div>
+            </div>
           </div>
           <div className="leaderboard-list">
             {leaderboard.map((staker, index) => (
