@@ -36,6 +36,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('stake');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showRain, setShowRain] = useState(false);
 
   const isConfigured = TOKEN_ADDRESS !== "0xYOUR_TOKEN_ADDRESS_HERE" && STAKING_ADDRESS !== "0xYOUR_STAKING_CONTRACT_ADDRESS_HERE";
 
@@ -160,6 +161,36 @@ function App() {
     }
   };
 
+  const triggerRain = () => {
+    setShowRain(true);
+    setTimeout(() => setShowRain(false), 5000); // Rains for 5 seconds
+  };
+
+  const renderRain = () => {
+    if (!showRain) return null;
+    const drops = Array.from({ length: 60 }).map((_, i) => {
+      const left = Math.random() * 100;
+      const delay = Math.random() * 1.5;
+      const duration = 2 + Math.random() * 2;
+      const size = 1.5 + Math.random() * 1.5;
+      return (
+        <div 
+          key={i} 
+          className="token-drop" 
+          style={{ 
+            left: `${left}%`, 
+            animationDelay: `${delay}s`,
+            animationDuration: `${duration}s`,
+            fontSize: `${size}rem`
+          }}
+        >
+          🪙
+        </div>
+      );
+    });
+    return <div className="token-rain-container">{drops}</div>;
+  };
+
   const handleAction = async () => {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       setError("Please enter a valid amount");
@@ -180,6 +211,7 @@ function App() {
         
         const tx = await stakingContract.stake(amountWei);
         await tx.wait();
+        triggerRain(); // Make it rain when they stake!
       } else {
         const tx = await stakingContract.unstake(amountWei);
         await tx.wait();
@@ -202,6 +234,7 @@ function App() {
       const tx = await stakingContract.claimReward();
       await tx.wait();
       fetchData();
+      triggerRain(); // Make it rain when they claim rewards!
     } catch (err) {
       console.error(err);
       setError(err.reason || err.message || "Failed to claim rewards");
@@ -217,6 +250,7 @@ function App() {
 
   return (
     <div className="app-container">
+      {renderRain()}
       <header className="header">
         <div className="logo">
           <Cpu color="#00efc8" size={28} />
