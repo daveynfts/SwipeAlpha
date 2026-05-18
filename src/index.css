@@ -321,6 +321,16 @@ body::after {
   color: rgba(255,255,255,0.2);
 }
 
+/* Remove up/down arrows from number input */
+.token-input::-webkit-outer-spin-button,
+.token-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.token-input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
 .max-btn {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-main);
