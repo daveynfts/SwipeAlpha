@@ -256,7 +256,43 @@ function App() {
           <Landmark color="#00efc8" size={28} />
           DAVEY <span>TREASURY</span>
         </div>
-        <ConnectButton />
+        <ConnectButton.Custom>
+          {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
+            const connected = mounted && account && chain;
+            return (
+              <div {...(!mounted && { style: { opacity: 0 } })}>
+                {(() => {
+                  if (!connected) {
+                    return (
+                      <button onClick={openConnectModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>
+                        Connect Wallet
+                      </button>
+                    );
+                  }
+                  if (chain.unsupported || chain.id !== 5003) {
+                    return (
+                      <button onClick={openChainModal} className="liquid-glass-btn" style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: 'rgba(239, 68, 68, 0.5)', color: '#ff6b6b', padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>
+                        <AlertCircle size={16} style={{ display: 'inline', marginRight: '5px', verticalAlign: 'text-bottom' }}/>
+                        Switch to Mantle Testnet
+                      </button>
+                    );
+                  }
+                  return (
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button onClick={openChainModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
+                        {chain.name}
+                      </button>
+                      <button onClick={openAccountModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
+                        {account.displayName}
+                      </button>
+                    </div>
+                  );
+                })()}
+              </div>
+            );
+          }}
+        </ConnectButton.Custom>
       </header>
 
       {!isConfigured && (
