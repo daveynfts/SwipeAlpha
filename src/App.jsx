@@ -28,6 +28,8 @@ function App() {
   const [pendingRewards, setPendingRewards] = useState('0');
   const [realtimeRewards, setRealtimeRewards] = useState('0');
   const [totalStaked, setTotalStaked] = useState('0');
+  const [poolBalance, setPoolBalance] = useState('0');
+  const [depletionTime, setDepletionTime] = useState('');
   const [leaderboard, setLeaderboard] = useState([]);
   
   const [amount, setAmount] = useState('');
@@ -96,7 +98,32 @@ function App() {
       setRealtimeRewards(formattedRewards);
 
       const total = await stakingContract.totalStaked();
-      setTotalStaked(ethers.formatEther(total));
+      const totalFormatted = ethers.formatEther(total);
+      setTotalStaked(totalFormatted);
+      
+      const contractBal = await tokenContract.balanceOf(STAKING_ADDRESS);
+      const rewardReserve = contractBal - total;
+      const reserveFormatted = ethers.formatEther(rewardReserve);
+      setPoolBalance(reserveFormatted);
+      
+      const totalNum = Number(totalFormatted);
+      const reserveNum = Number(reserveFormatted);
+      
+      if (totalNum > 0) {
+        const rewardPerYear = totalNum * 0.05;
+        const rewardPerDay = rewardPerYear / 365;
+        const daysLeft = reserveNum / rewardPerDay;
+        
+        if (daysLeft > 365) {
+          setDepletionTime('> 1 Year');
+        } else if (daysLeft > 30) {
+          setDepletionTime(`~${Math.floor(daysLeft / 30)} Months`);
+        } else {
+          setDepletionTime(`~${Math.floor(daysLeft)} Days`);
+        }
+      } else {
+        setDepletionTime('∞ (No stakers)');
+      }
       
       fetchLeaderboard();
     } catch (err) {
@@ -218,6 +245,14 @@ function App() {
             <div className="stat-value" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
               <TrendingUp size={20} /> 5%
             </div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-label">Reward Pool</div>
+            <div className="stat-value">{Number(poolBalance).toLocaleString(undefined, {maximumFractionDigits: 0})} $DAVEY</div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-label">Time to Deplete</div>
+            <div className="stat-value" style={{ fontSize: '1.2rem', marginTop: '0.25rem' }}>{depletionTime || '-'}</div>
           </div>
         </div>
 
