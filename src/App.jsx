@@ -350,14 +350,8 @@ function App() {
         </button>
 
         <div className="rewards-section">
-          <div className="rewards-info">
-            <span className="stat-label">Pending Rewards</span>
-            <span className="stat-value" style={{ fontSize: '1.25rem' }}>
-              {Number(realtimeRewards).toLocaleString(undefined, {minimumFractionDigits: 8, maximumFractionDigits: 8})}
-            </span>
-          </div>
           <button 
-            className="claim-btn"
+            className="claim-btn liquid-glass-btn"
             onClick={claimRewards}
             disabled={isLoading || Number(pendingRewards) <= 0 || !isConfigured || !isConnected}
           >
