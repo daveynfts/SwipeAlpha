@@ -253,8 +253,8 @@ function App() {
       {renderRain()}
       <header className="header">
         <div className="logo">
-          <Cpu color="#00efc8" size={28} />
-          MANTLE <span>STAKE</span>
+          <Landmark color="#00efc8" size={28} />
+          DAVEY <span>TREASURY</span>
         </div>
         <ConnectButton />
       </header>
@@ -274,7 +274,7 @@ function App() {
           <div className="pulse-ring"></div>
           <div className="pulse-ring delay"></div>
         </div>
-        <h2 className="hero-title">Mantle Yield Vault</h2>
+        <h2 className="hero-title">Davey Treasury Vault</h2>
         <p className="hero-subtitle">Watch your wealth grow in real-time.</p>
         <div className="live-yield-display">
           <span className="live-dot"></span>
