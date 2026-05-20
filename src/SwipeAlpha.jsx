@@ -21,68 +21,208 @@ const MOCK_MOE_ROUTER_ABI = [
 
 const TOKENS = [
   {
-    name:"Aave",symbol:"AAVE",chain:"Ethereum",chainIcon:"⟠",
-    price:"$308.42",priceChange:"+12.4%",positive:true,
-    mcap:"$4.69B",volume:"$8.85M",liquidity:"$153M",
-    smNetflow:"+$2.1M",smTraders:45,smSignal:"accumulating",
-    aiSummary:"Smart Money quỹ lớn đang tích lũy mạnh. 45 traders đã mua ròng $2.1M trong 24h. Volume mua gấp đôi bán — tín hiệu bullish.",
-    signal:"STRONG BUY",signalClass:"strong-buy",confidence:85,
-    age:"4.5 years",holders:"165,299",
-    iconBg:"linear-gradient(135deg,#2775ca,#1a5fb4)",iconLetter:"A",
-    logoUrl:"https://assets.coingecko.com/coins/images/12645/large/AAVE.png",
-    risk:"LOW",
+    name: "Turing Dave",
+    symbol: "TDAVE",
+    standard: "ERC-8004",
+    creator: "TuringLabs",
+    model: "Claude 3.5 Sonnet",
+    logoUrl: "https://assets.coingecko.com/coins/images/42490/large/virtual_protocol.png",
+    description: "Multi-strategy yield optimization agent running on Mantle Network. Dynamically allocates liquidity into Moe vaults.",
+    winRate: "84.5%",
+    avgHolding: "4.2 hours",
+    roi24h: "+12.4%",
+    roi30d: "+142.5%",
+    risk: "LOW",
+    confidence: 85,
+    primaryTokens: ["MNT", "MOE", "PENDLE"],
+    iconBg: "linear-gradient(135deg, #a855f7, #6366f1)",
+    recentTrades: [
+      { type: "BUY", token: "MOE", price: "$0.14", amount: "1,200", time: "5m ago" },
+      { type: "SELL", token: "PENDLE", price: "$4.18", amount: "350", time: "2h ago" },
+      { type: "BUY", token: "MNT", price: "$0.87", amount: "5,000", time: "4h ago" }
+    ],
+    nansenAnalysis: {
+      score: "94/100",
+      status: "VERIFIED SECURE",
+      auditor: "Nansen AI Agent Guard",
+      riskLevel: "Low Risk",
+      details: "Agent wallet shows direct smart contract interaction without proxy deviation. 98.4% transactions match standard logic templates. Zero malicious calls detected."
+    },
+    price: "+142.5% (30D)",
+    priceChange: "+12.4%",
+    positive: true,
+    chainIcon: "🤖",
+    chain: "ERC-8004",
+    mcap: "84.5% Win",
+    volume: "4.2h Hold",
+    smNetflow: "+142.5% ROI",
+    aiSummary: "Scans liquidity pools on Mantle Network to maximize yield. Integrates directly with Merchant Moe concentrated liquidity vaults.",
+    signal: "HIRE AGENT",
+    signalClass: "strong-buy",
     trendPoints: [30, 45, 40, 60, 55, 75, 90]
   },
   {
-    name:"Jupiter",symbol:"JUP",chain:"Solana",chainIcon:"◎",
-    price:"$1.24",priceChange:"+8.7%",positive:true,
-    mcap:"$1.68B",volume:"$42M",liquidity:"$28M",
-    smNetflow:"+$890K",smTraders:32,smSignal:"accumulating",
-    aiSummary:"DEX king trên Solana. Smart Money Funds đang tăng vị thế. Volume giao dịch tăng 40% so với tuần trước. Ecosystem play mạnh.",
-    signal:"BUY",signalClass:"buy",confidence:72,
-    age:"1.5 years",holders:"89,432",
-    iconBg:"linear-gradient(135deg,#9945FF,#14F195)",iconLetter:"J",
-    logoUrl:"https://assets.coingecko.com/coins/images/34188/large/jup.png",
-    risk:"MEDIUM",
+    name: "Alpha Swindler",
+    symbol: "SWINDLE",
+    standard: "ERC-8004",
+    creator: "AgentRegistry",
+    model: "GPT-4o",
+    logoUrl: "https://assets.coingecko.com/coins/images/32822/large/virtual.png",
+    description: "Arbitrage & High-Frequency Meme-coin hunter. Auto-buys base/mantle narratives before retail.",
+    winRate: "72.8%",
+    avgHolding: "18 mins",
+    roi24h: "+32.1%",
+    roi30d: "+320.4%",
+    risk: "HIGH",
+    confidence: 72,
+    primaryTokens: ["VIRTUAL", "ENA", "JUP"],
+    iconBg: "linear-gradient(135deg, #fe3c72, #ff7854)",
+    recentTrades: [
+      { type: "BUY", token: "VIRTUAL", price: "$2.87", amount: "4,500", time: "12m ago" },
+      { type: "BUY", token: "ENA", price: "$0.58", amount: "10,000", time: "45m ago" },
+      { type: "SELL", token: "JUP", price: "$1.24", amount: "8,000", time: "1h ago" }
+    ],
+    nansenAnalysis: {
+      score: "78/100",
+      status: "HIGH VOLATILITY",
+      auditor: "Nansen AI Agent Guard",
+      riskLevel: "High Risk",
+      details: "High execution frequency detected. 12% trades suffer slippage. Capital turnover rate is extremely high. Recommended only for degen portfolios."
+    },
+    price: "+320.4% (30D)",
+    priceChange: "+32.1%",
+    positive: true,
+    chainIcon: "🔥",
+    chain: "ERC-8004",
+    mcap: "72.8% Win",
+    volume: "18m Hold",
+    smNetflow: "+320.4% ROI",
+    aiSummary: "High frequency arbitrage trader searching for price discrepancies across top DEXs and front-running trending meme coins.",
+    signal: "HIRE AGENT",
+    signalClass: "buy",
     trendPoints: [50, 45, 60, 55, 70, 65, 85]
   },
   {
-    name:"Pendle",symbol:"PENDLE",chain:"Ethereum",chainIcon:"⟠",
-    price:"$4.18",priceChange:"+22.1%",positive:true,
-    mcap:"$680M",volume:"$18M",liquidity:"$12M",
-    smNetflow:"+$1.5M",smTraders:28,smSignal:"accumulating",
-    aiSummary:"Yield protocol hàng đầu DeFi. Smart Money đang mua mạnh trước mùa yields. TVL tăng 35% trong 7 ngày qua.",
-    signal:"STRONG BUY",signalClass:"strong-buy",confidence:81,
-    age:"2 years",holders:"42,103",
-    iconBg:"linear-gradient(135deg,#627eea,#3b5998)",iconLetter:"P",
-    logoUrl:"https://assets.coingecko.com/coins/images/16185/large/pendle.png",
-    risk:"MEDIUM",
+    name: "Nansen Scout",
+    symbol: "SCOUT",
+    standard: "ERC-8004",
+    creator: "NansenAI Labs",
+    model: "Gemini 1.5 Pro",
+    logoUrl: "https://assets.coingecko.com/coins/images/12645/large/AAVE.png",
+    description: "Tracks Smart Money wallet clusters on-chain and copy-trades institutional flow signals in real time.",
+    winRate: "89.1%",
+    avgHolding: "2.5 days",
+    roi24h: "+5.8%",
+    roi30d: "+95.2%",
+    risk: "MEDIUM",
+    confidence: 89,
+    primaryTokens: ["AAVE", "ETH", "LDO"],
+    iconBg: "linear-gradient(135deg, #0052ff, #1a1a2e)",
+    recentTrades: [
+      { type: "BUY", token: "AAVE", price: "$308.42", amount: "12.5", time: "1h ago" },
+      { type: "SELL", token: "LDO", price: "$1.85", amount: "2,400", time: "6h ago" },
+      { type: "BUY", token: "ETH", price: "$3,450", amount: "2.1", time: "1d ago" }
+    ],
+    nansenAnalysis: {
+      score: "97/100",
+      status: "ELITE MATCHING",
+      auditor: "Nansen AI Agent Guard",
+      riskLevel: "Very Low Risk",
+      details: "Direct correlation with Smart Money address books. 94% win-rate on blue-chip tokens over 90 days. Solid liquidity buffer in backup vaults."
+    },
+    price: "+95.2% (30D)",
+    priceChange: "+5.8%",
+    positive: true,
+    chainIcon: "🛡️",
+    chain: "ERC-8004",
+    mcap: "89.1% Win",
+    volume: "2.5d Hold",
+    smNetflow: "+95.2% ROI",
+    aiSummary: "Tracks Smart Money wallet clusters on-chain and copy-trades institutional flow signals in real time.",
+    signal: "HIRE AGENT",
+    signalClass: "strong-buy",
     trendPoints: [20, 30, 25, 55, 48, 70, 95]
   },
   {
-    name:"Virtual Protocol",symbol:"VIRTUAL",chain:"Base",chainIcon:"🔵",
-    price:"$2.87",priceChange:"-3.2%",positive:false,
-    mcap:"$2.8B",volume:"$95M",liquidity:"$8.5M",
-    smNetflow:"-$320K",smTraders:12,smSignal:"distributing",
-    aiSummary:"AI agent token hot nhưng Smart Money đang bán ròng. Volume cao nhưng chủ yếu retail. Cẩn thận — có thể sideways ngắn hạn.",
-    signal:"CAUTION",signalClass:"caution",confidence:45,
-    age:"8 months",holders:"31,209",
-    iconBg:"linear-gradient(135deg,#0052ff,#3380ff)",iconLetter:"V",
-    logoUrl:"https://assets.coingecko.com/coins/images/42490/large/virtual_protocol.png",
-    risk:"HIGH",
+    name: "Moe Vault Guard",
+    symbol: "MOEGUARD",
+    standard: "ERC-8004",
+    creator: "MerchantMoe Contributor",
+    model: "Llama-3-70B",
+    logoUrl: "https://assets.coingecko.com/coins/images/16185/large/pendle.png",
+    description: "Rebalances concentrated liquidity pools dynamically to capture maximum trading fees while minimizing impermanent loss.",
+    winRate: "91.2%",
+    avgHolding: "7.0 days",
+    roi24h: "+1.2%",
+    roi30d: "+48.6%",
+    risk: "LOW",
+    confidence: 91,
+    primaryTokens: ["MNT", "USDC", "USDT"],
+    iconBg: "linear-gradient(135deg, #22c55e, #16a34a)",
+    recentTrades: [
+      { type: "BUY", token: "MNT", price: "$0.87", amount: "15,000", time: "3h ago" },
+      { type: "SELL", token: "USDC", price: "$1.00", amount: "5,000", time: "8h ago" },
+      { type: "BUY", token: "USDT", price: "$1.00", amount: "12,000", time: "1d ago" }
+    ],
+    nansenAnalysis: {
+      score: "99/100",
+      status: "SECURE YIELD",
+      auditor: "Nansen AI Agent Guard",
+      riskLevel: "Low Risk",
+      details: "Interacts purely with verified MerchantMoe LP vaults. Non-custodial proxy limits agent from withdrawing assets outside allowed vaults."
+    },
+    price: "+48.6% (30D)",
+    priceChange: "+1.2%",
+    positive: true,
+    chainIcon: "🎯",
+    chain: "ERC-8004",
+    mcap: "91.2% Win",
+    volume: "7d Hold",
+    smNetflow: "+48.6% ROI",
+    aiSummary: "Rebalances concentrated liquidity pools dynamically to capture maximum trading fees while minimizing impermanent loss.",
+    signal: "HIRE AGENT",
+    signalClass: "strong-buy",
     trendPoints: [90, 80, 85, 70, 65, 50, 40]
   },
   {
-    name:"Ethena",symbol:"ENA",chain:"Ethereum",chainIcon:"⟠",
-    price:"$0.58",priceChange:"+5.3%",positive:true,
-    mcap:"$1.7B",volume:"$32M",liquidity:"$45M",
-    smNetflow:"+$640K",smTraders:18,smSignal:"accumulating",
-    aiSummary:"Synthetic dollar protocol đang có traction mạnh. Funds bắt đầu vào vị thế. TVL tăng trưởng ổn định — tín hiệu tích cực.",
-    signal:"BUY",signalClass:"buy",confidence:68,
-    age:"1 year",holders:"67,891",
-    iconBg:"linear-gradient(135deg,#1a1a2e,#6366f1)",iconLetter:"E",
-    logoUrl:"https://assets.coingecko.com/coins/images/36399/large/ENA.png",
-    risk:"MEDIUM",
+    name: "Sentient Sentinel",
+    symbol: "SENTI",
+    standard: "ERC-8004",
+    creator: "SentinelDAO",
+    model: "DeepSeek-V3",
+    logoUrl: "https://assets.coingecko.com/coins/images/36399/large/ENA.png",
+    description: "Volatility hedge agent. Automatically opens delta-neutral positions and short hedges during market dips.",
+    winRate: "78.4%",
+    avgHolding: "1.2 days",
+    roi24h: "-0.5%",
+    roi30d: "+62.1%",
+    risk: "MEDIUM",
+    confidence: 78,
+    primaryTokens: ["BTC", "ETH", "ENA"],
+    iconBg: "linear-gradient(135deg, #ec4899, #f43f5e)",
+    recentTrades: [
+      { type: "SELL", token: "ETH", price: "$3,450", amount: "4.5", time: "30m ago" },
+      { type: "BUY", token: "ENA", price: "$0.58", amount: "15,000", time: "2h ago" },
+      { type: "BUY", token: "BTC", price: "$67,200", amount: "0.25", time: "5h ago" }
+    ],
+    nansenAnalysis: {
+      score: "88/100",
+      status: "STABLE SHIELD",
+      auditor: "Nansen AI Agent Guard",
+      riskLevel: "Medium Risk",
+      details: "Hedging contracts validated. Successfully protected capital in 4 consecutive market selloffs. Slight cost overhead during low volatility."
+    },
+    price: "+62.1% (30D)",
+    priceChange: "-0.5%",
+    positive: false,
+    chainIcon: "💎",
+    chain: "ERC-8004",
+    mcap: "78.4% Win",
+    volume: "1.2d Hold",
+    smNetflow: "+62.1% ROI",
+    aiSummary: "Volatility hedge agent. Automatically opens delta-neutral positions and short hedges during market dips.",
+    signal: "HIRE AGENT",
+    signalClass: "caution",
     trendPoints: [40, 45, 42, 50, 58, 52, 65]
   }
 ];
@@ -312,6 +452,48 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
     }
   };
 
+  const handleRecentTradeSwap = async (tradeTokenSymbol, tradeType) => {
+    if (!walletClient) {
+      alert("Please connect your wallet first at the top of the page!");
+      return;
+    }
+    setIsSwapping(true);
+    try {
+      const { transport, chain } = walletClient;
+      const network = {
+        chainId: chain.id,
+        name: chain.name,
+      };
+      const provider = new ethers.BrowserProvider(transport, network);
+      const signer = new ethers.JsonRpcSigner(provider, account);
+
+      if (chain.id !== 5003) {
+        alert("Please switch network to Mantle Sepolia at the header.");
+        setIsSwapping(false);
+        return;
+      }
+
+      const routerContract = new ethers.Contract(MOCK_MOE_ROUTER_ADDRESS, MOCK_MOE_ROUTER_ABI, signer);
+      const swapValue = ethers.parseEther("0.1");
+      
+      console.log(`Executing ${tradeType} swap of 0.1 MNT for ${tradeTokenSymbol} via MockMerchantMoeRouter`);
+      
+      const tx = await routerContract.swapMNT(
+        tradeTokenSymbol,
+        account,
+        { value: swapValue }
+      );
+      
+      await tx.wait();
+      alert(`🛒 Copy Trade transaction executed successfully via MerchantMoe (Mock Router) on Mantle Sepolia!\nAction: ${tradeType} ${tradeTokenSymbol}\nValue: 0.1 MNT\nTx Hash: ${tx.hash}`);
+    } catch (e) {
+      console.error(e);
+      alert(`❌ Error executing ${tradeType.toLowerCase()} transaction: ${e.reason || e.message}`);
+    } finally {
+      setIsSwapping(false);
+    }
+  };
+
   const toggleTag = (tag) => {
     if (activeTags.includes(tag)) {
       setActiveTags(prev => prev.filter(t => t !== tag));
@@ -510,204 +692,206 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                             {currentToken.logoUrl ? (
                               <img src={currentToken.logoUrl} alt={currentToken.name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
                             ) : (
-                              currentToken.iconLetter
+                              currentToken.symbol.substring(0,1)
                             )}
                           </div>
                           <div>
                             <div className="token-name">{currentToken.name}</div>
                             <div className="token-symbol" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span>{currentToken.chainIcon} {currentToken.chain} · ${currentToken.symbol}</span>
+                              <span>{currentToken.standard} · {currentToken.symbol} Agent</span>
                               <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, border: '1px solid rgba(254, 60, 114, 0.25)' }}>⚡ Nansen</span>
                             </div>
                           </div>
                         </div>
                         <span className={`token-badge ${currentToken.positive ? 'pos' : 'neg'}`}>
-                          {currentToken.priceChange}
+                          {currentToken.roi30d}
                         </span>
                       </div>
 
-                      {/* Tab 0: Price and Stats Overview */}
+                      {/* Tab 0: Agent Details */}
                       {activeCardTab === 0 && (
                         <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                            <div className="token-price-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', margin: '4px 0' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {/* ROI and Risk Summary */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 14px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }}>
                               <div>
-                                <div className="price-big" style={{ fontSize: '2.1rem', letterSpacing: '-0.5px' }}>{currentToken.price}</div>
-                                <div className="price-lbl" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                  <span>Current Value</span>
-                                  <span className={currentToken.positive ? 'c-pos' : 'c-neg'} style={{ fontWeight: 600 }}>({currentToken.priceChange})</span>
+                                <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>30D Return</span>
+                                <div style={{ fontSize: '1.4rem', fontWeight: '800', color: '#22c55e', fontFamily: 'monospace' }}>{currentToken.roi30d}</div>
+                              </div>
+                              <div style={{ textAlign: 'right' }}>
+                                <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Risk Class</span>
+                                <div style={{ 
+                                  fontSize: '0.75rem', 
+                                  fontWeight: '800', 
+                                  color: currentToken.risk === 'HIGH' ? '#ef4444' : currentToken.risk === 'MEDIUM' ? '#eab308' : '#22c55e',
+                                  background: currentToken.risk === 'HIGH' ? 'rgba(239, 68, 68, 0.1)' : currentToken.risk === 'MEDIUM' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                                  padding: '2px 8px',
+                                  borderRadius: '6px',
+                                  marginTop: '2px',
+                                  display: 'inline-block'
+                                }}>
+                                  {currentToken.risk}
                                 </div>
                               </div>
-                              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                                {currentToken.risk} Risk
+                            </div>
+
+                            {/* Performance Grid */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px 12px' }}>
+                                <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Win Rate</span>
+                                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', marginTop: '2px', fontFamily: 'monospace' }}>{currentToken.winRate}</div>
+                              </div>
+                              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px 12px' }}>
+                                <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Avg Hold Time</span>
+                                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', marginTop: '2px', fontFamily: 'monospace' }}>{currentToken.avgHolding}</div>
                               </div>
                             </div>
 
-                            {/* Large Sparkline Chart in the Center */}
-                            <div className="sparkline-wrapper" style={{ 
-                              opacity: 0.95, 
-                              height: '110px', 
-                              background: 'rgba(255, 255, 255, 0.015)', 
-                              border: '1px solid rgba(255, 255, 255, 0.04)',
-                              borderRadius: '16px',
-                              padding: '12px',
-                              position: 'relative',
-                              overflow: 'hidden',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              justifyContent: 'center'
-                            }}>
-                              <div style={{ position: 'absolute', top: '8px', left: '12px', fontSize: '0.58rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                7-Day Price Trend
+                            {/* Model and Creator */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', background: 'rgba(255,255,255,0.01)', padding: '10px 12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)', fontSize: '0.72rem' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>AI Engine</span>
+                                <span style={{ color: 'white', fontWeight: 600 }}>{currentToken.model}</span>
                               </div>
-                              <svg className="sparkline" viewBox="0 0 100 30" style={{ width: '100%', height: '80px', marginTop: '10px' }} preserveAspectRatio="none">
-                                <defs>
-                                  <linearGradient id={`grad-swipe-${currentToken.symbol}`} x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor={currentToken.positive ? '#22c55e' : '#ef4444'} stopOpacity="0.4"/>
-                                    <stop offset="100%" stopColor={currentToken.positive ? '#22c55e' : '#ef4444'} stopOpacity="0"/>
-                                  </linearGradient>
-                                </defs>
-                                <path
-                                  d={`M 0 ${30 - currentToken.trendPoints[0] * 0.25} L 16 ${30 - currentToken.trendPoints[1] * 0.25} L 32 ${30 - currentToken.trendPoints[2] * 0.25} L 48 ${30 - currentToken.trendPoints[3] * 0.25} L 64 ${30 - currentToken.trendPoints[4] * 0.25} L 80 ${30 - currentToken.trendPoints[5] * 0.25} L 96 ${30 - currentToken.trendPoints[6] * 0.25}`}
-                                  fill="none"
-                                  stroke={currentToken.positive ? '#22c55e' : '#ef4444'}
-                                  strokeWidth="2.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d={`M 0 ${30 - currentToken.trendPoints[0] * 0.25} L 16 ${30 - currentToken.trendPoints[1] * 0.25} L 32 ${30 - currentToken.trendPoints[2] * 0.25} L 48 ${30 - currentToken.trendPoints[3] * 0.25} L 64 ${30 - currentToken.trendPoints[4] * 0.25} L 80 ${30 - currentToken.trendPoints[5] * 0.25} L 96 ${30 - currentToken.trendPoints[6] * 0.25} L 96 30 L 0 30 Z`}
-                                  fill={`url(#grad-swipe-${currentToken.symbol})`}
-                                />
-                              </svg>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '6px' }}>
+                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Creator</span>
+                                <span style={{ color: 'white', fontWeight: 600 }}>{currentToken.creator}</span>
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '6px' }}>
+                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Primary Assets</span>
+                                <span style={{ color: 'white', fontWeight: 600 }}>{currentToken.primaryTokens.join(', ')}</span>
+                              </div>
                             </div>
 
-                            <div className="token-grid-stats" style={{ marginTop: '5px', gap: '8px' }}>
-                              <div className="grid-item" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', padding: '10px 4px' }}>
-                                <span className="grid-val" style={{ fontSize: '0.85rem' }}>{currentToken.mcap}</span>
-                                <span className="grid-lbl">MCap</span>
-                              </div>
-                              <div className="grid-item" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', padding: '10px 4px' }}>
-                                <span className="grid-val" style={{ fontSize: '0.85rem' }}>{currentToken.volume}</span>
-                                <span className="grid-lbl">Vol 24h</span>
-                              </div>
-                              <div className="grid-item" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', padding: '10px 4px' }}>
-                                <span className="grid-val" style={{ fontSize: '0.85rem' }}>{currentToken.liquidity}</span>
-                                <span className="grid-lbl">Liquidity</span>
-                              </div>
-                            </div>
+                            {/* Agent Description */}
+                            <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.45, margin: '2px 0 0 0', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                              "{currentToken.description}"
+                            </p>
                           </div>
-                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '12px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)', marginTop: '20px' }}>
-                            👆 Tap card to view On-Chain Flows
+                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '10px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)', marginTop: '10px' }}>
+                            👆 Tap card to view Agent Recent Trades
                           </div>
                         </div>
                       )}
 
-                      {/* Tab 1: On-Chain & Smart Money (Nansen) */}
+                      {/* Tab 1: Recent Trades */}
                       {activeCardTab === 1 && (
                         <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                            <div className="card-analyst-box smart-money" style={{ margin: '0', background: 'linear-gradient(135deg, rgba(254, 60, 114, 0.04), rgba(255, 120, 84, 0.04))', border: '1px solid rgba(254, 60, 114, 0.15)', borderRadius: '16px', padding: '15px' }}>
-                              <div className="box-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span>🔍 Smart Money Flow</span>
-                                <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>NANSEN DATA</span>
-                              </div>
-                              <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                                <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)' }}>Net Flow (24h):</span>
-                                <span className={currentToken.smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'} style={{ fontSize: '1.4rem', fontWeight: '800', fontFamily: 'monospace' }}>
-                                  {currentToken.smNetflow}
-                                </span>
-                              </div>
-
-                              {/* Progress bar visualizer for net flow direction */}
-                              <div style={{ marginTop: '12px', background: 'rgba(255,255,255,0.06)', height: '6px', borderRadius: '3px', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ 
-                                  position: 'absolute', 
-                                  top: 0, 
-                                  left: currentToken.smNetflow.startsWith('+') ? '50%' : 'auto',
-                                  right: currentToken.smNetflow.startsWith('+') ? 'auto' : '50%',
-                                  width: currentToken.smNetflow.startsWith('+') ? '35%' : '25%', // simulated flow strength
-                                  height: '100%',
-                                  background: currentToken.smNetflow.startsWith('+') ? 'linear-gradient(90deg, #22c55e, #4ade80)' : 'linear-gradient(90deg, #f87171, #ef4444)',
-                                  borderRadius: '3px'
-                                }} />
-                                <div style={{ position: 'absolute', left: '50%', top: 0, width: '2px', height: '100%', background: 'rgba(255,255,255,0.3)' }} />
-                              </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                              <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>📈 Agent Activity Log</span>
+                              <span style={{ fontSize: '0.58rem', background: 'rgba(34, 197, 94, 0.15)', color: '#22c55e', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>LIVE FEEDS</span>
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', alignItems: 'center' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Smart Money active traders</span>
-                                <span style={{ color: 'white', fontWeight: 600, fontFamily: 'monospace' }}>{currentToken.smTraders} wallets</span>
-                              </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Smart Money signal</span>
-                                <span className={currentToken.smSignal.toLowerCase().includes('buy') || currentToken.smSignal.toLowerCase().includes('accum') ? 'c-pos' : 'c-neg'} style={{ textTransform: 'uppercase', fontWeight: 700, fontSize: '0.72rem', letterSpacing: '0.5px' }}>
-                                  {currentToken.smSignal}
-                                </span>
-                              </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Total token holders</span>
-                                <span style={{ color: 'white', fontWeight: 600, fontFamily: 'monospace' }}>{currentToken.holders} addresses</span>
-                              </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              {currentToken.recentTrades.map((trade, tIdx) => (
+                                <div key={tIdx} style={{ 
+                                  display: 'flex', 
+                                  justifyContent: 'space-between', 
+                                  alignItems: 'center', 
+                                  background: 'rgba(255,255,255,0.02)', 
+                                  padding: '8px 12px', 
+                                  borderRadius: '12px',
+                                  border: '1px solid rgba(255,255,255,0.04)'
+                                }}>
+                                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                    <span style={{ 
+                                      fontSize: '0.62rem', 
+                                      fontWeight: '800', 
+                                      padding: '2px 6px', 
+                                      borderRadius: '4px',
+                                      background: trade.type === 'BUY' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
+                                      color: trade.type === 'BUY' ? '#22c55e' : '#ef4444'
+                                    }}>
+                                      {trade.type}
+                                    </span>
+                                    <div>
+                                      <div style={{ fontSize: '0.78rem', fontWeight: 'bold', color: '#fff' }}>{trade.token}</div>
+                                      <div style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.4)' }}>{trade.time} @ {trade.price}</div>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Interactive Swap Button */}
+                                  <button 
+                                    onClick={(e) => { 
+                                      e.stopPropagation(); // prevent cycling tab!
+                                      handleRecentTradeSwap(trade.token, trade.type); 
+                                    }} 
+                                    style={{ 
+                                      fontSize: '0.68rem', 
+                                      fontWeight: '700', 
+                                      padding: '6px 12px', 
+                                      borderRadius: '6px',
+                                      border: 'none',
+                                      background: trade.type === 'BUY' ? 'linear-gradient(135deg, #22c55e, #10b981)' : 'linear-gradient(135deg, #ef4444, #f43f5e)',
+                                      color: '#fff',
+                                      cursor: 'pointer',
+                                      boxShadow: trade.type === 'BUY' ? '0 0 6px rgba(34,197,94,0.2)' : '0 0 6px rgba(239,68,68,0.2)'
+                                    }}
+                                  >
+                                    {trade.type === 'BUY' ? 'Buy 0.1 MNT' : 'Sell 0.1 MNT'}
+                                  </button>
+                                </div>
+                              ))}
                             </div>
                           </div>
-                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '12px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)', marginTop: '20px' }}>
-                            👆 Tap card to view AI Agent Analysis
+                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '10px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)', marginTop: '10px' }}>
+                            👆 Tap card to view Nansen AI Audit
                           </div>
                         </div>
                       )}
 
-                      {/* Tab 2: AI Agent Opinion */}
+                      {/* Tab 2: Nansen AI Audit */}
                       {activeCardTab === 2 && (
                         <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                            <div className="card-analyst-box ai-summary-box" style={{ 
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            <div className="card-analyst-box smart-money" style={{ 
                               margin: '0', 
-                              background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(99, 102, 241, 0.05))', 
-                              border: '1px solid rgba(168, 85, 247, 0.15)',
-                              borderRadius: '16px',
-                              padding: '16px',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '12px'
+                              background: 'linear-gradient(135deg, rgba(254, 60, 114, 0.04), rgba(255, 120, 84, 0.04))', 
+                              border: '1px solid rgba(254, 60, 114, 0.15)', 
+                              borderRadius: '16px', 
+                              padding: '14px' 
                             }}>
-                              <div className="box-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>🤖 AI AGENT opinion</span>
-                                <span style={{ fontSize: '0.55rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>AGENT RENTED</span>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>🛡️ NANSEN AI AGENT AUDIT</span>
+                                <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>SECURE COOP</span>
                               </div>
-                              <p className="ai-summary-txt" style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.9)', lineHeight: 1.5, margin: '2px 0', minHeight: '60px' }}>
-                                "{currentToken.aiSummary}"
-                              </p>
                               
-                              <div className="ai-row-footer" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span className={`sig-badge ${currentToken.signalClass}`} style={{ padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 800 }}>
-                                  {currentToken.signal}
-                                </span>
-                                <span className="conf-perc" style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>
-                                  Confidence: <strong style={{ color: '#fff', fontSize: '0.75rem', fontFamily: 'monospace' }}>{currentToken.confidence}%</strong>
-                                </span>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+                                <div>
+                                  <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#fff' }}>{currentToken.nansenAnalysis.status}</div>
+                                  <div style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.4)', marginTop: '2px' }}>Audited by {currentToken.nansenAnalysis.auditor}</div>
+                                </div>
+                                <div style={{ 
+                                  width: '54px', 
+                                  height: '54px', 
+                                  borderRadius: '50%', 
+                                  border: '3px solid #fe3c72', 
+                                  display: 'flex', 
+                                  flexDirection: 'column', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'center',
+                                  boxShadow: '0 0 10px rgba(254,60,114,0.3)',
+                                  background: 'rgba(0,0,0,0.2)'
+                                }}>
+                                  <span style={{ fontSize: '0.85rem', fontWeight: '800', fontFamily: 'monospace', color: '#fff' }}>{currentToken.nansenAnalysis.score.split('/')[0]}</span>
+                                  <span style={{ fontSize: '0.45rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>score</span>
+                                </div>
                               </div>
                             </div>
 
-                            {/* Confidence progress bar */}
                             <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px', padding: '12px 14px' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>
-                                <span>Signal Strength</span>
-                                <span>{currentToken.confidence}% Match</span>
+                              <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5 }}>
+                                {currentToken.nansenAnalysis.details}
                               </div>
-                              <div style={{ background: 'rgba(255,255,255,0.06)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
-                                <div style={{ 
-                                  width: `${currentToken.confidence}%`, 
-                                  height: '100%', 
-                                  background: 'linear-gradient(90deg, #fe3c72, #ff7854)',
-                                  borderRadius: '3px'
-                                }} />
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '6px' }}>
+                                <span>Security Rank</span>
+                                <span style={{ color: '#fff', fontWeight: 'bold' }}>{currentToken.nansenAnalysis.riskLevel}</span>
                               </div>
                             </div>
                           </div>
-                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '12px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-                            👆 Tap card to return to Price & Sparkline
+                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '10px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
+                            👆 Tap card to return to Agent Details
                           </div>
                         </div>
                       )}
@@ -1029,7 +1213,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                       {token.logoUrl ? (
                         <img src={token.logoUrl} alt={token.name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
                       ) : (
-                        token.iconLetter
+                        token.symbol.substring(0,1)
                       )}
                     </div>
                     <div>
@@ -1037,18 +1221,18 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                         {token.name}
                         <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, border: '1px solid rgba(254, 60, 114, 0.25)' }}>⚡ Nansen</span>
                       </h4>
-                      <span className="token-symbol-tag">{token.chainIcon} {token.chain} · {token.symbol}</span>
+                      <span className="token-symbol-tag">{token.standard} · {token.symbol} Agent</span>
                     </div>
                   </div>
                   <span className={`token-change-badge ${token.positive ? 'pos' : 'neg'}`}>
-                    {token.priceChange}
+                    {token.roi30d}
                   </span>
                 </div>
 
                 <div className="token-price-section" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div className="price-label">Current Value</div>
-                    <div className="price-value">{token.price}</div>
+                    <div className="price-label">30D Return</div>
+                    <div className="price-value" style={{ color: '#22c55e' }}>{token.roi30d}</div>
                   </div>
                   <div className="sparkline-wrapper" style={{ opacity: 0.9 }}>
                     <svg className="sparkline" viewBox="0 0 100 30" style={{ width: '100px', height: '35px' }}>
@@ -1076,22 +1260,22 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
 
                 <div className="token-stats-row">
                   <div>
-                    <span className="lbl">MCap</span>
-                    <span className="val">{token.mcap}</span>
+                    <span className="lbl">Win Rate</span>
+                    <span className="val">{token.winRate}</span>
                   </div>
                   <div>
-                    <span className="lbl">24h Vol</span>
-                    <span className="val">{token.volume}</span>
+                    <span className="lbl">Avg Hold</span>
+                    <span className="val">{token.avgHolding}</span>
                   </div>
                   <div>
-                    <span className="lbl">Netflow 24h</span>
-                    <span className={`val ${token.smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}`}>{token.smNetflow}</span>
+                    <span className="lbl">Risk Level</span>
+                    <span className="val" style={{ color: token.risk === 'HIGH' ? '#ef4444' : token.risk === 'MEDIUM' ? '#eab308' : '#22c55e' }}>{token.risk}</span>
                   </div>
                 </div>
 
                 <div className="ai-opinion-section">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <h5 style={{ margin: 0 }}>🤖 AI Agent Analysis</h5>
+                    <h5 style={{ margin: 0 }}>🤖 AI Agent Strategy</h5>
                     <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.35)' }}>signals by <strong>Nansen</strong></span>
                   </div>
                   <p>{token.aiSummary}</p>
@@ -1109,12 +1293,12 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                   {swappingToken === token.symbol ? (
                     <>
                       <div className="buy-spinner" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '6px', margin: 0 }}></div>
-                      <span>Swapping on-chain...</span>
+                      <span>Hiring on-chain...</span>
                     </>
                   ) : (
                     <>
                       <Heart size={16} style={{ marginRight: '6px', verticalAlign: 'middle' }} fill="currentColor" />
-                      <span>Swap via MerchantMoe (0.1 MNT)</span>
+                      <span>Hire Agent via Moe (0.1 MNT)</span>
                     </>
                   )}
                 </button>
