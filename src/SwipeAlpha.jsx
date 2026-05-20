@@ -125,7 +125,7 @@ const AGENTS = [
   }
 ];
 
-export default function SwipeAlpha({ walletClient, account }) {
+export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) {
   const [screen, setScreen] = useState('swipe'); // swipe, detail, agents, agentDetail, rateAgent
   const [selectedTokenIdx, setSelectedTokenIdx] = useState(0);
   const [selectedAgentIdx, setSelectedAgentIdx] = useState(0);
@@ -140,6 +140,17 @@ export default function SwipeAlpha({ walletClient, account }) {
   const [cardIndex, setCardIndex] = useState(0);
   const [activeAgent, setActiveAgent] = useState(AGENTS[0]);
   const [isSwapping, setIsSwapping] = useState(false);
+
+  // Desktop states
+  const [swappingToken, setSwappingToken] = useState(null);
+  const [showRateModal, setShowRateModal] = useState(false);
+  
+  const MOCK_REVIEWS = [
+    { agentName: "Yield Sniper", rating: 5, comment: "Accurate alerts, caught the PENDLE vault yield spike perfectly!", user: "0x3f5c...921a", time: "2 hours ago" },
+    { agentName: "AI Narrative", rating: 4, comment: "Good narrative tracking, helped me discover VIRTUAL early.", user: "0x892b...77cf", time: "5 hours ago" },
+    { agentName: "Mantle Scout", rating: 5, comment: "Moe pools monitoring is very fast. Highly recommended.", user: "0x11e4...882a", time: "1 day ago" }
+  ];
+  const [reviewsList, setReviewsList] = useState(MOCK_REVIEWS);
 
   const currentToken = TOKENS[cardIndex] || null;
 
@@ -192,6 +203,45 @@ export default function SwipeAlpha({ walletClient, account }) {
     setCardIndex(prev => prev + 1);
   };
 
+  const handleDesktopSwap = async (token) => {
+    if (!walletClient) {
+      alert("Please connect your wallet first at the top of the page!");
+      return;
+    }
+    setSwappingToken(token.symbol);
+    try {
+      const { transport, chain } = walletClient;
+      const network = {
+        chainId: chain.id,
+        name: chain.name,
+      };
+      const provider = new ethers.BrowserProvider(transport, network);
+      const signer = new ethers.JsonRpcSigner(provider, account);
+
+      if (chain.id !== 5003) {
+        alert("Please switch network to Mantle Sepolia at the header.");
+        setSwappingToken(null);
+        return;
+      }
+
+      const routerContract = new ethers.Contract(MOCK_MOE_ROUTER_ADDRESS, MOCK_MOE_ROUTER_ABI, signer);
+      const swapValue = ethers.parseEther("0.1");
+      const tx = await routerContract.swapMNT(
+        token.symbol,
+        account,
+        { value: swapValue }
+      );
+      
+      await tx.wait();
+      alert(`🛒 Swap transaction executed successfully via MerchantMoe (Mock Router) on Mantle Sepolia!\nToken: ${token.name} ($${token.symbol})\nAmount In: 0.1 MNT\nTx Hash: ${tx.hash}`);
+    } catch (e) {
+      console.error(e);
+      alert(`❌ Error executing swap transaction: ${e.reason || e.message}`);
+    } finally {
+      setSwappingToken(null);
+    }
+  };
+
   const toggleTag = (tag) => {
     if (activeTags.includes(tag)) {
       setActiveTags(prev => prev.filter(t => t !== tag));
@@ -211,7 +261,6 @@ export default function SwipeAlpha({ walletClient, account }) {
         throw new Error("Wallet not connected. Please connect wallet at top of the page.");
       }
 
-      // Convert RainbowKit/Wagmi walletClient to ethers Signer
       const { transport, chain } = walletClient;
       const network = {
         chainId: chain.id,
@@ -239,6 +288,16 @@ export default function SwipeAlpha({ walletClient, account }) {
       await tx.wait();
 
       alert(`🎉 Rating published on-chain successfully!\nTx Hash: ${tx.hash}`);
+      
+      const newUserReview = {
+        agentName: AGENTS[selectedAgentIdx].name,
+        rating: ratingVal,
+        comment: finalComment,
+        user: account ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}` : "You",
+        time: "Just now"
+      };
+      setReviewsList(prev => [newUserReview, ...prev]);
+
       setScreen('swipe');
       setRatingVal(0);
       setActiveTags([]);
@@ -251,369 +310,555 @@ export default function SwipeAlpha({ walletClient, account }) {
     }
   };
 
-  return (
-    <div className="swipealpha-landing">
-      <div className="landing-info-column">
-        <div className="glow-badge">🧠 SwipeAlpha AI Platform</div>
-        <h1 className="landing-title">The Tinder for <span>Tokens</span></h1>
-        <p className="landing-subtitle">Swipe left to skip, swipe right to execute simulated swaps. Rent AI Agents to curate your feed, and publish on-chain reviews to the Mantle reputation ledger.</p>
-        
-        <div className="landing-stats">
-          <div className="l-stat">
-            <span className="l-val" style={{ color: 'var(--primary)', textShadow: '0 0 10px rgba(0, 239, 200, 0.2)' }}>72%</span>
-            <span className="l-lbl">Avg Win Rate</span>
-          </div>
-          <div className="l-stat">
-            <span className="l-val" style={{ color: '#a855f7', textShadow: '0 0 10px rgba(168, 85, 247, 0.2)' }}>5</span>
-            <span className="l-lbl">Active Agents</span>
-          </div>
-          <div className="l-stat">
-            <span className="l-val" style={{ color: '#ffd700', textShadow: '0 0 10px rgba(255, 215, 0, 0.2)' }}>100%</span>
-            <span className="l-lbl">Verified On-Chain</span>
-          </div>
-        </div>
+  if (mode === 'demo') {
+    return (
+      <div className="swipealpha-demo-view">
+        <div className="swipealpha-phone-container">
+          <div className="phone-mockup">
+            {/* Notch */}
+            <div className="notch"></div>
 
-        <div className="landing-features-list">
-          <div className="l-feat">
-            <span className="feat-icon">🔥</span>
-            <div>
-              <h4>Curated AI Signals</h4>
-              <p>Specialized agents scan and filter Nansen Smart Money flows for you.</p>
-            </div>
-          </div>
-          <div className="l-feat">
-            <span className="feat-icon">🛡️</span>
-            <div>
-              <h4>Immutable On-chain Reviews</h4>
-              <p>Ratings are recorded on Mantle Sepolia Testnet using standard Transparent Proxy.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="swipealpha-phone-container">
-        <div className="phone-mockup">
-        {/* Notch */}
-        <div className="notch"></div>
-
-        {/* Swipe Screen */}
-        {screen === 'swipe' && (
-          <div className="phone-screen active">
-            {/* Top Bar inside app */}
-            <div className="phone-header">
-              <span className="app-logo">Swipe<span className="logo-accent">Alpha</span></span>
-              <button className="agents-btn" onClick={() => setScreen('agents')}>
-                <Sparkles size={16} /> Agents
-              </button>
-            </div>
-
-            {/* Active Agent Sub-Header */}
-            <div className="active-agent-banner" onClick={() => { setSelectedAgentIdx(0); setScreen('agentDetail'); }}>
-              <div className="banner-pulse"></div>
-              <span>Agent: <strong>{activeAgent.name}</strong></span>
-              <span className="banner-rating">⭐ {activeAgent.rating}</span>
-            </div>
-
-            {/* Token cards stack */}
-            <div className="swipe-stack-container">
-              {isSwapping && (
-                <div className="swap-loading-overlay">
-                  <div className="swap-loading-content">
-                    <Sparkles className="swap-loading-icon" size={40} />
-                    <h4>Executing Swap via MerchantMoe...</h4>
-                    <p style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '8px' }}>
-                      Sending 0.1 MNT to route to simulated {currentToken?.symbol} pool
-                    </p>
-                  </div>
+            {/* Swipe Screen */}
+            {screen === 'swipe' && (
+              <div className="phone-screen active">
+                <div className="phone-header">
+                  <span className="app-logo">Swipe<span className="logo-accent">Alpha</span></span>
+                  <button className="agents-btn" onClick={() => setScreen('agents')}>
+                    <Sparkles size={16} /> Agents
+                  </button>
                 </div>
-              )}
-              {currentToken ? (
-                <div className="swipe-token-card">
-                  <div className="token-card-header">
-                    <div className="token-meta">
-                      <div className="token-avatar" style={{ background: currentToken.iconBg }}>{currentToken.iconLetter}</div>
-                      <div>
-                        <div className="token-name">{currentToken.name}</div>
-                        <div className="token-symbol">{currentToken.chainIcon} {currentToken.chain} · ${currentToken.symbol}</div>
+
+                <div className="active-agent-banner" onClick={() => { setSelectedAgentIdx(0); setScreen('agentDetail'); }}>
+                  <div className="banner-pulse"></div>
+                  <span>Agent: <strong>{activeAgent.name}</strong></span>
+                  <span className="banner-rating">⭐ {activeAgent.rating}</span>
+                </div>
+
+                <div className="swipe-stack-container">
+                  {isSwapping && (
+                    <div className="swap-loading-overlay">
+                      <div className="swap-loading-content">
+                        <Sparkles className="swap-loading-icon" size={40} />
+                        <h4>Executing Swap via MerchantMoe...</h4>
+                        <p style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '8px' }}>
+                          Sending 0.1 MNT to route to simulated {currentToken?.symbol} pool
+                        </p>
                       </div>
                     </div>
-                    <span className={`token-badge ${currentToken.positive ? 'pos' : 'neg'}`}>
-                      {currentToken.priceChange}
-                    </span>
-                  </div>
+                  )}
+                  {currentToken ? (
+                    <div className="swipe-token-card">
+                      <div className="token-card-header">
+                        <div className="token-meta">
+                          <div className="token-avatar" style={{ background: currentToken.iconBg }}>{currentToken.iconLetter}</div>
+                          <div>
+                            <div className="token-name">{currentToken.name}</div>
+                            <div className="token-symbol">{currentToken.chainIcon} {currentToken.chain} · ${currentToken.symbol}</div>
+                          </div>
+                        </div>
+                        <span className={`token-badge ${currentToken.positive ? 'pos' : 'neg'}`}>
+                          {currentToken.priceChange}
+                        </span>
+                      </div>
 
-                  <div className="token-price-info">
-                    <div className="price-big">{currentToken.price}</div>
-                    <div className="price-lbl">Current Price</div>
-                  </div>
+                      <div className="token-price-info">
+                        <div className="price-big">{currentToken.price}</div>
+                        <div className="price-lbl">Current Price</div>
+                      </div>
 
-                  <div className="token-grid-stats">
-                    <div className="grid-item">
-                      <span className="grid-val">{currentToken.mcap}</span>
-                      <span className="grid-lbl">MCap</span>
-                    </div>
-                    <div className="grid-item">
-                      <span className="grid-val">{currentToken.volume}</span>
-                      <span className="grid-lbl">Vol 24h</span>
-                    </div>
-                    <div className="grid-item">
-                      <span className="grid-val">{currentToken.liquidity}</span>
-                      <span className="grid-lbl">Liquidity</span>
-                    </div>
-                  </div>
+                      <div className="token-grid-stats">
+                        <div className="grid-item">
+                          <span className="grid-val">{currentToken.mcap}</span>
+                          <span className="grid-lbl">MCap</span>
+                        </div>
+                        <div className="grid-item">
+                          <span className="grid-val">{currentToken.volume}</span>
+                          <span className="grid-lbl">Vol 24h</span>
+                        </div>
+                        <div className="grid-item">
+                          <span className="grid-val">{currentToken.liquidity}</span>
+                          <span className="grid-lbl">Liquidity</span>
+                        </div>
+                      </div>
 
-                  <div className="card-analyst-box smart-money">
-                    <div className="box-title">🔍 Smart Money Net Flow</div>
-                    <div className="box-desc">
-                      <span>Flow 24h:</span>
-                      <strong className={currentToken.smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}>
-                        {currentToken.smNetflow}
-                      </strong>
-                    </div>
-                  </div>
+                      <div className="card-analyst-box smart-money">
+                        <div className="box-title">🔍 Smart Money Net Flow</div>
+                        <div className="box-desc">
+                          <span>Flow 24h:</span>
+                          <strong className={currentToken.smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}>
+                            {currentToken.smNetflow}
+                          </strong>
+                        </div>
+                      </div>
 
-                  <div className="card-analyst-box ai-summary-box">
-                    <div className="box-title">🤖 AI Agent Opinion</div>
-                    <p className="ai-summary-txt">{currentToken.aiSummary}</p>
-                    <div className="ai-row-footer">
-                      <span className={`sig-badge ${currentToken.signalClass}`}>{currentToken.signal}</span>
-                      <span className="conf-perc">Confidence: {currentToken.confidence}%</span>
+                      <div className="card-analyst-box ai-summary-box">
+                        <div className="box-title">🤖 AI Agent Opinion</div>
+                        <p className="ai-summary-txt">{currentToken.aiSummary}</p>
+                        <div className="ai-row-footer">
+                          <span className={`sig-badge ${currentToken.signalClass}`}>{currentToken.signal}</span>
+                          <span className="conf-perc">Confidence: {currentToken.confidence}%</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="empty-stack-placeholder">
+                      <div className="empty-icon">🎉</div>
+                      <h4>You're All Caught Up!</h4>
+                      <p>AI Agents are scanning more block transactions...</p>
+                      <button className="reload-btn" onClick={() => setCardIndex(0)}>Swipe Again</button>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="empty-stack-placeholder">
-                  <div className="empty-icon">🎉</div>
-                  <h4>You're All Caught Up!</h4>
-                  <p>AI Agents are scanning more block transactions...</p>
-                  <button className="reload-btn" onClick={() => setCardIndex(0)}>Swipe Again</button>
-                </div>
-              )}
-            </div>
 
-            {/* Action Bar */}
-            {currentToken && (
-              <div className="swipe-action-controls">
-                <button className="control-btn skip-action" onClick={() => handleSwipe('left')} disabled={isSwapping}>
-                  <ThumbsDown size={20} />
-                </button>
-                <button className="control-btn info-action" onClick={() => { setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping}>
-                  <Info size={18} />
-                </button>
-                <button className="control-btn buy-action" onClick={() => handleSwipe('right')} disabled={isSwapping}>
-                  {isSwapping ? <div className="buy-spinner"></div> : <ThumbsUp size={20} />}
-                  <span className="buy-amount-label">{isSwapping ? "Swapping..." : "0.1 MNT"}</span>
-                </button>
+                {currentToken && (
+                  <div className="swipe-action-controls">
+                    <button className="control-btn skip-action" onClick={() => handleSwipe('left')} disabled={isSwapping}>
+                      <ThumbsDown size={20} />
+                    </button>
+                    <button className="control-btn info-action" onClick={() => { setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping}>
+                      <Info size={18} />
+                    </button>
+                    <button className="control-btn buy-action" onClick={() => handleSwipe('right')} disabled={isSwapping}>
+                      {isSwapping ? <div className="buy-spinner"></div> : <ThumbsUp size={20} />}
+                      <span className="buy-amount-label">{isSwapping ? "Swapping..." : "0.1 MNT"}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
 
-        {/* Detail Screen */}
-        {screen === 'detail' && (
-          <div className="phone-screen active scrollable">
-            <div className="screen-nav">
-              <button className="nav-back" onClick={() => setScreen('swipe')}>
-                <ArrowLeft size={18} /> Back
-              </button>
-              <span>Token Details</span>
-              <div style={{ width: 18 }}></div>
-            </div>
-            
-            <div className="detail-scroll-content">
-              <div className="detail-top-card">
-                <div className="token-avatar large" style={{ background: TOKENS[selectedTokenIdx].iconBg }}>
-                  {TOKENS[selectedTokenIdx].iconLetter}
+            {/* Detail Screen */}
+            {screen === 'detail' && (
+              <div className="phone-screen active scrollable">
+                <div className="screen-nav">
+                  <button className="nav-back" onClick={() => setScreen('swipe')}>
+                    <ArrowLeft size={18} /> Back
+                  </button>
+                  <span>Token Details</span>
+                  <div style={{ width: 18 }}></div>
                 </div>
-                <h2>{TOKENS[selectedTokenIdx].name}</h2>
-                <div className="token-symbol">{TOKENS[selectedTokenIdx].symbol}</div>
-                <div className="price-huge">{TOKENS[selectedTokenIdx].price}</div>
-              </div>
-
-              <div className="detail-card-section">
-                <h3>Smart Money Flow Analytics</h3>
-                <div className="stat-row">
-                  <span>Net Flow 24h</span>
-                  <span className={TOKENS[selectedTokenIdx].smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}>{TOKENS[selectedTokenIdx].smNetflow}</span>
-                </div>
-                <div className="stat-row">
-                  <span>SM Addresses active</span>
-                  <span>{TOKENS[selectedTokenIdx].smTraders} wallets</span>
-                </div>
-                <div className="stat-row">
-                  <span>Accumulation Trend</span>
-                  <span style={{ textTransform: 'capitalize' }}>{TOKENS[selectedTokenIdx].smSignal}</span>
-                </div>
-              </div>
-
-              <div className="detail-card-section">
-                <h3>Token Age & Holders</h3>
-                <div className="stat-row">
-                  <span>Holders</span>
-                  <span>{TOKENS[selectedTokenIdx].holders} addresses</span>
-                </div>
-                <div className="stat-row">
-                  <span>Launch Age</span>
-                  <span>{TOKENS[selectedTokenIdx].age}</span>
-                </div>
-                <div className="stat-row">
-                  <span>Risk Metric</span>
-                  <span>{TOKENS[selectedTokenIdx].risk}</span>
-                </div>
-              </div>
-
-              <div className="detail-card-section ai-glow">
-                <h3>AI Signal Reasoning</h3>
-                <p className="ai-reason-text">{TOKENS[selectedTokenIdx].aiSummary}</p>
-                <div className="stat-row" style={{ marginTop: '10px' }}>
-                  <span>Final Recommendation</span>
-                  <span className={`sig-badge ${TOKENS[selectedTokenIdx].signalClass}`}>{TOKENS[selectedTokenIdx].signal}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Agents Marketplace */}
-        {screen === 'agents' && (
-          <div className="phone-screen active scrollable">
-            <div className="screen-nav">
-              <button className="nav-back" onClick={() => setScreen('swipe')}>
-                <ArrowLeft size={18} /> Back
-              </button>
-              <span>AI Agents</span>
-              <div style={{ width: 18 }}></div>
-            </div>
-
-            <div className="agents-marketplace-list">
-              {AGENTS.map((agent, idx) => (
-                <div key={agent.name} className="marketplace-agent-card" onClick={() => { setSelectedAgentIdx(idx); setScreen('agentDetail'); }}>
-                  <div className="avatar-side" style={{ background: agent.bg }}>
-                    {agent.emoji}
+                
+                <div className="detail-scroll-content">
+                  <div className="detail-top-card">
+                    <div className="token-avatar large" style={{ background: TOKENS[selectedTokenIdx].iconBg }}>
+                      {TOKENS[selectedTokenIdx].iconLetter}
+                    </div>
+                    <h2>{TOKENS[selectedTokenIdx].name}</h2>
+                    <div className="token-symbol">{TOKENS[selectedTokenIdx].symbol}</div>
+                    <div className="price-huge">{TOKENS[selectedTokenIdx].price}</div>
                   </div>
-                  <div className="agent-text-side">
-                    <h4>{agent.name}</h4>
-                    <span className="strategy-tag">{agent.strategy}</span>
-                    <div className="agent-min-stats">
-                      <span>🎯 {agent.winRate}% Win</span>
-                      <span>⭐ {agent.rating}</span>
+
+                  <div className="detail-card-section">
+                    <h3>Smart Money Flow Analytics</h3>
+                    <div className="stat-row">
+                      <span>Net Flow 24h</span>
+                      <span className={TOKENS[selectedTokenIdx].smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}>{TOKENS[selectedTokenIdx].smNetflow}</span>
+                    </div>
+                    <div className="stat-row">
+                      <span>SM Addresses active</span>
+                      <span>{TOKENS[selectedTokenIdx].smTraders} wallets</span>
+                    </div>
+                    <div className="stat-row">
+                      <span>Accumulation Trend</span>
+                      <span style={{ textTransform: 'capitalize' }}>{TOKENS[selectedTokenIdx].smSignal}</span>
                     </div>
                   </div>
-                  <div className="price-side">
-                    <span className="price-num">{agent.price}</span>
-                    <span className="price-lbl">{agent.period}</span>
+
+                  <div className="detail-card-section">
+                    <h3>Token Age & Holders</h3>
+                    <div className="stat-row">
+                      <span>Holders</span>
+                      <span>{TOKENS[selectedTokenIdx].holders} addresses</span>
+                    </div>
+                    <div className="stat-row">
+                      <span>Launch Age</span>
+                      <span>{TOKENS[selectedTokenIdx].age}</span>
+                    </div>
+                    <div className="stat-row">
+                      <span>Risk Metric</span>
+                      <span>{TOKENS[selectedTokenIdx].risk}</span>
+                    </div>
+                  </div>
+
+                  <div className="detail-card-section ai-glow">
+                    <h3>AI Signal Reasoning</h3>
+                    <p className="ai-reason-text">{TOKENS[selectedTokenIdx].aiSummary}</p>
+                    <div style={{ marginTop: '10px' }}>
+                      <span className={`sig-badge ${TOKENS[selectedTokenIdx].signalClass}`}>{TOKENS[selectedTokenIdx].signal}</span>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Agent Detail */}
-        {screen === 'agentDetail' && (
-          <div className="phone-screen active scrollable">
-            <div className="screen-nav">
-              <button className="nav-back" onClick={() => setScreen('agents')}>
-                <ArrowLeft size={18} /> Back
-              </button>
-              <span>Agent Profiles</span>
-              <div style={{ width: 18 }}></div>
-            </div>
-
-            <div className="agent-profile-content">
-              <div className="profile-top-avatar" style={{ background: AGENTS[selectedAgentIdx].bg }}>
-                {AGENTS[selectedAgentIdx].emoji}
               </div>
-              <h2>{AGENTS[selectedAgentIdx].name}</h2>
-              <span className="strategy-label">{AGENTS[selectedAgentIdx].strategy}</span>
+            )}
 
-              <div className="profile-stats-grid">
-                <div className="p-stat">
-                  <span>{AGENTS[selectedAgentIdx].winRate}%</span>
-                  <label>Win Rate</label>
+            {/* Agents Screen */}
+            {screen === 'agents' && (
+              <div className="phone-screen active scrollable">
+                <div className="screen-nav">
+                  <button className="nav-back" onClick={() => setScreen('swipe')}>
+                    <ArrowLeft size={18} /> Back
+                  </button>
+                  <span>AI Agents</span>
+                  <div style={{ width: 18 }}></div>
                 </div>
-                <div className="p-stat">
-                  <span>⭐ {AGENTS[selectedAgentIdx].rating}</span>
-                  <label>Rating</label>
-                </div>
-                <div className="p-stat">
-                  <span>{AGENTS[selectedAgentIdx].trades}</span>
-                  <label>Trades</label>
-                </div>
-              </div>
 
-              <div className="profile-bio">
-                <h3>Bio & Strategy</h3>
-                <p>{AGENTS[selectedAgentIdx].description}</p>
-              </div>
-
-              <div className="profile-picks">
-                <h3>Recent Successful Picks</h3>
-                <div className="picks-grid">
-                  {AGENTS[selectedAgentIdx].recentPicks.map((pick, i) => (
-                    <span key={i} className="pick-pill">{pick}</span>
+                <div className="agents-marketplace-list">
+                  {AGENTS.map((agent, idx) => (
+                    <div key={agent.name} className="marketplace-agent-card" onClick={() => { setSelectedAgentIdx(idx); setScreen('agentDetail'); }}>
+                      <div className="avatar-side" style={{ background: agent.bg }}>
+                        {agent.emoji}
+                      </div>
+                      <div className="agent-text-side">
+                        <h4>{agent.name}</h4>
+                        <span className="strategy-tag">{agent.strategy}</span>
+                        <div className="agent-min-stats">
+                          <span>🎯 {agent.winRate}% Win</span>
+                          <span>⭐ {agent.rating}</span>
+                        </div>
+                      </div>
+                      <div className="price-side">
+                        <span className="price-num">{agent.price}</span>
+                        <span className="price-lbl">{agent.period}</span>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
+            )}
 
-              <div className="profile-rental-action">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <label style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Rental Fee</label>
-                    <div style={{ fontSize: '18px', fontWeight: '800', color: 'var(--primary)' }}>{AGENTS[selectedAgentIdx].price}</div>
+            {/* Agent Detail */}
+            {screen === 'agentDetail' && (
+              <div className="phone-screen active scrollable">
+                <div className="screen-nav">
+                  <button className="nav-back" onClick={() => setScreen('agents')}>
+                    <ArrowLeft size={18} /> Back
+                  </button>
+                  <span>Agent Profiles</span>
+                  <div style={{ width: 18 }}></div>
+                </div>
+
+                <div className="agent-profile-content">
+                  <div className="profile-top-avatar" style={{ background: AGENTS[selectedAgentIdx].bg }}>
+                    {AGENTS[selectedAgentIdx].emoji}
                   </div>
-                  <button className="rent-now-btn" onClick={() => {
-                    setActiveAgent(AGENTS[selectedAgentIdx]);
-                    alert(`✅ Successfully rented ${AGENTS[selectedAgentIdx].name}!\nYour feed will now show signals from this agent.`);
-                    setScreen('swipe');
-                  }}>Rent Agent</button>
+                  <h2>{AGENTS[selectedAgentIdx].name}</h2>
+                  <span className="strategy-label">{AGENTS[selectedAgentIdx].strategy}</span>
+
+                  <div className="profile-stats-grid">
+                    <div className="p-stat">
+                      <span>{AGENTS[selectedAgentIdx].winRate}%</span>
+                      <label>Win Rate</label>
+                    </div>
+                    <div className="p-stat">
+                      <span>⭐ {AGENTS[selectedAgentIdx].rating}</span>
+                      <label>Rating</label>
+                    </div>
+                    <div className="p-stat">
+                      <span>{AGENTS[selectedAgentIdx].trades}</span>
+                      <label>Trades</label>
+                    </div>
+                  </div>
+
+                  <div className="profile-bio">
+                    <h3>Bio & Strategy</h3>
+                    <p>{AGENTS[selectedAgentIdx].description}</p>
+                  </div>
+
+                  <div className="profile-picks">
+                    <h3>Recent Successful Picks</h3>
+                    <div className="picks-grid">
+                      {AGENTS[selectedAgentIdx].recentPicks.map((pick, i) => (
+                        <span key={i} className="pick-pill">{pick}</span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="profile-rental-action">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <label style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Rental Fee</label>
+                        <div style={{ fontSize: '18px', fontWeight: '800', color: 'var(--primary)' }}>{AGENTS[selectedAgentIdx].price}</div>
+                      </div>
+                      <button className="rent-now-btn" onClick={() => {
+                        setActiveAgent(AGENTS[selectedAgentIdx]);
+                        alert(`✅ Successfully rented ${AGENTS[selectedAgentIdx].name}!\nYour feed will now show signals from this agent.`);
+                        setScreen('swipe');
+                      }}>Rent Agent</button>
+                    </div>
+                  </div>
+
+                  <button className="rate-agent-link-btn" onClick={() => { setScreen('rateAgent'); setRatingVal(0); setActiveTags([]); }}>
+                    <MessageSquare size={16} /> Submit Rating to Mantle Sepolia
+                  </button>
                 </div>
               </div>
+            )}
 
-              <button className="rate-agent-link-btn" onClick={() => { setScreen('rateAgent'); setRatingVal(0); setActiveTags([]); }}>
-                <MessageSquare size={16} /> Submit Rating to Mantle Sepolia
-              </button>
-            </div>
-          </div>
-        )}
+            {/* Rate Agent Screen */}
+            {screen === 'rateAgent' && (
+              <div className="phone-screen active scrollable">
+                <div className="screen-nav">
+                  <button className="nav-back" onClick={() => setScreen('agentDetail')}>
+                    <ArrowLeft size={18} /> Cancel
+                  </button>
+                  <span>Submit Reputation</span>
+                  <div style={{ width: 18 }}></div>
+                </div>
 
-        {/* Rate Agent Screen */}
-        {screen === 'rateAgent' && (
-          <div className="phone-screen active scrollable">
-            <div className="screen-nav">
-              <button className="nav-back" onClick={() => setScreen('agentDetail')}>
-                <ArrowLeft size={18} /> Cancel
-              </button>
-              <span>Submit Reputation</span>
-              <div style={{ width: 18 }}></div>
-            </div>
+                <div className="rate-agent-form">
+                  <div className="agent-form-header">
+                    <div className="form-avatar" style={{ background: AGENTS[selectedAgentIdx].bg }}>{AGENTS[selectedAgentIdx].emoji}</div>
+                    <h3>{AGENTS[selectedAgentIdx].name}</h3>
+                    <p>Submit your experience directly on-chain to the reputation ledger.</p>
+                  </div>
 
-            <div className="rate-agent-form">
-              <div className="agent-form-header">
-                <div className="form-avatar" style={{ background: AGENTS[selectedAgentIdx].bg }}>{AGENTS[selectedAgentIdx].emoji}</div>
-                <h3>{AGENTS[selectedAgentIdx].name}</h3>
-                <p>Submit your experience directly on-chain to the reputation ledger.</p>
+                  <div className="star-rating-selector">
+                    {[1, 2, 3, 4, 5].map((starVal) => (
+                      <Star
+                        key={starVal}
+                        size={36}
+                        className={`star-icon ${ratingVal >= starVal ? 'active' : ''}`}
+                        onClick={() => setRatingVal(starVal)}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="reputation-tags-section">
+                    <label>Select Tags</label>
+                    <div className="reputation-tags-grid">
+                      {['High Winrate', 'Excellent Alpha', 'Lagging Signals', 'High Fee', 'Very Accurate', 'Risky Plays'].map((tag) => (
+                        <button
+                          key={tag}
+                          className={`rep-tag-btn ${activeTags.includes(tag) ? 'active' : ''}`}
+                          onClick={() => toggleTag(tag)}
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="reputation-comment-section">
+                    <label>Feedback Details</label>
+                    <textarea
+                      placeholder="Tell others how this agent performed..."
+                      value={ratingComment}
+                      onChange={(e) => setRatingComment(e.target.value)}
+                    />
+                  </div>
+
+                  <button
+                    className="submit-onchain-rating-btn"
+                    onClick={handleOnChainRating}
+                    disabled={isSubmittingRating}
+                  >
+                    {isSubmittingRating ? (
+                      <div className="spinner" style={{ border: '2px solid rgba(255,255,255,0.2)', borderLeftColor: 'white', borderRadius: '50%', width: 18, height: 18, animation: 'spin 1s linear infinite' }}></div>
+                    ) : (
+                      "Publish Review to Mantle"
+                    )}
+                  </button>
+                </div>
               </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-              <div className="star-rating-selector">
+  // mode === 'desktop' (Main Dashboard)
+  return (
+    <div className="swipealpha-desktop-dashboard">
+      {/* Top Header stats */}
+      <div className="dashboard-stats-header">
+        <div className="stat-card glow-blue">
+          <span className="card-lbl">🔥 AVG Win Rate</span>
+          <span className="card-val">72.4%</span>
+        </div>
+        <div className="stat-card glow-purple">
+          <span className="card-lbl">🤖 Active Agents</span>
+          <span className="card-val">5 AI Models</span>
+        </div>
+        <div className="stat-card glow-teal">
+          <span className="card-lbl">🛡️ Registry Contract</span>
+          <span className="card-val-small">0x2dEE...CAE7</span>
+        </div>
+        <div className="stat-card glow-green">
+          <span className="card-lbl">🛒 Router (Moe Mock)</span>
+          <span className="card-val-small">0x5dde...Bed4</span>
+        </div>
+      </div>
+
+      <div className="dashboard-columns">
+        {/* Left: Signals Feed */}
+        <div className="signals-feed-column">
+          <div className="column-header">
+            <h2>🧠 Live AI Agent Trading Signals</h2>
+            <span className="live-status">● Live Feed</span>
+          </div>
+          
+          <div className="signals-grid">
+            {TOKENS.map((token) => (
+              <div key={token.symbol} className="desktop-signal-card">
+                <div className="token-card-top">
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <div className="token-avatar" style={{ background: token.iconBg, width: '42px', height: '42px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontWeight: 'bold' }}>
+                      {token.iconLetter}
+                    </div>
+                    <div>
+                      <h4 className="token-title">{token.name}</h4>
+                      <span className="token-symbol-tag">{token.chainIcon} {token.chain} · {token.symbol}</span>
+                    </div>
+                  </div>
+                  <span className={`token-change-badge ${token.positive ? 'pos' : 'neg'}`}>
+                    {token.priceChange}
+                  </span>
+                </div>
+
+                <div className="token-price-section">
+                  <div className="price-label">Current Value</div>
+                  <div className="price-value">{token.price}</div>
+                </div>
+
+                <div className="token-stats-row">
+                  <div>
+                    <span className="lbl">MCap</span>
+                    <span className="val">{token.mcap}</span>
+                  </div>
+                  <div>
+                    <span className="lbl">24h Vol</span>
+                    <span className="val">{token.volume}</span>
+                  </div>
+                  <div>
+                    <span className="lbl">Netflow 24h</span>
+                    <span className={`val ${token.smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}`}>{token.smNetflow}</span>
+                  </div>
+                </div>
+
+                <div className="ai-opinion-section">
+                  <h5>🤖 AI Agent Analysis</h5>
+                  <p>{token.aiSummary}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+                    <span className={`sig-badge ${token.signalClass}`}>{token.signal}</span>
+                    <span className="confidence-tag">Confidence: {token.confidence}%</span>
+                  </div>
+                </div>
+
+                <button 
+                  className="desktop-swap-btn"
+                  onClick={() => handleDesktopSwap(token)}
+                  disabled={swappingToken === token.symbol}
+                >
+                  {swappingToken === token.symbol ? (
+                    <>
+                      <div className="buy-spinner" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '6px', margin: 0 }}></div>
+                      <span>Swapping on-chain...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ThumbsUp size={16} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+                      <span>Swap via MerchantMoe (0.1 MNT)</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: Reputation & Agents */}
+        <div className="reputation-column">
+          <div className="column-header">
+            <h2>🤖 Active AI Agents</h2>
+          </div>
+          
+          <div className="desktop-agents-list">
+            {AGENTS.map((agent, idx) => (
+              <div key={agent.name} className="desktop-agent-card">
+                <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                  <div className="agent-avatar" style={{ background: agent.bg, width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '12px', fontSize: '1.5rem' }}>
+                    {agent.emoji}
+                  </div>
+                  <div>
+                    <h4>{agent.name}</h4>
+                    <span className="strategy-tag">{agent.strategy}</span>
+                  </div>
+                </div>
+                <div className="agent-stats">
+                  <span>🎯 {agent.winRate}% Win</span>
+                  <span>⭐ {agent.rating}</span>
+                </div>
+                <button 
+                  className="desktop-rate-btn"
+                  onClick={() => {
+                    setSelectedAgentIdx(idx);
+                    setRatingVal(0);
+                    setActiveTags([]);
+                    setRatingComment('');
+                    setShowRateModal(true);
+                  }}
+                >
+                  Rate Agent
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="column-header" style={{ marginTop: '2rem' }}>
+            <h2>🛡️ Reputation Reviews (Mantle Sepolia Ledger)</h2>
+          </div>
+
+          <div className="desktop-reviews-list">
+            {reviewsList.map((review, i) => (
+              <div key={i} className="desktop-review-card">
+                <div className="review-card-top">
+                  <div>
+                    <span className="review-agent">{review.agentName}</span>
+                    <span className="review-stars">{"⭐".repeat(review.rating)}</span>
+                  </div>
+                  <span className="review-time">{review.time}</span>
+                </div>
+                <p className="review-comment">{review.comment}</p>
+                <div className="review-user">By: <code>{review.user}</code></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Inline rating modal */}
+      {showRateModal && (
+        <div className="desktop-modal-backdrop" onClick={() => setShowRateModal(false)}>
+          <div className="desktop-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Rate Agent: {AGENTS[selectedAgentIdx].name}</h3>
+              <button className="close-modal-btn" onClick={() => setShowRateModal(false)}>×</button>
+            </div>
+            <div className="modal-body">
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '15px' }}>Submit reviews directly on-chain to the reputation ledger proxy contract.</p>
+              
+              <div className="star-rating-selector" style={{ margin: '20px 0', justifyContent: 'center', display: 'flex', gap: '8px' }}>
                 {[1, 2, 3, 4, 5].map((starVal) => (
                   <Star
                     key={starVal}
-                    size={36}
+                    size={40}
+                    style={{ cursor: 'pointer', transition: 'all 0.2s' }}
                     className={`star-icon ${ratingVal >= starVal ? 'active' : ''}`}
                     onClick={() => setRatingVal(starVal)}
                   />
                 ))}
               </div>
 
-              <div className="reputation-tags-section">
-                <label>Select Tags</label>
-                <div className="reputation-tags-grid">
+              <div className="reputation-tags-section" style={{ marginBottom: '20px' }}>
+                <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', display: 'block', marginBottom: '8px', fontWeight: 600 }}>Select Tags</label>
+                <div className="reputation-tags-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {['High Winrate', 'Excellent Alpha', 'Lagging Signals', 'High Fee', 'Very Accurate', 'Risky Plays'].map((tag) => (
                     <button
                       key={tag}
                       className={`rep-tag-btn ${activeTags.includes(tag) ? 'active' : ''}`}
                       onClick={() => toggleTag(tag)}
+                      style={{ padding: '6px 14px', fontSize: '0.75rem', borderRadius: '20px', background: activeTags.includes(tag) ? 'rgba(0, 239, 200, 0.2)' : 'rgba(255,255,255,0.03)', border: activeTags.includes(tag) ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.08)', color: activeTags.includes(tag) ? 'var(--primary)' : 'var(--text-muted)', cursor: 'pointer' }}
                     >
                       {tag}
                     </button>
@@ -622,30 +867,33 @@ export default function SwipeAlpha({ walletClient, account }) {
               </div>
 
               <div className="reputation-comment-section">
-                <label>Feedback Details</label>
+                <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', display: 'block', marginBottom: '8px', fontWeight: 600 }}>Review Details</label>
                 <textarea
-                  placeholder="Tell others how this agent performed..."
+                  placeholder="Enter feedback comments..."
                   value={ratingComment}
                   onChange={(e) => setRatingComment(e.target.value)}
+                  style={{ width: '100%', minHeight: '80px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white', padding: '10px', fontSize: '0.85rem', outline: 'none' }}
                 />
               </div>
-
-              <button
-                className="submit-onchain-rating-btn"
-                onClick={handleOnChainRating}
+            </div>
+            
+            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
+              <button className="cancel-btn" onClick={() => setShowRateModal(false)} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
+              <button 
+                className="submit-onchain-rating-btn" 
+                onClick={async () => {
+                  await handleOnChainRating();
+                  setShowRateModal(false);
+                }}
                 disabled={isSubmittingRating}
+                style={{ padding: '8px 20px', borderRadius: '8px' }}
               >
-                {isSubmittingRating ? (
-                  <div className="spinner" style={{ border: '2px solid rgba(255,255,255,0.2)', borderLeftColor: 'white', borderRadius: '50%', width: 18, height: 18, animation: 'spin 1s linear infinite' }}></div>
-                ) : (
-                  "Publish Review to Mantle"
-                )}
+                {isSubmittingRating ? "Publishing..." : "Publish to Mantle"}
               </button>
             </div>
           </div>
-        )}
         </div>
-      </div>
+      )}
     </div>
   );
 }

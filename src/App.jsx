@@ -43,6 +43,17 @@ function App() {
 
   const isConfigured = TOKEN_ADDRESS !== "0xYOUR_TOKEN_ADDRESS_HERE" && STAKING_ADDRESS !== "0xYOUR_STAKING_CONTRACT_ADDRESS_HERE";
 
+  const [isDemo, setIsDemo] = useState(false);
+
+  useEffect(() => {
+    const checkRoute = () => {
+      const path = window.location.pathname;
+      setIsDemo(path === '/demo' || path.endsWith('/demo') || window.location.hash === '#/demo');
+    };
+    checkRoute();
+    window.addEventListener('popstate', checkRoute);
+    return () => window.removeEventListener('popstate', checkRoute);
+  }, []);
   useEffect(() => {
     if (walletClient && isConfigured) {
       const signer = clientToSigner(walletClient);
@@ -251,6 +262,69 @@ function App() {
     else setAmount(stakedBalance);
   };
 
+  if (isDemo) {
+    return (
+      <div className="demo-mode-page">
+        {renderRain()}
+        <header className="header" style={{ padding: '1rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <div className="logo" style={{ margin: 0 }}>
+              <span style={{ fontSize: '1.1rem', fontWeight: '800', background: 'linear-gradient(135deg, #00efc8, #0070f3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SwipeAlpha Demo Simulator 📱</span>
+            </div>
+            <a href="/" className="liquid-glass-btn" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', textDecoration: 'none', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '6px' }} onClick={(e) => {
+              e.preventDefault();
+              window.history.pushState({}, '', '/');
+              setIsDemo(false);
+            }}>
+              💻 Go to Desktop DApp
+            </a>
+          </div>
+
+          <ConnectButton.Custom>
+            {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
+              const connected = mounted && account && chain;
+              return (
+                <div {...(!mounted && { style: { opacity: 0 } })}>
+                  {(() => {
+                    if (!connected) {
+                      return (
+                        <button onClick={openConnectModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>
+                          Connect Wallet
+                        </button>
+                      );
+                    }
+                    if (chain.unsupported || chain.id !== 5003) {
+                      return (
+                        <button onClick={openChainModal} className="liquid-glass-btn" style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: 'rgba(239, 68, 68, 0.5)', color: '#ff6b6b', padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>
+                          <AlertCircle size={16} style={{ display: 'inline', marginRight: '5px', verticalAlign: 'text-bottom' }}/>
+                          Switch to Mantle Testnet
+                        </button>
+                      );
+                    }
+                    return (
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button onClick={openChainModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
+                          {chain.name}
+                        </button>
+                        <button onClick={openAccountModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
+                          {account.displayName}
+                        </button>
+                      </div>
+                    );
+                  })()}
+                </div>
+              );
+            }}
+          </ConnectButton.Custom>
+        </header>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem 1rem', minHeight: 'calc(100vh - 80px)' }}>
+          <SwipeAlpha walletClient={walletClient} account={account} mode="demo" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="app-container">
       {renderRain()}
@@ -260,7 +334,7 @@ function App() {
           DAVEY <span>TREASURY</span>
         </div>
 
-        {/* View Switcher: Staking vs SwipeAlpha */}
+        {/* View Switcher: Staking vs SwipeAlpha vs Mobile Demo */}
         <div className="view-selector" style={{ display: 'flex', gap: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.25rem', borderRadius: '9999px', border: '1px solid rgba(255,255,255,0.05)' }}>
           <button 
             className={`view-btn ${currentView === 'staking' ? 'active' : ''}`}
@@ -296,6 +370,32 @@ function App() {
           >
             🧠 SwipeAlpha AI
           </button>
+          <a 
+            href="/demo"
+            className="view-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              window.history.pushState({}, '', '/demo');
+              setIsDemo(true);
+            }}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-muted)',
+              padding: '0.4rem 1.2rem',
+              borderRadius: '9999px',
+              fontSize: '0.85rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              transition: 'all 0.3s'
+            }}
+          >
+            📱 Mobile Demo
+          </a>
         </div>
 
         <ConnectButton.Custom>
@@ -475,7 +575,7 @@ function App() {
           )}
         </>
       ) : (
-        <SwipeAlpha walletClient={walletClient} account={account} />
+        <SwipeAlpha walletClient={walletClient} account={account} mode="desktop" />
       )}
     </div>
   );
