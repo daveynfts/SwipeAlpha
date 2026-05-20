@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { Star, ThumbsUp, ThumbsDown, Info, ArrowLeft, Check, Sparkles, MessageSquare } from 'lucide-react';
+import { Star, ThumbsUp, ThumbsDown, Info, ArrowLeft, Check, Sparkles, MessageSquare, Flame, Heart, X, RotateCcw } from 'lucide-react';
 import './SwipeAlpha.css';
 
 // === Web3 Contract Configuration ===
@@ -375,7 +375,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
             {screen === 'swipe' && (
               <div className="phone-screen active">
                 <div className="phone-header">
-                  <span className="app-logo">Swipe<span className="logo-accent">Alpha</span></span>
+                  <span className="app-logo" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '1.05rem', fontWeight: '800' }}>
+                    <Flame size={18} color="#fe3c72" fill="#fe3c72" style={{ filter: 'drop-shadow(0 0 4px rgba(254, 60, 114, 0.5))' }} />
+                    <span>Agent<span style={{ color: '#ff7854' }}>Swindler</span></span>
+                  </span>
                   <button className="agents-btn" onClick={() => setScreen('agents')}>
                     <Sparkles size={16} /> Agents
                   </button>
@@ -563,16 +566,22 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                 </div>
 
                 {currentToken && (
-                  <div className="swipe-action-controls">
-                    <button className="control-btn skip-action" onClick={() => handleSwipe('left')} disabled={isSwapping}>
-                      <ThumbsDown size={20} />
+                  <div className="swipe-action-controls" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', padding: '12px 0', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
+                    <button className="control-btn rewind-action" onClick={() => setCardIndex(0)} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(234, 179, 8, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rewind Stack">
+                      <RotateCcw size={16} color="#eab308" />
                     </button>
-                    <button className="control-btn info-action" onClick={() => { setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping}>
-                      <Info size={18} />
+                    <button className="control-btn nope-action" onClick={() => handleSwipe('left')} disabled={isSwapping} style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(239, 68, 68, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Skip">
+                      <X size={24} color="#ef4444" />
                     </button>
-                    <button className="control-btn buy-action" onClick={() => handleSwipe('right')} disabled={isSwapping}>
-                      {isSwapping ? <div className="buy-spinner"></div> : <ThumbsUp size={20} />}
-                      <span className="buy-amount-label">{isSwapping ? "Swapping..." : "0.1 MNT"}</span>
+                    <button className="control-btn super-action" onClick={() => { setSelectedAgentIdx(0); setScreen('rateAgent'); }} disabled={isSwapping} style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(59, 130, 246, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rate Agent">
+                      <Star size={18} color="#3b82f6" />
+                    </button>
+                    <button className="control-btn like-action" onClick={() => handleSwipe('right')} disabled={isSwapping} style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(254, 60, 114, 0.1)', border: '2px solid #22c55e', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s', position: 'relative' }} title="Buy 0.1 MNT">
+                      {isSwapping ? <div className="buy-spinner" style={{ width: '16px', height: '16px', border: '2px solid #22c55e', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> : <Heart size={22} color="#22c55e" fill="#22c55e" />}
+                      {!isSwapping && <span style={{ fontSize: '0.5rem', color: '#22c55e', fontWeight: 'bold', marginTop: '0px' }}>0.1 MNT</span>}
+                    </button>
+                    <button className="control-btn info-action" onClick={() => { setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168, 85, 247, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Token Info">
+                      <Info size={16} color="#a855f7" />
                     </button>
                   </div>
                 )}
@@ -861,7 +870,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                     <div>
                       <h4 className="token-title" style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
                         {token.name}
-                        <span style={{ fontSize: '0.58rem', background: 'rgba(99, 102, 241, 0.15)', color: '#a5b4fc', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, border: '1px solid rgba(99, 102, 241, 0.2)' }}>⚡ Nansen</span>
+                        <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, border: '1px solid rgba(254, 60, 114, 0.25)' }}>⚡ Nansen</span>
                       </h4>
                       <span className="token-symbol-tag">{token.chainIcon} {token.chain} · {token.symbol}</span>
                     </div>
@@ -939,7 +948,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                     </>
                   ) : (
                     <>
-                      <ThumbsUp size={16} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+                      <Heart size={16} style={{ marginRight: '6px', verticalAlign: 'middle' }} fill="currentColor" />
                       <span>Swap via MerchantMoe (0.1 MNT)</span>
                     </>
                   )}

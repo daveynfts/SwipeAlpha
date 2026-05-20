@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { TrendingUp, AlertCircle, Cpu, Trophy, Landmark } from 'lucide-react';
+import { TrendingUp, AlertCircle, Cpu, Trophy, Landmark, Flame } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 import { TOKEN_ADDRESS, STAKING_ADDRESS, TOKEN_ABI, STAKING_ABI } from './constants';
@@ -285,8 +285,9 @@ function App() {
           zIndex: 100
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ fontSize: '0.95rem', fontWeight: '800', letterSpacing: '0.5px' }}>
-              <span style={{ background: 'linear-gradient(135deg, #00efc8, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SwipeAlpha Demo 📱</span>
+            <div style={{ fontSize: '0.95rem', fontWeight: '800', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Flame size={18} color="#fe3c72" style={{ filter: 'drop-shadow(0 0 5px rgba(254, 60, 114, 0.4))' }} />
+              <span style={{ background: 'linear-gradient(135deg, #fe3c72, #ff7854)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Agent Swindler 📱</span>
             </div>
             <a href="/" className="liquid-glass-btn" style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', textDecoration: 'none', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }} onClick={(e) => {
               e.preventDefault();
@@ -346,8 +347,8 @@ function App() {
       {renderRain()}
       <header className="header">
         <div className="logo">
-          <Landmark color="#00efc8" size={28} />
-          DAVEY <span>TREASURY</span>
+          <Flame color="#fe3c72" size={28} style={{ filter: 'drop-shadow(0 0 8px rgba(254, 60, 114, 0.45))' }} />
+          AGENT <span>SWINDLER</span>
         </div>
 
         {/* View Switcher: Staking vs SwipeAlpha vs Mobile Demo */}
@@ -356,7 +357,7 @@ function App() {
             className={`view-btn ${currentView === 'staking' ? 'active' : ''}`}
             onClick={() => setCurrentView('staking')}
             style={{
-              background: currentView === 'staking' ? 'rgba(0, 239, 200, 0.15)' : 'transparent',
+              background: currentView === 'staking' ? 'rgba(254, 60, 114, 0.18)' : 'transparent',
               border: 'none',
               color: currentView === 'staking' ? 'var(--primary)' : 'var(--text-muted)',
               padding: '0.4rem 1.2rem',
@@ -367,13 +368,13 @@ function App() {
               transition: 'all 0.3s'
             }}
           >
-            🏛️ Staking
+            🏛️ Swindler Vault
           </button>
           <button 
             className={`view-btn ${currentView === 'swipealpha' ? 'active' : ''}`}
             onClick={() => setCurrentView('swipealpha')}
             style={{
-              background: currentView === 'swipealpha' ? 'rgba(0, 239, 200, 0.15)' : 'transparent',
+              background: currentView === 'swipealpha' ? 'rgba(254, 60, 114, 0.18)' : 'transparent',
               border: 'none',
               color: currentView === 'swipealpha' ? 'var(--primary)' : 'var(--text-muted)',
               padding: '0.4rem 1.2rem',
@@ -384,7 +385,7 @@ function App() {
               transition: 'all 0.3s'
             }}
           >
-            🧠 SwipeAlpha AI
+            🧠 Swindler Swipe
           </button>
           <a 
             href="/demo"
@@ -465,18 +466,18 @@ function App() {
           )}
 
           <div className="hero-section">
-            <div className="vault-icon-container">
-              <Landmark className="vault-icon" size={48} color="var(--primary)" />
+            <div className="vault-icon-container" style={{ background: 'rgba(254, 60, 114, 0.1)', border: '1px solid rgba(254, 60, 114, 0.3)', boxShadow: '0 0 30px rgba(254, 60, 114, 0.15)' }}>
+              <Flame className="vault-icon" size={48} color="var(--primary)" style={{ filter: 'drop-shadow(0 0 8px rgba(254, 60, 114, 0.4))' }} />
               <div className="pulse-ring"></div>
               <div className="pulse-ring delay"></div>
             </div>
-            <h2 className="hero-title">Davey Treasury Vault</h2>
+            <h2 className="hero-title">Agent Swindler Vault</h2>
             <p className="hero-subtitle">Watch your wealth grow in real-time.</p>
             <div className="live-yield-display">
               <span className="live-dot"></span>
               <span className="live-text">LIVE YIELD:</span>
               <span className="live-amount">+{Number(realtimeRewards).toLocaleString(undefined, {minimumFractionDigits: 6, maximumFractionDigits: 6})}</span>
-              <span className="live-currency">$DAVEY</span>
+              <span className="live-currency">$SWINDLER</span>
             </div>
           </div>
 
@@ -484,7 +485,7 @@ function App() {
             <div className="stats-grid">
               <div className="stat-box">
                 <div className="stat-label">My Staked</div>
-                <div className="stat-value">{Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY</div>
+                <div className="stat-value">{Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 2})} $SWINDLER</div>
               </div>
               <div className="stat-box">
                 <div className="stat-label">Current APY</div>
@@ -494,7 +495,7 @@ function App() {
               </div>
               <div className="stat-box">
                 <div className="stat-label">Reward Pool</div>
-                <div className="stat-value">{Number(poolBalance).toLocaleString(undefined, {maximumFractionDigits: 0})} $DAVEY</div>
+                <div className="stat-value">{Number(poolBalance).toLocaleString(undefined, {maximumFractionDigits: 0})} $SWINDLER</div>
               </div>
               <div className="stat-box">
                 <div className="stat-label">Time to Deplete</div>
@@ -528,7 +529,7 @@ function App() {
                   disabled={isLoading || !isConfigured || !isConnected}
                 />
                 <button className="max-btn" onClick={setMaxAmount} disabled={isLoading || !isConfigured || !isConnected}>MAX</button>
-                <span style={{ fontWeight: 600, color: 'var(--primary)', paddingRight: '0.5rem' }}>$DAVEY</span>
+                <span style={{ fontWeight: 600, color: 'var(--primary)', paddingRight: '0.5rem' }}>$SWINDLER</span>
               </div>
               <div className="balance-text">
                 Available: {activeTab === 'stake' ? Number(balance).toLocaleString(undefined, {maximumFractionDigits: 4}) : Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 4})}
@@ -565,8 +566,8 @@ function App() {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Global Total Staked</div>
-                  <div style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem', textShadow: '0 0 10px rgba(0, 239, 200, 0.2)' }}>
-                    {Number(totalStaked).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY
+                  <div style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem', textShadow: '0 0 10px rgba(254, 60, 114, 0.2)' }}>
+                    {Number(totalStaked).toLocaleString(undefined, {maximumFractionDigits: 2})} $SWINDLER
                   </div>
                 </div>
               </div>
@@ -582,7 +583,7 @@ function App() {
                       )}
                     </div>
                     <div className="staker-amount">
-                      {staker.staked.toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY
+                      {staker.staked.toLocaleString(undefined, {maximumFractionDigits: 2})} $SWINDLER
                     </div>
                   </div>
                 ))}
