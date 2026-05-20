@@ -266,17 +266,34 @@ function App() {
     return (
       <div className="demo-mode-page">
         {renderRain()}
-        <header className="header" style={{ padding: '1rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <div className="logo" style={{ margin: 0 }}>
-              <span style={{ fontSize: '1.1rem', fontWeight: '800', background: 'linear-gradient(135deg, #00efc8, #0070f3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SwipeAlpha Demo Simulator 📱</span>
+        <header className="demo-header-capsule" style={{
+          position: 'fixed',
+          top: '1rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '92%',
+          maxWidth: '1100px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '0.6rem 1.2rem',
+          borderRadius: '9999px',
+          background: 'rgba(0, 0, 0, 0.65)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
+          zIndex: 100
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ fontSize: '0.95rem', fontWeight: '800', letterSpacing: '0.5px' }}>
+              <span style={{ background: 'linear-gradient(135deg, #00efc8, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SwipeAlpha Demo 📱</span>
             </div>
-            <a href="/" className="liquid-glass-btn" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', textDecoration: 'none', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '6px' }} onClick={(e) => {
+            <a href="/" className="liquid-glass-btn" style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', textDecoration: 'none', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }} onClick={(e) => {
               e.preventDefault();
               window.history.pushState({}, '', '/');
               setIsDemo(false);
             }}>
-              💻 Go to Desktop DApp
+              💻 Go to DApp
             </a>
           </div>
 
@@ -288,26 +305,25 @@ function App() {
                   {(() => {
                     if (!connected) {
                       return (
-                        <button onClick={openConnectModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>
+                        <button onClick={openConnectModal} className="liquid-glass-btn" style={{ padding: '0.45rem 1.2rem', fontSize: '0.8rem' }}>
                           Connect Wallet
                         </button>
                       );
                     }
                     if (chain.unsupported || chain.id !== 5003) {
                       return (
-                        <button onClick={openChainModal} className="liquid-glass-btn" style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: 'rgba(239, 68, 68, 0.5)', color: '#ff6b6b', padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>
-                          <AlertCircle size={16} style={{ display: 'inline', marginRight: '5px', verticalAlign: 'text-bottom' }}/>
-                          Switch to Mantle Testnet
+                        <button onClick={openChainModal} className="liquid-glass-btn" style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: 'rgba(239, 68, 68, 0.5)', color: '#ff6b6b', padding: '0.45rem 1.2rem', fontSize: '0.8rem' }}>
+                          Switch to Mantle
                         </button>
                       );
                     }
                     return (
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button onClick={openChainModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                          <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
-                          {chain.name}
+                        <button onClick={openChainModal} className="liquid-glass-btn" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 8px var(--primary)' }}></div>
+                          {chain.name.replace('Mantle ', '')}
                         </button>
-                        <button onClick={openAccountModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
+                        <button onClick={openAccountModal} className="liquid-glass-btn" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>
                           {account.displayName}
                         </button>
                       </div>
@@ -318,7 +334,7 @@ function App() {
             }}
           </ConnectButton.Custom>
         </header>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem 1rem', minHeight: 'calc(100vh - 80px)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '6.5rem 1rem 2rem 1rem', minHeight: '100vh' }}>
           <SwipeAlpha walletClient={walletClient} account={account} mode="demo" />
         </div>
       </div>

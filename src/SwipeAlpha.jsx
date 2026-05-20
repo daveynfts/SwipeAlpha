@@ -157,6 +157,54 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
   ];
   const [reviewsList, setReviewsList] = useState(MOCK_REVIEWS);
 
+  // Swipe drag states
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDragStart = (e) => {
+    if (isSwapping) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    setDragStart({ x: clientX, y: clientY });
+    setIsDragging(true);
+  };
+
+  const handleDragMove = (e) => {
+    if (!isDragging || isSwapping) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const offsetX = clientX - dragStart.x;
+    const offsetY = clientY - dragStart.y;
+    setDragOffset({ x: offsetX, y: offsetY });
+  };
+
+  const handleDragEnd = () => {
+    if (!isDragging || isSwapping) return;
+    setIsDragging(false);
+    
+    const threshold = 120;
+    if (dragOffset.x > threshold) {
+      handleSwipe('right');
+    } else if (dragOffset.x < -threshold) {
+      handleSwipe('left');
+    }
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (mode !== 'demo' || screen !== 'swipe' || isSwapping) return;
+      if (e.key === 'ArrowLeft') {
+        handleSwipe('left');
+      } else if (e.key === 'ArrowRight') {
+        handleSwipe('right');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [cardIndex, isSwapping, mode, screen]);
+
   const currentToken = TOKENS[cardIndex] || null;
 
   const handleSwipe = async (direction) => {
@@ -352,7 +400,76 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                     </div>
                   )}
                   {currentToken ? (
-                    <div className="swipe-token-card">
+                    <div 
+                      className="swipe-token-card"
+                      onMouseDown={handleDragStart}
+                      onMouseMove={handleDragMove}
+                      onMouseUp={handleDragEnd}
+                      onMouseLeave={handleDragEnd}
+                      onTouchStart={handleDragStart}
+                      onTouchMove={handleDragMove}
+                      onTouchEnd={handleDragEnd}
+                      style={
+                        isDragging
+                          ? {
+                              transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${dragOffset.x * 0.08}deg)`,
+                              transition: 'none',
+                              cursor: 'grabbing',
+                              userSelect: 'none',
+                              position: 'relative'
+                            }
+                          : {
+                              transform: 'translate(0px, 0px) rotate(0deg)',
+                              transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                              cursor: 'grab',
+                              userSelect: 'none',
+                              position: 'relative'
+                            }
+                      }
+                    >
+                      {/* Swipe overlays */}
+                      {dragOffset.x > 25 && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '24px',
+                          left: '24px',
+                          border: '3px solid #22c55e',
+                          color: '#22c55e',
+                          textTransform: 'uppercase',
+                          fontSize: '1.4rem',
+                          fontWeight: '800',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          transform: 'rotate(-12deg)',
+                          zIndex: 100,
+                          opacity: Math.min(dragOffset.x / 80, 1),
+                          pointerEvents: 'none',
+                          background: 'rgba(0,0,0,0.6)'
+                        }}>
+                          BUY
+                        </div>
+                      )}
+                      {dragOffset.x < -25 && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '24px',
+                          right: '24px',
+                          border: '3px solid #ef4444',
+                          color: '#ef4444',
+                          textTransform: 'uppercase',
+                          fontSize: '1.4rem',
+                          fontWeight: '800',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          transform: 'rotate(12deg)',
+                          zIndex: 100,
+                          opacity: Math.min(-dragOffset.x / 80, 1),
+                          pointerEvents: 'none',
+                          background: 'rgba(0,0,0,0.6)'
+                        }}>
+                          SKIP
+                        </div>
+                      )}
                       <div className="token-card-header">
                         <div className="token-meta">
                           <div className="token-avatar" style={{ background: currentToken.iconBg }}>{currentToken.iconLetter}</div>
