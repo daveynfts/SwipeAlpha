@@ -2,6 +2,8 @@
 
 **SwipeAlpha** is a mobile-first Web3 application designed for the **Mantle Turing Test 2026 Hackathon (AI Alpha & Data Track)**. It enables users to browse AI-curated token recommendations powered by Nansen Smart Money signals and execute actions (Buy/Skip) using a simple swiping gesture, backed by an on-chain **ERC-8004 Trustless Agent Reputation Registry**.
 
+*   **Live Demo (Vercel):** [https://swipe-alpha-liard.vercel.app](https://swipe-alpha-liard.vercel.app)
+
 ---
 
 ## 🚀 Deployed Smart Contracts (Mantle Sepolia Testnet)
