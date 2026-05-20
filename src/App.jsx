@@ -4,6 +4,7 @@ import { TrendingUp, AlertCircle, Cpu, Trophy, Landmark } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 import { TOKEN_ADDRESS, STAKING_ADDRESS, TOKEN_ABI, STAKING_ABI } from './constants';
+import SwipeAlpha from './SwipeAlpha';
 
 function clientToSigner(client) {
   const { account, chain, transport } = client;
@@ -22,6 +23,8 @@ function App() {
   
   const [tokenContract, setTokenContract] = useState(null);
   const [stakingContract, setStakingContract] = useState(null);
+  
+  const [currentView, setCurrentView] = useState('staking'); // 'staking' or 'swipealpha'
   
   const [balance, setBalance] = useState('0');
   const [stakedBalance, setStakedBalance] = useState('0');
@@ -256,6 +259,45 @@ function App() {
           <Landmark color="#00efc8" size={28} />
           DAVEY <span>TREASURY</span>
         </div>
+
+        {/* View Switcher: Staking vs SwipeAlpha */}
+        <div className="view-selector" style={{ display: 'flex', gap: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.25rem', borderRadius: '9999px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <button 
+            className={`view-btn ${currentView === 'staking' ? 'active' : ''}`}
+            onClick={() => setCurrentView('staking')}
+            style={{
+              background: currentView === 'staking' ? 'rgba(0, 239, 200, 0.15)' : 'transparent',
+              border: 'none',
+              color: currentView === 'staking' ? 'var(--primary)' : 'var(--text-muted)',
+              padding: '0.4rem 1.2rem',
+              borderRadius: '9999px',
+              fontSize: '0.85rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              transition: 'all 0.3s'
+            }}
+          >
+            🏛️ Staking
+          </button>
+          <button 
+            className={`view-btn ${currentView === 'swipealpha' ? 'active' : ''}`}
+            onClick={() => setCurrentView('swipealpha')}
+            style={{
+              background: currentView === 'swipealpha' ? 'rgba(0, 239, 200, 0.15)' : 'transparent',
+              border: 'none',
+              color: currentView === 'swipealpha' ? 'var(--primary)' : 'var(--text-muted)',
+              padding: '0.4rem 1.2rem',
+              borderRadius: '9999px',
+              fontSize: '0.85rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              transition: 'all 0.3s'
+            }}
+          >
+            🧠 SwipeAlpha AI
+          </button>
+        </div>
+
         <ConnectButton.Custom>
           {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
             const connected = mounted && account && chain;
@@ -295,139 +337,145 @@ function App() {
         </ConnectButton.Custom>
       </header>
 
-      {!isConfigured && (
-        <div style={{ background: 'rgba(255, 74, 74, 0.1)', border: '1px solid var(--error)', padding: '1rem', borderRadius: '12px', marginBottom: '2rem', width: '100%', maxWidth: '500px', display: 'flex', gap: '0.5rem' }}>
-          <AlertCircle color="var(--error)" />
-          <div>
-            <strong>Setup Required:</strong> Please deploy your MockERC20 and Staking contracts to Mantle Sepolia, then update the addresses in <code>src/constants.js</code>.
-          </div>
-        </div>
-      )}
-
-      <div className="hero-section">
-        <div className="vault-icon-container">
-          <Landmark className="vault-icon" size={48} color="var(--primary)" />
-          <div className="pulse-ring"></div>
-          <div className="pulse-ring delay"></div>
-        </div>
-        <h2 className="hero-title">Davey Treasury Vault</h2>
-        <p className="hero-subtitle">Watch your wealth grow in real-time.</p>
-        <div className="live-yield-display">
-          <span className="live-dot"></span>
-          <span className="live-text">LIVE YIELD:</span>
-          <span className="live-amount">+{Number(realtimeRewards).toLocaleString(undefined, {minimumFractionDigits: 6, maximumFractionDigits: 6})}</span>
-          <span className="live-currency">$DAVEY</span>
-        </div>
-      </div>
-
-      <main className="main-card">
-        <div className="stats-grid">
-          <div className="stat-box">
-            <div className="stat-label">My Staked</div>
-            <div className="stat-value">{Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-label">Current APY</div>
-            <div className="stat-value" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-              <TrendingUp size={20} /> 5%
-            </div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-label">Reward Pool</div>
-            <div className="stat-value">{Number(poolBalance).toLocaleString(undefined, {maximumFractionDigits: 0})} $DAVEY</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-label">Time to Deplete</div>
-            <div className="stat-value" style={{ fontSize: '1.2rem', marginTop: '0.25rem' }}>{depletionTime || '-'}</div>
-          </div>
-        </div>
-
-        <div className="action-tabs">
-          <button 
-            className={`tab-btn ${activeTab === 'stake' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('stake'); setAmount(''); setError(''); }}
-          >
-            Stake
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'unstake' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('unstake'); setAmount(''); setError(''); }}
-          >
-            Unstake
-          </button>
-        </div>
-
-        <div className="input-group">
-          <div className="input-wrapper">
-            <input 
-              type="number" 
-              className="token-input"
-              placeholder="0.0" 
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              disabled={isLoading || !isConfigured || !isConnected}
-            />
-            <button className="max-btn" onClick={setMaxAmount} disabled={isLoading || !isConfigured || !isConnected}>MAX</button>
-            <span style={{ fontWeight: 600, color: 'var(--primary)', paddingRight: '0.5rem' }}>$DAVEY</span>
-          </div>
-          <div className="balance-text">
-            Available: {activeTab === 'stake' ? Number(balance).toLocaleString(undefined, {maximumFractionDigits: 4}) : Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 4})}
-          </div>
-        </div>
-
-        {error && <div className="error-msg">{error}</div>}
-
-        <button 
-          className="submit-btn" 
-          onClick={handleAction}
-          disabled={isLoading || !isConnected || !amount || !isConfigured}
-        >
-          {isLoading ? <div className="loader"></div> : (activeTab === 'stake' ? 'Stake Tokens' : 'Unstake Tokens')}
-        </button>
-
-        <div className="rewards-section">
-          <button 
-            className="claim-btn liquid-glass-btn"
-            onClick={claimRewards}
-            disabled={isLoading || Number(pendingRewards) <= 0 || !isConfigured || !isConnected}
-          >
-            Claim Rewards
-          </button>
-        </div>
-      </main>
-
-      {leaderboard.length > 0 && (
-        <div className="leaderboard-card">
-          <div className="leaderboard-header" style={{ justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <Trophy color="var(--primary)" size={24} />
-              <h3>Top Stakers</h3>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Global Total Staked</div>
-              <div style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem', textShadow: '0 0 10px rgba(0, 239, 200, 0.2)' }}>
-                {Number(totalStaked).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY
+      {currentView === 'staking' ? (
+        <>
+          {!isConfigured && (
+            <div style={{ background: 'rgba(255, 74, 74, 0.1)', border: '1px solid var(--error)', padding: '1rem', borderRadius: '12px', marginBottom: '2rem', width: '100%', maxWidth: '500px', display: 'flex', gap: '0.5rem' }}>
+              <AlertCircle color="var(--error)" />
+              <div>
+                <strong>Setup Required:</strong> Please deploy your MockERC20 and Staking contracts to Mantle Sepolia, then update the addresses in <code>src/constants.js</code>.
               </div>
             </div>
+          )}
+
+          <div className="hero-section">
+            <div className="vault-icon-container">
+              <Landmark className="vault-icon" size={48} color="var(--primary)" />
+              <div className="pulse-ring"></div>
+              <div className="pulse-ring delay"></div>
+            </div>
+            <h2 className="hero-title">Davey Treasury Vault</h2>
+            <p className="hero-subtitle">Watch your wealth grow in real-time.</p>
+            <div className="live-yield-display">
+              <span className="live-dot"></span>
+              <span className="live-text">LIVE YIELD:</span>
+              <span className="live-amount">+{Number(realtimeRewards).toLocaleString(undefined, {minimumFractionDigits: 6, maximumFractionDigits: 6})}</span>
+              <span className="live-currency">$DAVEY</span>
+            </div>
           </div>
-          <div className="leaderboard-list">
-            {leaderboard.map((staker, index) => (
-              <div key={staker.address} className="leaderboard-item">
-                <div className="staker-rank">#{index + 1}</div>
-                <div className="staker-address">
-                  {staker.address === account ? (
-                    <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>You</span>
-                  ) : (
-                    `${staker.address.substring(0, 6)}...${staker.address.substring(staker.address.length - 4)}`
-                  )}
-                </div>
-                <div className="staker-amount">
-                  {staker.staked.toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY
+
+          <main className="main-card">
+            <div className="stats-grid">
+              <div className="stat-box">
+                <div className="stat-label">My Staked</div>
+                <div className="stat-value">{Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-label">Current APY</div>
+                <div className="stat-value" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                  <TrendingUp size={20} /> 5%
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+              <div className="stat-box">
+                <div className="stat-label">Reward Pool</div>
+                <div className="stat-value">{Number(poolBalance).toLocaleString(undefined, {maximumFractionDigits: 0})} $DAVEY</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-label">Time to Deplete</div>
+                <div className="stat-value" style={{ fontSize: '1.2rem', marginTop: '0.25rem' }}>{depletionTime || '-'}</div>
+              </div>
+            </div>
+
+            <div className="action-tabs">
+              <button 
+                className={`tab-btn ${activeTab === 'stake' ? 'active' : ''}`}
+                onClick={() => { setActiveTab('stake'); setAmount(''); setError(''); }}
+              >
+                Stake
+              </button>
+              <button 
+                className={`tab-btn ${activeTab === 'unstake' ? 'active' : ''}`}
+                onClick={() => { setActiveTab('unstake'); setAmount(''); setError(''); }}
+              >
+                Unstake
+              </button>
+            </div>
+
+            <div className="input-group">
+              <div className="input-wrapper">
+                <input 
+                  type="number" 
+                  className="token-input"
+                  placeholder="0.0" 
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  disabled={isLoading || !isConfigured || !isConnected}
+                />
+                <button className="max-btn" onClick={setMaxAmount} disabled={isLoading || !isConfigured || !isConnected}>MAX</button>
+                <span style={{ fontWeight: 600, color: 'var(--primary)', paddingRight: '0.5rem' }}>$DAVEY</span>
+              </div>
+              <div className="balance-text">
+                Available: {activeTab === 'stake' ? Number(balance).toLocaleString(undefined, {maximumFractionDigits: 4}) : Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 4})}
+              </div>
+            </div>
+
+            {error && <div className="error-msg">{error}</div>}
+
+            <button 
+              className="submit-btn" 
+              onClick={handleAction}
+              disabled={isLoading || !isConnected || !amount || !isConfigured}
+            >
+              {isLoading ? <div className="loader"></div> : (activeTab === 'stake' ? 'Stake Tokens' : 'Unstake Tokens')}
+            </button>
+
+            <div className="rewards-section">
+              <button 
+                className="claim-btn liquid-glass-btn"
+                onClick={claimRewards}
+                disabled={isLoading || Number(pendingRewards) <= 0 || !isConfigured || !isConnected}
+              >
+                Claim Rewards
+              </button>
+            </div>
+          </main>
+
+          {leaderboard.length > 0 && (
+            <div className="leaderboard-card">
+              <div className="leaderboard-header" style={{ justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <Trophy color="var(--primary)" size={24} />
+                  <h3>Top Stakers</h3>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Global Total Staked</div>
+                  <div style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem', textShadow: '0 0 10px rgba(0, 239, 200, 0.2)' }}>
+                    {Number(totalStaked).toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY
+                  </div>
+                </div>
+              </div>
+              <div className="leaderboard-list">
+                {leaderboard.map((staker, index) => (
+                  <div key={staker.address} className="leaderboard-item">
+                    <div className="staker-rank">#{index + 1}</div>
+                    <div className="staker-address">
+                      {staker.address === account ? (
+                        <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>You</span>
+                      ) : (
+                        `${staker.address.substring(0, 6)}...${staker.address.substring(staker.address.length - 4)}`
+                      )}
+                    </div>
+                    <div className="staker-amount">
+                      {staker.staked.toLocaleString(undefined, {maximumFractionDigits: 2})} $DAVEY
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <SwipeAlpha walletClient={walletClient} account={account} />
       )}
     </div>
   );
