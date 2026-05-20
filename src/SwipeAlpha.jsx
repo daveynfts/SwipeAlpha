@@ -29,7 +29,8 @@ const TOKENS = [
     signal:"STRONG BUY",signalClass:"strong-buy",confidence:85,
     age:"4.5 years",holders:"165,299",
     iconBg:"linear-gradient(135deg,#2775ca,#1a5fb4)",iconLetter:"A",
-    risk:"LOW"
+    risk:"LOW",
+    trendPoints: [30, 45, 40, 60, 55, 75, 90]
   },
   {
     name:"Jupiter",symbol:"JUP",chain:"Solana",chainIcon:"◎",
@@ -40,7 +41,8 @@ const TOKENS = [
     signal:"BUY",signalClass:"buy",confidence:72,
     age:"1.5 years",holders:"89,432",
     iconBg:"linear-gradient(135deg,#9945FF,#14F195)",iconLetter:"J",
-    risk:"MEDIUM"
+    risk:"MEDIUM",
+    trendPoints: [50, 45, 60, 55, 70, 65, 85]
   },
   {
     name:"Pendle",symbol:"PENDLE",chain:"Ethereum",chainIcon:"⟠",
@@ -51,7 +53,8 @@ const TOKENS = [
     signal:"STRONG BUY",signalClass:"strong-buy",confidence:81,
     age:"2 years",holders:"42,103",
     iconBg:"linear-gradient(135deg,#627eea,#3b5998)",iconLetter:"P",
-    risk:"MEDIUM"
+    risk:"MEDIUM",
+    trendPoints: [20, 30, 25, 55, 48, 70, 95]
   },
   {
     name:"Virtual Protocol",symbol:"VIRTUAL",chain:"Base",chainIcon:"🔵",
@@ -62,7 +65,8 @@ const TOKENS = [
     signal:"CAUTION",signalClass:"caution",confidence:45,
     age:"8 months",holders:"31,209",
     iconBg:"linear-gradient(135deg,#0052ff,#3380ff)",iconLetter:"V",
-    risk:"HIGH"
+    risk:"HIGH",
+    trendPoints: [90, 80, 85, 70, 65, 50, 40]
   },
   {
     name:"Ethena",symbol:"ENA",chain:"Ethereum",chainIcon:"⟠",
@@ -73,7 +77,8 @@ const TOKENS = [
     signal:"BUY",signalClass:"buy",confidence:68,
     age:"1 year",holders:"67,891",
     iconBg:"linear-gradient(135deg,#1a1a2e,#6366f1)",iconLetter:"E",
-    risk:"MEDIUM"
+    risk:"MEDIUM",
+    trendPoints: [40, 45, 42, 50, 58, 52, 65]
   }
 ];
 
@@ -353,7 +358,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                           <div className="token-avatar" style={{ background: currentToken.iconBg }}>{currentToken.iconLetter}</div>
                           <div>
                             <div className="token-name">{currentToken.name}</div>
-                            <div className="token-symbol">{currentToken.chainIcon} {currentToken.chain} · ${currentToken.symbol}</div>
+                            <div className="token-symbol" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span>{currentToken.chainIcon} {currentToken.chain} · ${currentToken.symbol}</span>
+                              <span style={{ fontSize: '0.58rem', background: 'rgba(99, 102, 241, 0.15)', color: '#a5b4fc', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, border: '1px solid rgba(99, 102, 241, 0.2)' }}>⚡ Nansen</span>
+                            </div>
                           </div>
                         </div>
                         <span className={`token-badge ${currentToken.positive ? 'pos' : 'neg'}`}>
@@ -361,9 +369,33 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                         </span>
                       </div>
 
-                      <div className="token-price-info">
-                        <div className="price-big">{currentToken.price}</div>
-                        <div className="price-lbl">Current Price</div>
+                      <div className="token-price-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0' }}>
+                        <div>
+                          <div className="price-big">{currentToken.price}</div>
+                          <div className="price-lbl">Current Price</div>
+                        </div>
+                        <div className="sparkline-wrapper" style={{ opacity: 0.9 }}>
+                          <svg className="sparkline" viewBox="0 0 100 30" style={{ width: '100px', height: '35px' }}>
+                            <defs>
+                              <linearGradient id={`grad-swipe-${currentToken.symbol}`} x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor={currentToken.positive ? '#22c55e' : '#ef4444'} stopOpacity="0.3"/>
+                                <stop offset="100%" stopColor={currentToken.positive ? '#22c55e' : '#ef4444'} stopOpacity="0"/>
+                              </linearGradient>
+                            </defs>
+                            <path
+                              d={`M 0 ${30 - currentToken.trendPoints[0] * 0.25} L 16 ${30 - currentToken.trendPoints[1] * 0.25} L 32 ${30 - currentToken.trendPoints[2] * 0.25} L 48 ${30 - currentToken.trendPoints[3] * 0.25} L 64 ${30 - currentToken.trendPoints[4] * 0.25} L 80 ${30 - currentToken.trendPoints[5] * 0.25} L 96 ${30 - currentToken.trendPoints[6] * 0.25}`}
+                              fill="none"
+                              stroke={currentToken.positive ? '#22c55e' : '#ef4444'}
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d={`M 0 ${30 - currentToken.trendPoints[0] * 0.25} L 16 ${30 - currentToken.trendPoints[1] * 0.25} L 32 ${30 - currentToken.trendPoints[2] * 0.25} L 48 ${30 - currentToken.trendPoints[3] * 0.25} L 64 ${30 - currentToken.trendPoints[4] * 0.25} L 80 ${30 - currentToken.trendPoints[5] * 0.25} L 96 ${30 - currentToken.trendPoints[6] * 0.25} L 96 30 L 0 30 Z`}
+                              fill={`url(#grad-swipe-${currentToken.symbol})`}
+                            />
+                          </svg>
+                        </div>
                       </div>
 
                       <div className="token-grid-stats">
@@ -382,7 +414,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                       </div>
 
                       <div className="card-analyst-box smart-money">
-                        <div className="box-title">🔍 Smart Money Net Flow</div>
+                        <div className="box-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>🔍 Smart Money Net Flow</span>
+                          <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'none', fontWeight: 'normal' }}>powered by <strong>Nansen</strong></span>
+                        </div>
                         <div className="box-desc">
                           <span>Flow 24h:</span>
                           <strong className={currentToken.smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}>
@@ -707,7 +742,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                       {token.iconLetter}
                     </div>
                     <div>
-                      <h4 className="token-title">{token.name}</h4>
+                      <h4 className="token-title" style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
+                        {token.name}
+                        <span style={{ fontSize: '0.58rem', background: 'rgba(99, 102, 241, 0.15)', color: '#a5b4fc', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, border: '1px solid rgba(99, 102, 241, 0.2)' }}>⚡ Nansen</span>
+                      </h4>
                       <span className="token-symbol-tag">{token.chainIcon} {token.chain} · {token.symbol}</span>
                     </div>
                   </div>
@@ -716,9 +754,33 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                   </span>
                 </div>
 
-                <div className="token-price-section">
-                  <div className="price-label">Current Value</div>
-                  <div className="price-value">{token.price}</div>
+                <div className="token-price-section" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div className="price-label">Current Value</div>
+                    <div className="price-value">{token.price}</div>
+                  </div>
+                  <div className="sparkline-wrapper" style={{ opacity: 0.9 }}>
+                    <svg className="sparkline" viewBox="0 0 100 30" style={{ width: '100px', height: '35px' }}>
+                      <defs>
+                        <linearGradient id={`grad-desk-${token.symbol}`} x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor={token.positive ? '#22c55e' : '#ef4444'} stopOpacity="0.3"/>
+                          <stop offset="100%" stopColor={token.positive ? '#22c55e' : '#ef4444'} stopOpacity="0"/>
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d={`M 0 ${30 - token.trendPoints[0] * 0.25} L 16 ${30 - token.trendPoints[1] * 0.25} L 32 ${30 - token.trendPoints[2] * 0.25} L 48 ${30 - token.trendPoints[3] * 0.25} L 64 ${30 - token.trendPoints[4] * 0.25} L 80 ${30 - token.trendPoints[5] * 0.25} L 96 ${30 - token.trendPoints[6] * 0.25}`}
+                        fill="none"
+                        stroke={token.positive ? '#22c55e' : '#ef4444'}
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d={`M 0 ${30 - token.trendPoints[0] * 0.25} L 16 ${30 - token.trendPoints[1] * 0.25} L 32 ${30 - token.trendPoints[2] * 0.25} L 48 ${30 - token.trendPoints[3] * 0.25} L 64 ${30 - token.trendPoints[4] * 0.25} L 80 ${30 - token.trendPoints[5] * 0.25} L 96 ${30 - token.trendPoints[6] * 0.25} L 96 30 L 0 30 Z`}
+                        fill={`url(#grad-desk-${token.symbol})`}
+                      />
+                    </svg>
+                  </div>
                 </div>
 
                 <div className="token-stats-row">
@@ -737,7 +799,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                 </div>
 
                 <div className="ai-opinion-section">
-                  <h5>🤖 AI Agent Analysis</h5>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <h5 style={{ margin: 0 }}>🤖 AI Agent Analysis</h5>
+                    <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.35)' }}>signals by <strong>Nansen</strong></span>
+                  </div>
                   <p>{token.aiSummary}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
                     <span className={`sig-badge ${token.signalClass}`}>{token.signal}</span>
