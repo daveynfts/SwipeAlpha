@@ -24,7 +24,7 @@ function App() {
   const [tokenContract, setTokenContract] = useState(null);
   const [stakingContract, setStakingContract] = useState(null);
   
-  const [currentView, setCurrentView] = useState('staking'); // 'staking' or 'swipealpha'
+  const [currentView, setCurrentView] = useState('swipealpha'); // 'swipealpha' or 'staking'
   
   const [balance, setBalance] = useState('0');
   const [stakedBalance, setStakedBalance] = useState('0');

@@ -201,8 +201,47 @@ export default function SwipeAlpha({ walletClient, account }) {
   };
 
   return (
-    <div className="swipealpha-phone-container">
-      <div className="phone-mockup">
+    <div className="swipealpha-landing">
+      <div className="landing-info-column">
+        <div className="glow-badge">🧠 SwipeAlpha AI Platform</div>
+        <h1 className="landing-title">The Tinder for <span>Tokens</span></h1>
+        <p className="landing-subtitle">Swipe left to skip, swipe right to execute simulated swaps. Rent AI Agents to curate your feed, and publish on-chain reviews to the Mantle reputation ledger.</p>
+        
+        <div className="landing-stats">
+          <div className="l-stat">
+            <span className="l-val" style={{ color: 'var(--primary)', textShadow: '0 0 10px rgba(0, 239, 200, 0.2)' }}>72%</span>
+            <span className="l-lbl">Avg Win Rate</span>
+          </div>
+          <div className="l-stat">
+            <span className="l-val" style={{ color: '#a855f7', textShadow: '0 0 10px rgba(168, 85, 247, 0.2)' }}>5</span>
+            <span className="l-lbl">Active Agents</span>
+          </div>
+          <div className="l-stat">
+            <span className="l-val" style={{ color: '#ffd700', textShadow: '0 0 10px rgba(255, 215, 0, 0.2)' }}>100%</span>
+            <span className="l-lbl">Verified On-Chain</span>
+          </div>
+        </div>
+
+        <div className="landing-features-list">
+          <div className="l-feat">
+            <span className="feat-icon">🔥</span>
+            <div>
+              <h4>Curated AI Signals</h4>
+              <p>Specialized agents scan and filter Nansen Smart Money flows for you.</p>
+            </div>
+          </div>
+          <div className="l-feat">
+            <span className="feat-icon">🛡️</span>
+            <div>
+              <h4>Immutable On-chain Reviews</h4>
+              <p>Ratings are recorded on Mantle Sepolia Testnet using standard Transparent Proxy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="swipealpha-phone-container">
+        <div className="phone-mockup">
         {/* Notch */}
         <div className="notch"></div>
 
@@ -543,6 +582,7 @@ export default function SwipeAlpha({ walletClient, account }) {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
