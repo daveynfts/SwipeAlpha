@@ -29,6 +29,7 @@ const TOKENS = [
     signal:"STRONG BUY",signalClass:"strong-buy",confidence:85,
     age:"4.5 years",holders:"165,299",
     iconBg:"linear-gradient(135deg,#2775ca,#1a5fb4)",iconLetter:"A",
+    logoUrl:"https://assets.coingecko.com/coins/images/12645/large/AAVE.png",
     risk:"LOW",
     trendPoints: [30, 45, 40, 60, 55, 75, 90]
   },
@@ -41,6 +42,7 @@ const TOKENS = [
     signal:"BUY",signalClass:"buy",confidence:72,
     age:"1.5 years",holders:"89,432",
     iconBg:"linear-gradient(135deg,#9945FF,#14F195)",iconLetter:"J",
+    logoUrl:"https://assets.coingecko.com/coins/images/34188/large/jup.png",
     risk:"MEDIUM",
     trendPoints: [50, 45, 60, 55, 70, 65, 85]
   },
@@ -53,6 +55,7 @@ const TOKENS = [
     signal:"STRONG BUY",signalClass:"strong-buy",confidence:81,
     age:"2 years",holders:"42,103",
     iconBg:"linear-gradient(135deg,#627eea,#3b5998)",iconLetter:"P",
+    logoUrl:"https://assets.coingecko.com/coins/images/16185/large/pendle.png",
     risk:"MEDIUM",
     trendPoints: [20, 30, 25, 55, 48, 70, 95]
   },
@@ -65,6 +68,7 @@ const TOKENS = [
     signal:"CAUTION",signalClass:"caution",confidence:45,
     age:"8 months",holders:"31,209",
     iconBg:"linear-gradient(135deg,#0052ff,#3380ff)",iconLetter:"V",
+    logoUrl:"https://assets.coingecko.com/coins/images/42490/large/virtual_protocol.png",
     risk:"HIGH",
     trendPoints: [90, 80, 85, 70, 65, 50, 40]
   },
@@ -77,6 +81,7 @@ const TOKENS = [
     signal:"BUY",signalClass:"buy",confidence:68,
     age:"1 year",holders:"67,891",
     iconBg:"linear-gradient(135deg,#1a1a2e,#6366f1)",iconLetter:"E",
+    logoUrl:"https://assets.coingecko.com/coins/images/36399/large/ENA.png",
     risk:"MEDIUM",
     trendPoints: [40, 45, 42, 50, 58, 52, 65]
   }
@@ -501,7 +506,13 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
 
                       <div className="token-card-header">
                         <div className="token-meta">
-                          <div className="token-avatar" style={{ background: currentToken.iconBg }}>{currentToken.iconLetter}</div>
+                          <div className="token-avatar" style={{ background: currentToken.iconBg, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            {currentToken.logoUrl ? (
+                              <img src={currentToken.logoUrl} alt={currentToken.name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
+                            ) : (
+                              currentToken.iconLetter
+                            )}
+                          </div>
                           <div>
                             <div className="token-name">{currentToken.name}</div>
                             <div className="token-symbol" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -517,89 +528,127 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
 
                       {/* Tab 0: Price and Stats Overview */}
                       {activeCardTab === 0 && (
-                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
-                          <div>
-                            <div className="token-price-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0' }}>
+                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                            <div className="token-price-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', margin: '4px 0' }}>
                               <div>
-                                <div className="price-big">{currentToken.price}</div>
-                                <div className="price-lbl">Current Price</div>
+                                <div className="price-big" style={{ fontSize: '2.1rem', letterSpacing: '-0.5px' }}>{currentToken.price}</div>
+                                <div className="price-lbl" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <span>Current Value</span>
+                                  <span className={currentToken.positive ? 'c-pos' : 'c-neg'} style={{ fontWeight: 600 }}>({currentToken.priceChange})</span>
+                                </div>
                               </div>
-                              <div className="sparkline-wrapper" style={{ opacity: 0.9 }}>
-                                <svg className="sparkline" viewBox="0 0 100 30" style={{ width: '100px', height: '35px' }}>
-                                  <defs>
-                                    <linearGradient id={`grad-swipe-${currentToken.symbol}`} x1="0" y1="0" x2="0" y2="1">
-                                      <stop offset="0%" stopColor={currentToken.positive ? '#22c55e' : '#ef4444'} stopOpacity="0.3"/>
-                                      <stop offset="100%" stopColor={currentToken.positive ? '#22c55e' : '#ef4444'} stopOpacity="0"/>
-                                    </linearGradient>
-                                  </defs>
-                                  <path
-                                    d={`M 0 ${30 - currentToken.trendPoints[0] * 0.25} L 16 ${30 - currentToken.trendPoints[1] * 0.25} L 32 ${30 - currentToken.trendPoints[2] * 0.25} L 48 ${30 - currentToken.trendPoints[3] * 0.25} L 64 ${30 - currentToken.trendPoints[4] * 0.25} L 80 ${30 - currentToken.trendPoints[5] * 0.25} L 96 ${30 - currentToken.trendPoints[6] * 0.25}`}
-                                    fill="none"
-                                    stroke={currentToken.positive ? '#22c55e' : '#ef4444'}
-                                    strokeWidth="2.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <path
-                                    d={`M 0 ${30 - currentToken.trendPoints[0] * 0.25} L 16 ${30 - currentToken.trendPoints[1] * 0.25} L 32 ${30 - currentToken.trendPoints[2] * 0.25} L 48 ${30 - currentToken.trendPoints[3] * 0.25} L 64 ${30 - currentToken.trendPoints[4] * 0.25} L 80 ${30 - currentToken.trendPoints[5] * 0.25} L 96 ${30 - currentToken.trendPoints[6] * 0.25} L 96 30 L 0 30 Z`}
-                                    fill={`url(#grad-swipe-${currentToken.symbol})`}
-                                  />
-                                </svg>
+                              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                                {currentToken.risk} Risk
                               </div>
                             </div>
 
-                            <div className="token-grid-stats" style={{ marginTop: '15px' }}>
-                              <div className="grid-item">
-                                <span className="grid-val">{currentToken.mcap}</span>
+                            {/* Large Sparkline Chart in the Center */}
+                            <div className="sparkline-wrapper" style={{ 
+                              opacity: 0.95, 
+                              height: '110px', 
+                              background: 'rgba(255, 255, 255, 0.015)', 
+                              border: '1px solid rgba(255, 255, 255, 0.04)',
+                              borderRadius: '16px',
+                              padding: '12px',
+                              position: 'relative',
+                              overflow: 'hidden',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'center'
+                            }}>
+                              <div style={{ position: 'absolute', top: '8px', left: '12px', fontSize: '0.58rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                7-Day Price Trend
+                              </div>
+                              <svg className="sparkline" viewBox="0 0 100 30" style={{ width: '100%', height: '80px', marginTop: '10px' }} preserveAspectRatio="none">
+                                <defs>
+                                  <linearGradient id={`grad-swipe-${currentToken.symbol}`} x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor={currentToken.positive ? '#22c55e' : '#ef4444'} stopOpacity="0.4"/>
+                                    <stop offset="100%" stopColor={currentToken.positive ? '#22c55e' : '#ef4444'} stopOpacity="0"/>
+                                  </linearGradient>
+                                </defs>
+                                <path
+                                  d={`M 0 ${30 - currentToken.trendPoints[0] * 0.25} L 16 ${30 - currentToken.trendPoints[1] * 0.25} L 32 ${30 - currentToken.trendPoints[2] * 0.25} L 48 ${30 - currentToken.trendPoints[3] * 0.25} L 64 ${30 - currentToken.trendPoints[4] * 0.25} L 80 ${30 - currentToken.trendPoints[5] * 0.25} L 96 ${30 - currentToken.trendPoints[6] * 0.25}`}
+                                  fill="none"
+                                  stroke={currentToken.positive ? '#22c55e' : '#ef4444'}
+                                  strokeWidth="2.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d={`M 0 ${30 - currentToken.trendPoints[0] * 0.25} L 16 ${30 - currentToken.trendPoints[1] * 0.25} L 32 ${30 - currentToken.trendPoints[2] * 0.25} L 48 ${30 - currentToken.trendPoints[3] * 0.25} L 64 ${30 - currentToken.trendPoints[4] * 0.25} L 80 ${30 - currentToken.trendPoints[5] * 0.25} L 96 ${30 - currentToken.trendPoints[6] * 0.25} L 96 30 L 0 30 Z`}
+                                  fill={`url(#grad-swipe-${currentToken.symbol})`}
+                                />
+                              </svg>
+                            </div>
+
+                            <div className="token-grid-stats" style={{ marginTop: '5px', gap: '8px' }}>
+                              <div className="grid-item" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', padding: '10px 4px' }}>
+                                <span className="grid-val" style={{ fontSize: '0.85rem' }}>{currentToken.mcap}</span>
                                 <span className="grid-lbl">MCap</span>
                               </div>
-                              <div className="grid-item">
-                                <span className="grid-val">{currentToken.volume}</span>
+                              <div className="grid-item" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', padding: '10px 4px' }}>
+                                <span className="grid-val" style={{ fontSize: '0.85rem' }}>{currentToken.volume}</span>
                                 <span className="grid-lbl">Vol 24h</span>
                               </div>
-                              <div className="grid-item">
-                                <span className="grid-val">{currentToken.liquidity}</span>
+                              <div className="grid-item" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', padding: '10px 4px' }}>
+                                <span className="grid-val" style={{ fontSize: '0.85rem' }}>{currentToken.liquidity}</span>
                                 <span className="grid-lbl">Liquidity</span>
                               </div>
                             </div>
                           </div>
-                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '12px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-                            👆 Tap card to view On-Chain & Smart Money
+                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '12px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)', marginTop: '20px' }}>
+                            👆 Tap card to view On-Chain Flows
                           </div>
                         </div>
                       )}
 
                       {/* Tab 1: On-Chain & Smart Money (Nansen) */}
                       {activeCardTab === 1 && (
-                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', height: '100%' }}>
-                          <div>
-                            <div className="card-analyst-box smart-money" style={{ margin: '10px 0 0 0' }}>
+                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                            <div className="card-analyst-box smart-money" style={{ margin: '0', background: 'linear-gradient(135deg, rgba(254, 60, 114, 0.04), rgba(255, 120, 84, 0.04))', border: '1px solid rgba(254, 60, 114, 0.15)', borderRadius: '16px', padding: '15px' }}>
                               <div className="box-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span>🔍 Smart Money Net Flow</span>
-                                <span style={{ fontSize: '0.58rem', color: 'rgba(254,60,114,0.7)', textTransform: 'none', fontWeight: 'bold' }}>powered by Nansen</span>
+                                <span>🔍 Smart Money Flow</span>
+                                <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>NANSEN DATA</span>
                               </div>
-                              <div className="box-desc" style={{ marginTop: '8px' }}>
-                                <span>Net Flow (24h):</span>
-                                <strong className={currentToken.smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'} style={{ fontSize: '1.05rem' }}>
+                              <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                                <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)' }}>Net Flow (24h):</span>
+                                <span className={currentToken.smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'} style={{ fontSize: '1.4rem', fontWeight: '800', fontFamily: 'monospace' }}>
                                   {currentToken.smNetflow}
-                                </strong>
+                                </span>
+                              </div>
+
+                              {/* Progress bar visualizer for net flow direction */}
+                              <div style={{ marginTop: '12px', background: 'rgba(255,255,255,0.06)', height: '6px', borderRadius: '3px', position: 'relative', overflow: 'hidden' }}>
+                                <div style={{ 
+                                  position: 'absolute', 
+                                  top: 0, 
+                                  left: currentToken.smNetflow.startsWith('+') ? '50%' : 'auto',
+                                  right: currentToken.smNetflow.startsWith('+') ? 'auto' : '50%',
+                                  width: currentToken.smNetflow.startsWith('+') ? '35%' : '25%', // simulated flow strength
+                                  height: '100%',
+                                  background: currentToken.smNetflow.startsWith('+') ? 'linear-gradient(90deg, #22c55e, #4ade80)' : 'linear-gradient(90deg, #f87171, #ef4444)',
+                                  borderRadius: '3px'
+                                }} />
+                                <div style={{ position: 'absolute', left: '50%', top: 0, width: '2px', height: '100%', background: 'rgba(255,255,255,0.3)' }} />
                               </div>
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px', background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.04)' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>SM Active Traders</span>
-                                <span style={{ color: 'white', fontWeight: 600 }}>{currentToken.smTraders} wallets</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', alignItems: 'center' }}>
+                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Smart Money active traders</span>
+                                <span style={{ color: 'white', fontWeight: 600, fontFamily: 'monospace' }}>{currentToken.smTraders} wallets</span>
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Accumulation Trend</span>
-                                <span className={currentToken.smSignal.toLowerCase().includes('buy') || currentToken.smSignal.toLowerCase().includes('accum') ? 'c-pos' : 'c-neg'} style={{ textTransform: 'capitalize', fontWeight: 600 }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px' }}>
+                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Smart Money signal</span>
+                                <span className={currentToken.smSignal.toLowerCase().includes('buy') || currentToken.smSignal.toLowerCase().includes('accum') ? 'c-pos' : 'c-neg'} style={{ textTransform: 'uppercase', fontWeight: 700, fontSize: '0.72rem', letterSpacing: '0.5px' }}>
                                   {currentToken.smSignal}
                                 </span>
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Total Token Holders</span>
-                                <span style={{ color: 'white', fontWeight: 600 }}>{currentToken.holders} addresses</span>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px' }}>
+                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Total token holders</span>
+                                <span style={{ color: 'white', fontWeight: 600, fontFamily: 'monospace' }}>{currentToken.holders} addresses</span>
                               </div>
                             </div>
                           </div>
@@ -611,19 +660,49 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
 
                       {/* Tab 2: AI Agent Opinion */}
                       {activeCardTab === 2 && (
-                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
-                          <div>
-                            <div className="card-analyst-box ai-summary-box" style={{ margin: '10px 0 0 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                            <div className="card-analyst-box ai-summary-box" style={{ 
+                              margin: '0', 
+                              background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(99, 102, 241, 0.05))', 
+                              border: '1px solid rgba(168, 85, 247, 0.15)',
+                              borderRadius: '16px',
+                              padding: '16px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '12px'
+                            }}>
                               <div className="box-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span>🤖 AI Agent Opinion</span>
-                                <span style={{ fontSize: '0.55rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '1px 5px', borderRadius: '3px' }}>Agent Rented</span>
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>🤖 AI AGENT opinion</span>
+                                <span style={{ fontSize: '0.55rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>AGENT RENTED</span>
                               </div>
-                              <p className="ai-summary-txt" style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.85)', lineHeight: 1.45, margin: '4px 0' }}>
-                                {currentToken.aiSummary}
+                              <p className="ai-summary-txt" style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.9)', lineHeight: 1.5, margin: '2px 0', minHeight: '60px' }}>
+                                "{currentToken.aiSummary}"
                               </p>
-                              <div className="ai-row-footer" style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span className={`sig-badge ${currentToken.signalClass}`}>{currentToken.signal}</span>
-                                <span className="conf-perc" style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)' }}>Confidence: <strong>{currentToken.confidence}%</strong></span>
+                              
+                              <div className="ai-row-footer" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span className={`sig-badge ${currentToken.signalClass}`} style={{ padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 800 }}>
+                                  {currentToken.signal}
+                                </span>
+                                <span className="conf-perc" style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>
+                                  Confidence: <strong style={{ color: '#fff', fontSize: '0.75rem', fontFamily: 'monospace' }}>{currentToken.confidence}%</strong>
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Confidence progress bar */}
+                            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px', padding: '12px 14px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>
+                                <span>Signal Strength</span>
+                                <span>{currentToken.confidence}% Match</span>
+                              </div>
+                              <div style={{ background: 'rgba(255,255,255,0.06)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
+                                <div style={{ 
+                                  width: `${currentToken.confidence}%`, 
+                                  height: '100%', 
+                                  background: 'linear-gradient(90deg, #fe3c72, #ff7854)',
+                                  borderRadius: '3px'
+                                }} />
                               </div>
                             </div>
                           </div>
@@ -679,8 +758,12 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                 
                 <div className="detail-scroll-content">
                   <div className="detail-top-card">
-                    <div className="token-avatar large" style={{ background: TOKENS[selectedTokenIdx].iconBg }}>
-                      {TOKENS[selectedTokenIdx].iconLetter}
+                    <div className="token-avatar large" style={{ background: TOKENS[selectedTokenIdx].iconBg, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      {TOKENS[selectedTokenIdx].logoUrl ? (
+                        <img src={TOKENS[selectedTokenIdx].logoUrl} alt={TOKENS[selectedTokenIdx].name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
+                      ) : (
+                        TOKENS[selectedTokenIdx].iconLetter
+                      )}
                     </div>
                     <h2>{TOKENS[selectedTokenIdx].name}</h2>
                     <div className="token-symbol">{TOKENS[selectedTokenIdx].symbol}</div>
@@ -942,8 +1025,12 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
               <div key={token.symbol} className="desktop-signal-card">
                 <div className="token-card-top">
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                    <div className="token-avatar" style={{ background: token.iconBg, width: '42px', height: '42px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontWeight: 'bold' }}>
-                      {token.iconLetter}
+                     <div className="token-avatar" style={{ background: token.iconBg, width: '42px', height: '42px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontWeight: 'bold', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      {token.logoUrl ? (
+                        <img src={token.logoUrl} alt={token.name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
+                      ) : (
+                        token.iconLetter
+                      )}
                     </div>
                     <div>
                       <h4 className="token-title" style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
