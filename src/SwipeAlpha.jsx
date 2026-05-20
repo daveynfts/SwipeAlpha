@@ -11,6 +11,14 @@ const REGISTRY_CONTRACT_ABI = [
   "function getAgent(uint256 _agentId) public view returns (string memory name, string memory metadataURI, uint256 avgRating, uint32 ratingCount, bool active)"
 ];
 
+const MOCK_MOE_ROUTER_ADDRESS = "0x5ddeea646Ed2DF37345d8987099A33e60879Bed4";
+const MOCK_MOE_ROUTER_ABI = [
+  "function swap(address tokenIn, uint256 amountIn, string calldata tokenOutSymbol, address to) external returns (uint256)",
+  "function swapMNT(string calldata tokenOutSymbol, address to) external payable returns (uint256)",
+  "event SwapExecuted(address indexed user, address indexed tokenIn, string tokenOutSymbol, uint256 amountIn, uint256 amountOutSimulated)",
+  "event SwapMNTExecuted(address indexed user, string tokenOutSymbol, uint256 amountInMNT, uint256 amountOutSimulated)"
+];
+
 const TOKENS = [
   {
     name:"Aave",symbol:"AAVE",chain:"Ethereum",chainIcon:"⟠",
@@ -131,12 +139,55 @@ export default function SwipeAlpha({ walletClient, account }) {
   // Swipe states
   const [cardIndex, setCardIndex] = useState(0);
   const [activeAgent, setActiveAgent] = useState(AGENTS[0]);
+  const [isSwapping, setIsSwapping] = useState(false);
 
   const currentToken = TOKENS[cardIndex] || null;
 
-  const handleSwipe = (direction) => {
+  const handleSwipe = async (direction) => {
     if (direction === 'right' && currentToken) {
-      alert(`🛒 executing Swapping / Purchasing!\nToken: ${currentToken.name} ($${currentToken.symbol})\nAmount: $10 (Simulated via router)`);
+      if (!walletClient) {
+        alert("Please connect your wallet first at the top of the page!");
+        return;
+      }
+      setIsSwapping(true);
+      try {
+        const { transport, chain } = walletClient;
+        const network = {
+          chainId: chain.id,
+          name: chain.name,
+        };
+        const provider = new ethers.BrowserProvider(transport, network);
+        const signer = new ethers.JsonRpcSigner(provider, account);
+
+        // Verify correct network (Mantle Sepolia: 5003)
+        if (chain.id !== 5003) {
+          alert("Please switch network to Mantle Sepolia at the header.");
+          setIsSwapping(false);
+          return;
+        }
+
+        const routerContract = new ethers.Contract(MOCK_MOE_ROUTER_ADDRESS, MOCK_MOE_ROUTER_ABI, signer);
+        
+        console.log(`Executing real on-chain mock swap via MockMerchantMoeRouter for ${currentToken.symbol}`);
+        
+        // Swap 0.1 MNT
+        const swapValue = ethers.parseEther("0.1");
+        const tx = await routerContract.swapMNT(
+          currentToken.symbol,
+          account,
+          { value: swapValue }
+        );
+        
+        await tx.wait();
+        alert(`🛒 Swap transaction executed successfully via MerchantMoe (Mock Router) on Mantle Sepolia!\nToken: ${currentToken.name} ($${currentToken.symbol})\nAmount In: 0.1 MNT\nTx Hash: ${tx.hash}`);
+      } catch (e) {
+        console.error(e);
+        alert(`❌ Error executing swap transaction: ${e.reason || e.message}`);
+        setIsSwapping(false);
+        return; // Don't advance card if failed
+      } finally {
+        setIsSwapping(false);
+      }
     }
     setCardIndex(prev => prev + 1);
   };
@@ -265,6 +316,17 @@ export default function SwipeAlpha({ walletClient, account }) {
 
             {/* Token cards stack */}
             <div className="swipe-stack-container">
+              {isSwapping && (
+                <div className="swap-loading-overlay">
+                  <div className="swap-loading-content">
+                    <Sparkles className="swap-loading-icon" size={40} />
+                    <h4>Executing Swap via MerchantMoe...</h4>
+                    <p style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '8px' }}>
+                      Sending 0.1 MNT to route to simulated {currentToken?.symbol} pool
+                    </p>
+                  </div>
+                </div>
+              )}
               {currentToken ? (
                 <div className="swipe-token-card">
                   <div className="token-card-header">
@@ -332,15 +394,15 @@ export default function SwipeAlpha({ walletClient, account }) {
             {/* Action Bar */}
             {currentToken && (
               <div className="swipe-action-controls">
-                <button className="control-btn skip-action" onClick={() => handleSwipe('left')}>
+                <button className="control-btn skip-action" onClick={() => handleSwipe('left')} disabled={isSwapping}>
                   <ThumbsDown size={20} />
                 </button>
-                <button className="control-btn info-action" onClick={() => { setSelectedTokenIdx(cardIndex); setScreen('detail'); }}>
+                <button className="control-btn info-action" onClick={() => { setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping}>
                   <Info size={18} />
                 </button>
-                <button className="control-btn buy-action" onClick={() => handleSwipe('right')}>
-                  <ThumbsUp size={20} />
-                  <span className="buy-amount-label">$10</span>
+                <button className="control-btn buy-action" onClick={() => handleSwipe('right')} disabled={isSwapping}>
+                  {isSwapping ? <div className="buy-spinner"></div> : <ThumbsUp size={20} />}
+                  <span className="buy-amount-label">{isSwapping ? "Swapping..." : "0.1 MNT"}</span>
                 </button>
               </div>
             )}
