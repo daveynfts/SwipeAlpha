@@ -33,7 +33,6 @@ contract Staking is Ownable {
         
         uint256 timeElapsed = block.timestamp - staker.lastStakeTime;
         
-        // Reward = (stakedAmount * 5 * timeElapsed) / (100 * SECONDS_IN_YEAR)
         uint256 newReward = (staker.stakedAmount * APY * timeElapsed) / (100 * SECONDS_IN_YEAR);
         
         return staker.pendingRewards + newReward;
