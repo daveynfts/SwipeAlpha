@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwipeAlpha — Pitch Deck</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="deck.css">
+</head>
+<body>
+  <!-- Progress Bar -->
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- Navigation -->
+  <div class="nav-controls">
+    <button class="nav-btn" onclick="prevSlide()">←</button>
+    <span class="slide-counter" id="slideCounter">1 / 12</span>
+    <button class="nav-btn" onclick="nextSlide()">→</button>
+  </div>
+
+  <div class="deck" id="deck">
+
+    <!-- SLIDE 1: Title -->
+    <section class="slide active" id="slide-0">
+      <div class="slide-bg-orbs"><div class="orb o1"></div><div class="orb o2"></div></div>
+      <div class="slide-content center-content">
+        <div class="title-badge">🏆 Mantle Turing Test 2026 — AI Alpha & Data Track</div>
+        <div class="logo-mark">
+          <svg width="64" height="64" viewBox="0 0 48 48" fill="none"><path d="M24 4L44 14v20L24 44 4 34V14L24 4z" fill="url(#lg)" opacity="0.2"/><path d="M24 8L40 16v16L24 40 8 32V16L24 8z" fill="url(#lg)"/><path d="M18 24l4 4 8-8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><defs><linearGradient id="lg" x1="4" y1="4" x2="44" y2="44"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs></svg>
+        </div>
+        <h1 class="hero-title">Swipe<span class="accent">Alpha</span></h1>
+        <p class="hero-sub">Tinder for Tokens — Swipe Right to Buy Smart Money Picks</p>
+        <div class="hero-pills">
+          <span class="pill">🔍 Nansen-Powered</span>
+          <span class="pill">🤖 AI Analysis</span>
+          <span class="pill">⚡ One-Swipe Buy</span>
+          <span class="pill">⛓️ Built on Mantle</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Problem -->
+    <section class="slide" id="slide-1">
+      <div class="slide-content">
+        <div class="slide-label">THE PROBLEM</div>
+        <h2>Crypto is Drowning in Noise</h2>
+        <div class="problem-grid">
+          <div class="problem-card">
+            <div class="problem-icon">📊</div>
+            <h3>Information Overload</h3>
+            <p>10,000+ new tokens launch weekly. No retail trader can analyze them all.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">🐋</div>
+            <h3>Asymmetric Intelligence</h3>
+            <p>Smart Money sees signals first. Retail discovers tokens after the 10x.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">😤</div>
+            <h3>Painful UX</h3>
+            <p>Finding alpha requires 5+ tools: DEXScreener, Nansen, Twitter, Telegram, DEX.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">⏰</div>
+            <h3>Slow Execution</h3>
+            <p>By the time retail analyzes + swaps, the opportunity is gone.</p>
+          </div>
+        </div>
+        <div class="stat-highlight">
+          <span class="stat-big">73%</span>
+          <span class="stat-desc">of retail traders lose money because they lack institutional-grade tools</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Solution -->
+    <section class="slide" id="slide-2">
+      <div class="slide-content">
+        <div class="slide-label">THE SOLUTION</div>
+        <h2>From 5 Tools to 1 Swipe</h2>
+        <div class="solution-flow">
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-icon">🔍</div>
+            <h3>Discover</h3>
+            <p>Nansen API surfaces tokens Smart Money is buying RIGHT NOW</p>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-icon">🤖</div>
+            <h3>Understand</h3>
+            <p>AI distills complex on-chain data into simple, actionable insights</p>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-icon">👉</div>
+            <h3>Act</h3>
+            <p>Swipe right = instant buy via DEX aggregator. Zero friction.</p>
+          </div>
+        </div>
+        <div class="comparison-box">
+          <div class="comp-col before">
+            <div class="comp-header">❌ Before SwipeAlpha</div>
+            <ul>
+              <li>Open Nansen → Find signals</li>
+              <li>Open DEXScreener → Check charts</li>
+              <li>Open Twitter → Read sentiment</li>
+              <li>Open DEX → Approve + Swap</li>
+              <li>⏱️ <strong>15-30 minutes per trade</strong></li>
+            </ul>
+          </div>
+          <div class="comp-col after">
+            <div class="comp-header">✅ With SwipeAlpha</div>
+            <ul>
+              <li>Open app → See curated cards</li>
+              <li>Read AI summary (3 seconds)</li>
+              <li>Swipe right → Done!</li>
+              <li>&nbsp;</li>
+              <li>⚡ <strong>10 seconds per trade</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Demo -->
+    <section class="slide" id="slide-3">
+      <div class="slide-content center-content">
+        <div class="slide-label">PRODUCT</div>
+        <h2>See It In Action</h2>
+        <div class="demo-frame">
+          <div class="demo-phone">
+            <div class="demo-notch"></div>
+            <div class="demo-screen">
+              <div class="demo-card-stack">
+                <div class="demo-card dc-3">
+                  <div class="dc-header"><span class="dc-icon" style="background:linear-gradient(135deg,#0052ff,#3380ff)">V</span><span>Virtual</span><span class="dc-badge negative">-3.2%</span></div>
+                </div>
+                <div class="demo-card dc-2">
+                  <div class="dc-header"><span class="dc-icon" style="background:linear-gradient(135deg,#627eea,#3b5998)">P</span><span>Pendle</span><span class="dc-badge positive">+22.1%</span></div>
+                  <div class="dc-price">$4.18</div>
+                  <div class="dc-metrics"><span>MCap $680M</span><span>Vol $18M</span></div>
+                </div>
+                <div class="demo-card dc-1" id="demoTopCard">
+                  <div class="dc-header"><span class="dc-icon" style="background:linear-gradient(135deg,#2775ca,#1a5fb4)">A</span><span>Aave</span><span class="dc-badge positive">+12.4%</span></div>
+                  <div class="dc-price">$308.42</div>
+                  <div class="dc-metrics"><span>MCap $4.69B</span><span>Vol $8.85M</span></div>
+                  <div class="dc-sm">🔍 SM: +$2.1M net flow · 45 traders</div>
+                  <div class="dc-ai">🤖 "Smart Money quỹ lớn tích lũy mạnh"</div>
+                  <div class="dc-signal"><span class="signal-tag green">STRONG BUY</span><span>85%</span></div>
+                </div>
+              </div>
+              <div class="demo-actions">
+                <div class="da skip">✕</div>
+                <div class="da info">i</div>
+                <div class="da buy">$10 ✓</div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-features">
+            <div class="df"><span class="df-icon">🃏</span><strong>Swipeable Cards</strong> — Tinder-style UX everyone knows</div>
+            <div class="df"><span class="df-icon">🧠</span><strong>AI Summaries</strong> — Complex data → simple verdicts</div>
+            <div class="df"><span class="df-icon">💚</span><strong>Smart Signals</strong> — Color-coded buy/skip indicators</div>
+            <div class="df"><span class="df-icon">⚡</span><strong>Instant Swap</strong> — Jupiter/1inch execution in background</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Architecture -->
+    <section class="slide" id="slide-4">
+      <div class="slide-content">
+        <div class="slide-label">ARCHITECTURE</div>
+        <h2>How It Works Under The Hood</h2>
+        <div class="arch-diagram">
+          <div class="arch-layer" style="--layer-color:#6366f1">
+            <div class="arch-label">DATA LAYER</div>
+            <div class="arch-items">
+              <div class="arch-item">Nansen Token Screener</div>
+              <div class="arch-item">Smart Money Netflows</div>
+              <div class="arch-item">Flow Intelligence</div>
+              <div class="arch-item">Token Information</div>
+            </div>
+          </div>
+          <div class="arch-arrow">↓ Raw on-chain data</div>
+          <div class="arch-layer" style="--layer-color:#a855f7">
+            <div class="arch-label">AI LAYER</div>
+            <div class="arch-items">
+              <div class="arch-item">Signal Processing</div>
+              <div class="arch-item">Risk Scoring</div>
+              <div class="arch-item">Natural Language Summary</div>
+            </div>
+          </div>
+          <div class="arch-arrow">↓ Actionable insights</div>
+          <div class="arch-layer" style="--layer-color:#22c55e">
+            <div class="arch-label">EXECUTION LAYER (MANTLE)</div>
+            <div class="arch-items">
+              <div class="arch-item">ERC-8004 Agent Identity</div>
+              <div class="arch-item">DEX Aggregator (Jupiter/1inch)</div>
+              <div class="arch-item">On-chain Trade Records</div>
+              <div class="arch-item">Portfolio Tracking</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Why Mantle -->
+    <section class="slide" id="slide-5">
+      <div class="slide-content">
+        <div class="slide-label">WHY MANTLE</div>
+        <h2>Purpose-Built for Mantle</h2>
+        <div class="why-grid">
+          <div class="why-card">
+            <div class="why-icon">💸</div>
+            <h3>Ultra-Low Gas</h3>
+            <p>Micro-swipe trades ($5-$50) are only viable with gas < $0.01. Mantle delivers this.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon">⚡</div>
+            <h3>Fast Finality</h3>
+            <p>~2s block time means swipe → trade confirmation feels instant.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon">🪪</div>
+            <h3>ERC-8004 Native</h3>
+            <p>AI Agent identity standard gives our trading agent verifiable on-chain reputation.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon">🏦</div>
+            <h3>DeFi Ecosystem</h3>
+            <p>Native DEXes + Bybit integration = deep liquidity for execution.</p>
+          </div>
+        </div>
+        <div class="mantle-stats">
+          <div class="ms"><span class="ms-val">$0.005</span><span class="ms-label">Avg TX Cost</span></div>
+          <div class="ms"><span class="ms-val">2s</span><span class="ms-label">Block Time</span></div>
+          <div class="ms"><span class="ms-val">$800M+</span><span class="ms-label">TVL</span></div>
+          <div class="ms"><span class="ms-val">ERC-8004</span><span class="ms-label">Agent Standard</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Market -->
+    <section class="slide" id="slide-6">
+      <div class="slide-content">
+        <div class="slide-label">MARKET OPPORTUNITY</div>
+        <h2>The Timing is Perfect</h2>
+        <div class="market-circles">
+          <div class="market-circle tam"><div class="mc-inner"><span class="mc-val">$2.5T</span><span class="mc-label">TAM</span><span class="mc-desc">Global Crypto Market</span></div></div>
+          <div class="market-circle sam"><div class="mc-inner"><span class="mc-val">$180B</span><span class="mc-label">SAM</span><span class="mc-desc">DEX Trading Volume/mo</span></div></div>
+          <div class="market-circle som"><div class="mc-inner"><span class="mc-val">$500M</span><span class="mc-label">SOM</span><span class="mc-desc">Retail Signal Trading</span></div></div>
+        </div>
+        <div class="trend-row">
+          <div class="trend">📈 AI agents in crypto grew <strong>40x</strong> in 2025</div>
+          <div class="trend">📱 Mobile DEX trading up <strong>320%</strong> YoY</div>
+          <div class="trend">🧠 "Copy trading" market worth <strong>$3.1B</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Business Model -->
+    <section class="slide" id="slide-7">
+      <div class="slide-content">
+        <div class="slide-label">BUSINESS MODEL</div>
+        <h2>Multiple Revenue Streams</h2>
+        <div class="revenue-grid">
+          <div class="rev-card primary">
+            <div class="rev-pct">0.3%</div>
+            <h3>Swap Fee</h3>
+            <p>Per transaction on every swipe-right buy</p>
+            <div class="rev-example">1,000 swipes/day × $15 avg = <strong>$45/day</strong></div>
+          </div>
+          <div class="rev-card">
+            <div class="rev-pct">$9.99</div>
+            <h3>Premium Subscription</h3>
+            <p>Advanced AI signals, custom filters, higher limits</p>
+          </div>
+          <div class="rev-card">
+            <div class="rev-pct">CPC</div>
+            <h3>Promoted Tokens</h3>
+            <p>Projects pay to appear in card stack (clearly labeled)</p>
+          </div>
+          <div class="rev-card">
+            <div class="rev-pct">API</div>
+            <h3>Signal API</h3>
+            <p>Sell aggregated signal data to other platforms</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Competitive Advantage -->
+    <section class="slide" id="slide-8">
+      <div class="slide-content">
+        <div class="slide-label">COMPETITIVE EDGE</div>
+        <h2>Why SwipeAlpha Wins</h2>
+        <div class="comp-table">
+          <div class="ct-header"><div class="ct-cell"></div><div class="ct-cell">SwipeAlpha</div><div class="ct-cell">DEXScreener</div><div class="ct-cell">Nansen App</div><div class="ct-cell">Copy Trading</div></div>
+          <div class="ct-row"><div class="ct-cell label">AI Analysis</div><div class="ct-cell us">✅</div><div class="ct-cell">❌</div><div class="ct-cell">⚠️ Manual</div><div class="ct-cell">❌</div></div>
+          <div class="ct-row"><div class="ct-cell label">Smart Money Data</div><div class="ct-cell us">✅ Nansen</div><div class="ct-cell">⚠️ Basic</div><div class="ct-cell">✅</div><div class="ct-cell">❌</div></div>
+          <div class="ct-row"><div class="ct-cell label">1-Click Buy</div><div class="ct-cell us">✅</div><div class="ct-cell">❌</div><div class="ct-cell">❌</div><div class="ct-cell">✅</div></div>
+          <div class="ct-row"><div class="ct-cell label">Mobile-First UX</div><div class="ct-cell us">✅</div><div class="ct-cell">⚠️</div><div class="ct-cell">❌</div><div class="ct-cell">⚠️</div></div>
+          <div class="ct-row"><div class="ct-cell label">On-Chain Agent</div><div class="ct-cell us">✅ ERC-8004</div><div class="ct-cell">❌</div><div class="ct-cell">❌</div><div class="ct-cell">❌</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Roadmap -->
+    <section class="slide" id="slide-9">
+      <div class="slide-content">
+        <div class="slide-label">ROADMAP</div>
+        <h2>From Hackathon to Product</h2>
+        <div class="roadmap">
+          <div class="rm-phase current">
+            <div class="rm-dot"></div>
+            <div class="rm-content">
+              <div class="rm-time">Q2 2026 — NOW</div>
+              <h3>🏗️ Hackathon MVP</h3>
+              <ul><li>Core swipe UI + Nansen integration</li><li>AI analysis engine</li><li>Mantle testnet deployment</li><li>ERC-8004 agent identity</li></ul>
+            </div>
+          </div>
+          <div class="rm-phase">
+            <div class="rm-dot"></div>
+            <div class="rm-content">
+              <div class="rm-time">Q3 2026</div>
+              <h3>🚀 Public Beta</h3>
+              <ul><li>Mantle mainnet launch</li><li>Multi-chain support (Solana, Base)</li><li>Premium subscription tier</li></ul>
+            </div>
+          </div>
+          <div class="rm-phase">
+            <div class="rm-dot"></div>
+            <div class="rm-content">
+              <div class="rm-time">Q4 2026</div>
+              <h3>📈 Growth</h3>
+              <ul><li>Social features (share swipes)</li><li>Portfolio analytics dashboard</li><li>Promoted token marketplace</li></ul>
+            </div>
+          </div>
+          <div class="rm-phase">
+            <div class="rm-dot"></div>
+            <div class="rm-content">
+              <div class="rm-time">2027</div>
+              <h3>🌍 Scale</h3>
+              <ul><li>Signal API for B2B</li><li>Autonomous agent strategies</li><li>Institutional alpha feeds</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Traction -->
+    <section class="slide" id="slide-10">
+      <div class="slide-content">
+        <div class="slide-label">TRACTION & VALIDATION</div>
+        <h2>Built in 2 Weeks. Already Working.</h2>
+        <div class="traction-grid">
+          <div class="tr-card"><div class="tr-val">✅</div><div class="tr-label">Working Prototype</div><div class="tr-desc">Interactive mockup with full UI flow</div></div>
+          <div class="tr-card"><div class="tr-val">5</div><div class="tr-label">Nansen APIs Integrated</div><div class="tr-desc">Token Screener, Netflows, Flow Intel, Token Info, Indicators</div></div>
+          <div class="tr-card"><div class="tr-val">2</div><div class="tr-label">DEX Aggregators</div><div class="tr-desc">Jupiter (Solana) + 1inch (EVM) ready</div></div>
+          <div class="tr-card"><div class="tr-val">$0.09</div><div class="tr-label">Cost Per Card</div><div class="tr-desc">Full AI-analyzed token card for under 10 cents</div></div>
+        </div>
+        <div class="quote-box">
+          "The best hackathon projects solve real problems with delightful UX. SwipeAlpha makes Smart Money intelligence feel like swiping on Tinder."
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: Ask / Close -->
+    <section class="slide" id="slide-11">
+      <div class="slide-bg-orbs"><div class="orb o1"></div><div class="orb o2"></div></div>
+      <div class="slide-content center-content">
+        <div class="logo-mark">
+          <svg width="56" height="56" viewBox="0 0 48 48" fill="none"><path d="M24 8L40 16v16L24 40 8 32V16L24 8z" fill="url(#lg2)"/><path d="M18 24l4 4 8-8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><defs><linearGradient id="lg2" x1="4" y1="4" x2="44" y2="44"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs></svg>
+        </div>
+        <h1 class="hero-title" style="font-size:48px">Swipe<span class="accent">Alpha</span></h1>
+        <p class="hero-sub" style="font-size:20px;max-width:500px">Democratizing Smart Money intelligence.<br>One swipe at a time.</p>
+        <div class="cta-links">
+          <div class="cta-item">🌐 <strong>Demo:</strong> <a href="http://localhost:3456" target="_blank" style="color:#a78bfa;text-decoration:none">localhost:3456</a></div>
+          <div class="cta-item">📧 <strong>Contact:</strong> <a href="mailto:team@swipealpha.xyz" style="color:#a78bfa;text-decoration:none">team@swipealpha.xyz</a></div>
+          <div class="cta-item">🐦 <strong>Twitter:</strong> <a href="https://twitter.com/SwipeAlpha" target="_blank" style="color:#a78bfa;text-decoration:none">@SwipeAlpha</a></div>
+          <div class="cta-item">⛓️ <strong>Built on:</strong> <a href="https://mantle.xyz" target="_blank" style="color:#a78bfa;text-decoration:none">Mantle Network</a></div>
+        </div>
+        <div class="final-tagline">
+          <span style="font-size:32px">👉</span> Swipe Right on the Future of Trading
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="deck.js"></script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwipeAlpha — Tinder for Tokens</title>
+  <meta name="description" content="Swipe right to buy trending tokens backed by Smart Money signals from Nansen.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span class="time" id="statusTime">11:06</span>
+      <div class="status-icons">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+      </div>
+    </div>
+
+    <!-- App Content -->
+    <div class="app-container">
+      
+      <!-- Screen: Splash -->
+      <div class="screen active" id="splashScreen">
+        <div class="splash-content">
+          <div class="splash-logo">
+            <div class="logo-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <path d="M24 4L44 14v20L24 44 4 34V14L24 4z" fill="url(#logoGrad)" opacity="0.2"/>
+                <path d="M24 8L40 16v16L24 40 8 32V16L24 8z" fill="url(#logoGrad)"/>
+                <path d="M18 24l4 4 8-8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                  <linearGradient id="logoGrad" x1="4" y1="4" x2="44" y2="44">
+                    <stop offset="0%" stop-color="#6366f1"/>
+                    <stop offset="100%" stop-color="#a855f7"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <h1 class="splash-title">Swipe<span class="accent">Alpha</span></h1>
+            <p class="splash-subtitle">Smart Money Signals. One Swipe Away.</p>
+          </div>
+          <div class="splash-features">
+            <div class="feature-pill"><span>🔍</span> Nansen Powered</div>
+            <div class="feature-pill"><span>🤖</span> AI Analysis</div>
+            <div class="feature-pill"><span>⚡</span> Instant Buy</div>
+          </div>
+          <button class="btn-primary" onclick="showScreen('connectScreen')">
+            Get Started
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+          </button>
+        </div>
+        <div class="splash-bg-orbs">
+          <div class="orb orb-1"></div>
+          <div class="orb orb-2"></div>
+          <div class="orb orb-3"></div>
+        </div>
+      </div>
+
+      <!-- Screen: Connect Wallet -->
+      <div class="screen" id="connectScreen">
+        <div class="connect-content">
+          <div class="connect-header">
+            <h2>Connect Wallet</h2>
+            <p>Link your wallet to start swiping</p>
+          </div>
+          <div class="wallet-options">
+            <button class="wallet-btn" onclick="connectWallet('phantom')">
+              <div class="wallet-icon phantom-icon">👻</div>
+              <div class="wallet-info">
+                <span class="wallet-name">Phantom</span>
+                <span class="wallet-chain">Solana</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.4"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/></svg>
+            </button>
+            <button class="wallet-btn" onclick="connectWallet('metamask')">
+              <div class="wallet-icon metamask-icon">🦊</div>
+              <div class="wallet-info">
+                <span class="wallet-name">MetaMask</span>
+                <span class="wallet-chain">EVM Chains</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.4"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/></svg>
+            </button>
+            <button class="wallet-btn" onclick="connectWallet('rainbow')">
+              <div class="wallet-icon rainbow-icon">🌈</div>
+              <div class="wallet-info">
+                <span class="wallet-name">Rainbow</span>
+                <span class="wallet-chain">Multi-Chain</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.4"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/></svg>
+            </button>
+          </div>
+          <div class="connect-footer">
+            <div class="security-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+              Non-custodial · You own your keys
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen: Loading / Fetching -->
+      <div class="screen" id="loadingScreen">
+        <div class="loading-content">
+          <div class="loading-animation">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring delay-1"></div>
+            <div class="pulse-ring delay-2"></div>
+            <div class="loading-icon">🔍</div>
+          </div>
+          <h3 class="loading-title">Scanning Smart Money</h3>
+          <p class="loading-subtitle" id="loadingText">Fetching token signals from Nansen...</p>
+          <div class="loading-steps">
+            <div class="load-step active" id="step1">
+              <div class="step-dot"></div>
+              <span>Token Screener</span>
+            </div>
+            <div class="load-step" id="step2">
+              <div class="step-dot"></div>
+              <span>Smart Money Flows</span>
+            </div>
+            <div class="load-step" id="step3">
+              <div class="step-dot"></div>
+              <span>AI Analysis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen: Main Swipe -->
+      <div class="screen" id="swipeScreen">
+        <!-- Top Nav -->
+        <div class="top-nav">
+          <button class="nav-icon" onclick="showScreen('settingsScreen')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+          </button>
+          <div class="nav-title">
+            <span class="nav-logo">Swipe</span><span class="nav-logo accent">Alpha</span>
+          </div>
+          <button class="nav-icon" onclick="showScreen('portfolioScreen')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+          </button>
+        </div>
+
+        <!-- Active Agent Bar -->
+        <div class="active-agent-bar" id="activeAgentBar" onclick="showScreen('agentDetailScreen')">
+          <div class="aa-dot"></div>
+          <span class="aa-label">Agent:</span>
+          <span class="aa-name" id="activeAgentName">DeFi Alpha Pro</span>
+          <span class="aa-badge">⭐ 4.8</span>
+          <span class="aa-status">Active · 5d left</span>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <button class="filter-chip active" data-chain="all">🔥 All</button>
+          <button class="filter-chip" data-chain="solana">◎ Solana</button>
+          <button class="filter-chip" data-chain="ethereum">⟠ ETH</button>
+          <button class="filter-chip" data-chain="base">🔵 Base</button>
+        </div>
+
+        <!-- Card Stack -->
+        <div class="card-stack" id="cardStack">
+          <!-- Cards will be injected by JS -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-bar">
+          <button class="action-btn skip-btn" id="skipBtn" onclick="swipeCard('left')">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+          </button>
+          <button class="action-btn info-btn" id="infoBtn" onclick="showTokenDetail()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          </button>
+          <button class="action-btn buy-btn" id="buyBtn" onclick="swipeCard('right')">
+            <span class="buy-amount">$10</span>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Screen: Buy Confirmation -->
+      <div class="screen" id="buyScreen">
+        <div class="buy-content">
+          <div class="buy-success-animation">
+            <div class="success-ring"></div>
+            <div class="success-icon">✅</div>
+          </div>
+          <h2 class="buy-title">Order Placed!</h2>
+          <p class="buy-subtitle" id="buyTokenName">Buying $AAVE</p>
+          
+          <div class="buy-details">
+            <div class="buy-row">
+              <span class="buy-label">Amount</span>
+              <span class="buy-value">$10.00 USDC</span>
+            </div>
+            <div class="buy-row">
+              <span class="buy-label">Est. Received</span>
+              <span class="buy-value" id="buyEstReceived">~32.5 AAVE</span>
+            </div>
+            <div class="buy-row">
+              <span class="buy-label">Route</span>
+              <span class="buy-value route-badge">Jupiter ⚡</span>
+            </div>
+            <div class="buy-row">
+              <span class="buy-label">Slippage</span>
+              <span class="buy-value">0.5%</span>
+            </div>
+            <div class="buy-row">
+              <span class="buy-label">Status</span>
+              <span class="buy-value status-confirmed">
+                <span class="dot-pulse"></span> Confirming...
+              </span>
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="showScreen('swipeScreen'); renderCards();">
+            Continue Swiping
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+          </button>
+          <button class="btn-ghost" onclick="showScreen('portfolioScreen')">View Portfolio</button>
+        </div>
+      </div>
+
+      <!-- Screen: Token Detail -->
+      <div class="screen" id="detailScreen">
+        <div class="detail-header">
+          <button class="back-btn" onclick="showScreen('swipeScreen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+          <span class="detail-title" id="detailTokenSymbol">$AAVE</span>
+          <div style="width:20px"></div>
+        </div>
+        <div class="detail-body" id="detailBody">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Screen: Portfolio -->
+      <div class="screen" id="portfolioScreen">
+        <div class="detail-header">
+          <button class="back-btn" onclick="showScreen('swipeScreen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+          <span class="detail-title">Portfolio</span>
+          <div style="width:20px"></div>
+        </div>
+        <div class="portfolio-body">
+          <div class="portfolio-total">
+            <span class="portfolio-label">Total Value</span>
+            <span class="portfolio-value">$47.32</span>
+            <span class="portfolio-change positive">+$3.82 (8.8%)</span>
+          </div>
+          <div class="portfolio-list" id="portfolioList">
+            <div class="portfolio-item">
+              <div class="portfolio-token-icon" style="background: linear-gradient(135deg, #2775ca, #1a5fb4)">A</div>
+              <div class="portfolio-token-info">
+                <span class="portfolio-token-name">AAVE</span>
+                <span class="portfolio-token-chain">Ethereum · Bought 2h ago</span>
+              </div>
+              <div class="portfolio-token-value">
+                <span class="portfolio-token-amount">$12.40</span>
+                <span class="portfolio-token-pnl positive">+24%</span>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="portfolio-token-icon" style="background: linear-gradient(135deg, #9945FF, #14F195)">J</div>
+              <div class="portfolio-token-info">
+                <span class="portfolio-token-name">JUP</span>
+                <span class="portfolio-token-chain">Solana · Bought 5h ago</span>
+              </div>
+              <div class="portfolio-token-value">
+                <span class="portfolio-token-amount">$10.92</span>
+                <span class="portfolio-token-pnl positive">+9.2%</span>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="portfolio-token-icon" style="background: linear-gradient(135deg, #627eea, #3b5998)">P</div>
+              <div class="portfolio-token-info">
+                <span class="portfolio-token-name">PENDLE</span>
+                <span class="portfolio-token-chain">Ethereum · Bought 1d ago</span>
+              </div>
+              <div class="portfolio-token-value">
+                <span class="portfolio-token-amount">$14.00</span>
+                <span class="portfolio-token-pnl negative">-2.1%</span>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="portfolio-token-icon" style="background: linear-gradient(135deg, #0052ff, #3380ff)">V</div>
+              <div class="portfolio-token-info">
+                <span class="portfolio-token-name">VIRTUAL</span>
+                <span class="portfolio-token-chain">Base · Bought 2d ago</span>
+              </div>
+              <div class="portfolio-token-value">
+                <span class="portfolio-token-amount">$10.00</span>
+                <span class="portfolio-token-pnl negative">-5.3%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen: Settings -->
+      <div class="screen" id="settingsScreen">
+        <div class="detail-header">
+          <button class="back-btn" onclick="showScreen('swipeScreen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+          <span class="detail-title">Settings</span>
+          <div style="width:20px"></div>
+        </div>
+        <div class="settings-body">
+          <div class="setting-group">
+            <div class="setting-group-title">Swipe Settings</div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Buy Amount</span>
+                <span class="setting-desc">Per swipe-right purchase</span>
+              </div>
+              <div class="setting-value-select">
+                <button class="amount-option">$5</button>
+                <button class="amount-option active">$10</button>
+                <button class="amount-option">$25</button>
+                <button class="amount-option">$50</button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Max Slippage</span>
+                <span class="setting-desc">Maximum price impact</span>
+              </div>
+              <span class="setting-value">0.5%</span>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Confirm Before Buy</span>
+                <span class="setting-desc">Show confirmation dialog</span>
+              </div>
+              <div class="toggle active">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+          </div>
+          <div class="setting-group">
+            <div class="setting-group-title">Filters</div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Min Market Cap</span>
+                <span class="setting-desc">Filter out micro caps</span>
+              </div>
+              <span class="setting-value">$1M</span>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Min Liquidity</span>
+                <span class="setting-desc">Ensure tradability</span>
+              </div>
+              <span class="setting-value">$100K</span>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Smart Money Only</span>
+                <span class="setting-desc">Only show SM-backed tokens</span>
+              </div>
+              <div class="toggle active">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+          </div>
+          <div class="setting-group">
+            <div class="setting-group-title">Wallet</div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Connected</span>
+                <span class="setting-desc wallet-addr">0x8a2e...4f3b</span>
+              </div>
+              <span class="setting-value disconnect">Disconnect</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen: Agent Marketplace -->
+      <div class="screen" id="agentsScreen">
+        <div class="detail-header">
+          <button class="back-btn" onclick="showScreen('swipeScreen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+          <span class="detail-title">Agent Marketplace</span>
+          <div style="width:20px"></div>
+        </div>
+        <div class="agents-body">
+          <!-- Featured Agent -->
+          <div class="agent-featured" onclick="showAgentDetail(0)">
+            <div class="af-badge">🏆 TOP PERFORMER</div>
+            <div class="af-row">
+              <div class="agent-avatar" style="background:linear-gradient(135deg,#6366f1,#a855f7)">🧠</div>
+              <div class="af-info">
+                <div class="af-name">DeFi Alpha Pro</div>
+                <div class="af-strategy">DeFi · Blue Chip Focus</div>
+              </div>
+              <div class="af-stats">
+                <span class="af-winrate">72%</span>
+                <span class="af-winlabel">Win Rate</span>
+              </div>
+            </div>
+            <div class="af-metrics">
+              <div class="af-metric"><span class="af-mv">340</span><span class="af-ml">Trades</span></div>
+              <div class="af-metric"><span class="af-mv">⭐ 4.8</span><span class="af-ml">Rating</span></div>
+              <div class="af-metric"><span class="af-mv">89</span><span class="af-ml">Renters</span></div>
+              <div class="af-metric"><span class="af-mv">5 MNT</span><span class="af-ml">/week</span></div>
+            </div>
+          </div>
+
+          <div class="agents-section-title">All Agents</div>
+
+          <!-- Agent List -->
+          <div class="agent-card" onclick="showAgentDetail(1)">
+            <div class="agent-avatar" style="background:linear-gradient(135deg,#f97316,#eab308)">🔥</div>
+            <div class="agent-card-info">
+              <div class="agent-card-name">Meme Hunter</div>
+              <div class="agent-card-desc">Meme · High Risk/Reward</div>
+              <div class="agent-card-stats"><span class="acs-win">58% win</span> · <span>890 trades</span> · <span>⭐ 4.2</span></div>
+            </div>
+            <div class="agent-card-price"><span class="acp-val">FREE</span><span class="acp-label">Ad-supported</span></div>
+          </div>
+
+          <div class="agent-card" onclick="showAgentDetail(2)">
+            <div class="agent-avatar" style="background:linear-gradient(135deg,#22c55e,#16a34a)">🏛️</div>
+            <div class="agent-card-info">
+              <div class="agent-card-name">Whale Watcher</div>
+              <div class="agent-card-desc">Blue Chip · Conservative</div>
+              <div class="agent-card-stats"><span class="acs-win">81% win</span> · <span>120 trades</span> · <span>⭐ 4.9</span></div>
+            </div>
+            <div class="agent-card-price"><span class="acp-val">10 MNT</span><span class="acp-label">/week</span></div>
+          </div>
+
+          <div class="agent-card" onclick="showAgentDetail(3)">
+            <div class="agent-avatar" style="background:linear-gradient(135deg,#ec4899,#a855f7)">🎯</div>
+            <div class="agent-card-info">
+              <div class="agent-card-name">Yield Sniper</div>
+              <div class="agent-card-desc">DeFi · Yield Farming</div>
+              <div class="agent-card-stats"><span class="acs-win">67% win</span> · <span>215 trades</span> · <span>⭐ 4.5</span></div>
+            </div>
+            <div class="agent-card-price"><span class="acp-val">3 MNT</span><span class="acp-label">/week</span></div>
+          </div>
+
+          <div class="agent-card" onclick="showAgentDetail(4)">
+            <div class="agent-avatar" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">🤖</div>
+            <div class="agent-card-info">
+              <div class="agent-card-name">AI Narrative</div>
+              <div class="agent-card-desc">AI/Agent Tokens · Trending</div>
+              <div class="agent-card-stats"><span class="acs-win">63% win</span> · <span>178 trades</span> · <span>⭐ 4.3</span></div>
+            </div>
+            <div class="agent-card-price"><span class="acp-val">5 MNT</span><span class="acp-label">/week</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen: Agent Detail -->
+      <div class="screen" id="agentDetailScreen">
+        <div class="detail-header">
+          <button class="back-btn" onclick="showScreen('agentsScreen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+          <span class="detail-title" id="agentDetailTitle">Agent Detail</span>
+          <div style="width:20px"></div>
+        </div>
+        <div class="detail-body" id="agentDetailBody">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Screen: Rate Agent -->
+      <div class="screen" id="rateAgentScreen">
+        <div class="detail-header">
+          <button class="back-btn" onclick="showScreen('swipeScreen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+          <span class="detail-title">Rate Agent</span>
+          <div style="width:20px"></div>
+        </div>
+        <div class="rate-body">
+          <div class="rate-agent-header">
+            <div class="agent-avatar" style="background:linear-gradient(135deg,#6366f1,#a855f7);width:56px;height:56px;font-size:28px">🧠</div>
+            <h3 id="rateAgentName">DeFi Alpha Pro</h3>
+            <p style="color:rgba(255,255,255,0.4);font-size:13px">How was your experience?</p>
+          </div>
+          <div class="rate-stars" id="rateStars">
+            <span class="star" data-v="1" onclick="setRating(1)">★</span>
+            <span class="star" data-v="2" onclick="setRating(2)">★</span>
+            <span class="star" data-v="3" onclick="setRating(3)">★</span>
+            <span class="star" data-v="4" onclick="setRating(4)">★</span>
+            <span class="star" data-v="5" onclick="setRating(5)">★</span>
+          </div>
+          <div class="rate-label" id="rateLabel">Tap to rate</div>
+          <div class="rate-tags">
+            <button class="rate-tag" onclick="this.classList.toggle('active')">Accurate signals</button>
+            <button class="rate-tag" onclick="this.classList.toggle('active')">Good risk mgmt</button>
+            <button class="rate-tag" onclick="this.classList.toggle('active')">Fast updates</button>
+            <button class="rate-tag" onclick="this.classList.toggle('active')">Worth the price</button>
+            <button class="rate-tag" onclick="this.classList.toggle('active')">Too risky</button>
+            <button class="rate-tag" onclick="this.classList.toggle('active')">Missed opportunities</button>
+          </div>
+          <button class="btn-primary" onclick="submitRating()" style="margin-top:24px">
+            Submit Rating On-Chain
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          </button>
+          <div class="rate-onchain">⛓️ Rating will be recorded via ERC-8004 Reputation Registry</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar" id="tabBar">
+      <button class="tab active" data-screen="swipeScreen" onclick="switchTab(this)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/></svg>
+        <span>Swipe</span>
+      </button>
+      <button class="tab" data-screen="agentsScreen" onclick="switchTab(this)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <span>Agents</span>
+      </button>
+      <button class="tab" data-screen="portfolioScreen" onclick="switchTab(this)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        <span>Portfolio</span>
+      </button>
+      <button class="tab" data-screen="settingsScreen" onclick="switchTab(this)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        <span>Settings</span>
+      </button>
+    </div>
+
+    <!-- Bottom Safe Area -->
+    <div class="bottom-bar"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.0/ethers.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
