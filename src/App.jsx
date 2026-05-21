@@ -5,6 +5,9 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 import { TOKEN_ADDRESS, STAKING_ADDRESS, TOKEN_ABI, STAKING_ABI } from './constants';
 import SwipeAlpha from './SwipeAlpha';
+import LandingPage from './LandingPage';
+import Profile from './Profile';
+import Admin from './Admin';
 
 function clientToSigner(client) {
   const { account, chain, transport } = client;
@@ -40,23 +43,26 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showRain, setShowRain] = useState(false);
-  const [selectedArchetype, setSelectedArchetype] = useState(() => {
-    return localStorage.getItem('swindler_archetype') || null;
-  });
+  const [selectedArchetype, setSelectedArchetype] = useState(null);
 
   const isConfigured = TOKEN_ADDRESS !== "0xYOUR_TOKEN_ADDRESS_HERE" && STAKING_ADDRESS !== "0xYOUR_STAKING_CONTRACT_ADDRESS_HERE";
 
-  const [isDemo, setIsDemo] = useState(false);
+  const [currentPath, setCurrentPath] = useState('/');
 
   useEffect(() => {
     const checkRoute = () => {
       const path = window.location.pathname;
-      setIsDemo(path === '/demo' || path.endsWith('/demo') || window.location.hash === '#/demo');
+      setCurrentPath(path);
     };
     checkRoute();
     window.addEventListener('popstate', checkRoute);
     return () => window.removeEventListener('popstate', checkRoute);
   }, []);
+
+  const navigate = (path) => {
+    window.history.pushState({}, '', path);
+    setCurrentPath(path);
+  };
   useEffect(() => {
     if (walletClient && isConfigured) {
       const signer = clientToSigner(walletClient);
@@ -265,7 +271,7 @@ function App() {
     else setAmount(stakedBalance);
   };
 
-  if (isDemo) {
+  if (currentPath === '/demo' || currentPath.endsWith('/demo') || window.location.hash === '#/demo') {
     return (
       <div className="demo-mode-page">
         {renderRain()}
@@ -292,12 +298,17 @@ function App() {
               <Flame size={18} color="#fe3c72" style={{ filter: 'drop-shadow(0 0 5px rgba(254, 60, 114, 0.4))' }} />
               <span style={{ background: 'linear-gradient(135deg, #fe3c72, #ff7854)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Agent Swindler 📱</span>
             </div>
-            <a href="/" className="liquid-glass-btn" style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', textDecoration: 'none', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }} onClick={(e) => {
+            <a href="/" className="liquid-glass-btn" style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', textDecoration: 'none', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }} onClick={(e) => {
               e.preventDefault();
-              window.history.pushState({}, '', '/');
-              setIsDemo(false);
+              navigate('/');
             }}>
-              💻 Go to DApp
+              🏠 Home
+            </a>
+            <a href="/profile" className="liquid-glass-btn" style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', textDecoration: 'none', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }} onClick={(e) => {
+              e.preventDefault();
+              navigate('/profile');
+            }}>
+              👤 Profile & APIs
             </a>
           </div>
 
@@ -355,270 +366,16 @@ function App() {
     );
   }
 
-  return (
-    <div className="app-container">
-      {renderRain()}
-      <header className="header">
-        <div className="logo">
-          <Flame color="#fe3c72" size={28} style={{ filter: 'drop-shadow(0 0 8px rgba(254, 60, 114, 0.45))' }} />
-          AGENT <span>SWINDLER</span>
-        </div>
+  if (currentPath === '/profile' || currentPath.endsWith('/profile') || window.location.hash === '#/profile') {
+    return <Profile navigate={navigate} />;
+  }
 
-        {/* View Switcher: Staking vs SwipeAlpha vs Mobile Demo */}
-        <div className="view-selector" style={{ display: 'flex', gap: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.25rem', borderRadius: '9999px', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <button 
-            className={`view-btn ${currentView === 'staking' ? 'active' : ''}`}
-            onClick={() => setCurrentView('staking')}
-            style={{
-              background: currentView === 'staking' ? 'rgba(254, 60, 114, 0.18)' : 'transparent',
-              border: 'none',
-              color: currentView === 'staking' ? 'var(--primary)' : 'var(--text-muted)',
-              padding: '0.4rem 1.2rem',
-              borderRadius: '9999px',
-              fontSize: '0.85rem',
-              fontWeight: '700',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
-          >
-            🏛️ Swindler Vault
-          </button>
-          <button 
-            className={`view-btn ${currentView === 'swipealpha' ? 'active' : ''}`}
-            onClick={() => setCurrentView('swipealpha')}
-            style={{
-              background: currentView === 'swipealpha' ? 'rgba(254, 60, 114, 0.18)' : 'transparent',
-              border: 'none',
-              color: currentView === 'swipealpha' ? 'var(--primary)' : 'var(--text-muted)',
-              padding: '0.4rem 1.2rem',
-              borderRadius: '9999px',
-              fontSize: '0.85rem',
-              fontWeight: '700',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
-          >
-            🧠 Swindler Swipe
-          </button>
-          <a 
-            href="/demo"
-            className="view-btn"
-            onClick={(e) => {
-              e.preventDefault();
-              window.history.pushState({}, '', '/demo');
-              setIsDemo(true);
-            }}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-muted)',
-              padding: '0.4rem 1.2rem',
-              borderRadius: '9999px',
-              fontSize: '0.85rem',
-              fontWeight: '700',
-              cursor: 'pointer',
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-              transition: 'all 0.3s'
-            }}
-          >
-            📱 Mobile Demo
-          </a>
-        </div>
+  if (currentPath === '/admin' || currentPath.endsWith('/admin') || window.location.hash === '#/admin') {
+    return <Admin navigate={navigate} />;
+  }
 
-        <ConnectButton.Custom>
-          {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
-            const connected = mounted && account && chain;
-            return (
-              <div {...(!mounted && { style: { opacity: 0 } })}>
-                {(() => {
-                  if (!connected) {
-                    return (
-                      <button onClick={openConnectModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>
-                        Connect Wallet
-                      </button>
-                    );
-                  }
-                  if (chain.unsupported || chain.id !== 5003) {
-                    return (
-                      <button onClick={openChainModal} className="liquid-glass-btn" style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: 'rgba(239, 68, 68, 0.5)', color: '#ff6b6b', padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>
-                        <AlertCircle size={16} style={{ display: 'inline', marginRight: '5px', verticalAlign: 'text-bottom' }}/>
-                        Switch to Mantle Testnet
-                      </button>
-                    );
-                  }
-                  return (
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button onClick={openChainModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}></div>
-                        {chain.name}
-                      </button>
-                      <button onClick={openAccountModal} className="liquid-glass-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
-                        {account.displayName}
-                      </button>
-                    </div>
-                  );
-                })()}
-              </div>
-            );
-          }}
-        </ConnectButton.Custom>
-      </header>
-
-      {currentView === 'staking' ? (
-        <>
-          {!isConfigured && (
-            <div style={{ background: 'rgba(255, 74, 74, 0.1)', border: '1px solid var(--error)', padding: '1rem', borderRadius: '12px', marginBottom: '2rem', width: '100%', maxWidth: '500px', display: 'flex', gap: '0.5rem' }}>
-              <AlertCircle color="var(--error)" />
-              <div>
-                <strong>Setup Required:</strong> Please deploy your MockERC20 and Staking contracts to Mantle Sepolia, then update the addresses in <code>src/constants.js</code>.
-              </div>
-            </div>
-          )}
-
-          <div className="hero-section">
-            <div className="vault-icon-container" style={{ background: 'rgba(254, 60, 114, 0.1)', border: '1px solid rgba(254, 60, 114, 0.3)', boxShadow: '0 0 30px rgba(254, 60, 114, 0.15)' }}>
-              <Flame className="vault-icon" size={48} color="var(--primary)" style={{ filter: 'drop-shadow(0 0 8px rgba(254, 60, 114, 0.4))' }} />
-              <div className="pulse-ring"></div>
-              <div className="pulse-ring delay"></div>
-            </div>
-            <h2 className="hero-title">Agent Swindler Vault</h2>
-            <p className="hero-subtitle">Watch your wealth grow in real-time.</p>
-            <div className="live-yield-display">
-              <span className="live-dot"></span>
-              <span className="live-text">LIVE YIELD:</span>
-              <span className="live-amount">+{Number(realtimeRewards).toLocaleString(undefined, {minimumFractionDigits: 6, maximumFractionDigits: 6})}</span>
-              <span className="live-currency">$SWINDLER</span>
-            </div>
-          </div>
-
-          <main className="main-card">
-            <div className="stats-grid">
-              <div className="stat-box">
-                <div className="stat-label">My Staked</div>
-                <div className="stat-value">{Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 2})} $SWINDLER</div>
-              </div>
-              <div className="stat-box">
-                <div className="stat-label">Current APY</div>
-                <div className="stat-value" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                  <TrendingUp size={20} /> 5%
-                </div>
-              </div>
-              <div className="stat-box">
-                <div className="stat-label">Reward Pool</div>
-                <div className="stat-value">{Number(poolBalance).toLocaleString(undefined, {maximumFractionDigits: 0})} $SWINDLER</div>
-              </div>
-              <div className="stat-box">
-                <div className="stat-label">Time to Deplete</div>
-                <div className="stat-value" style={{ fontSize: '1.2rem', marginTop: '0.25rem' }}>{depletionTime || '-'}</div>
-              </div>
-            </div>
-
-            <div className="action-tabs">
-              <button 
-                className={`tab-btn ${activeTab === 'stake' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('stake'); setAmount(''); setError(''); }}
-              >
-                Stake
-              </button>
-              <button 
-                className={`tab-btn ${activeTab === 'unstake' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('unstake'); setAmount(''); setError(''); }}
-              >
-                Unstake
-              </button>
-            </div>
-
-            <div className="input-group">
-              <div className="input-wrapper">
-                <input 
-                  type="number" 
-                  className="token-input"
-                  placeholder="0.0" 
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  disabled={isLoading || !isConfigured || !isConnected}
-                />
-                <button className="max-btn" onClick={setMaxAmount} disabled={isLoading || !isConfigured || !isConnected}>MAX</button>
-                <span style={{ fontWeight: 600, color: 'var(--primary)', paddingRight: '0.5rem' }}>$SWINDLER</span>
-              </div>
-              <div className="balance-text">
-                Available: {activeTab === 'stake' ? Number(balance).toLocaleString(undefined, {maximumFractionDigits: 4}) : Number(stakedBalance).toLocaleString(undefined, {maximumFractionDigits: 4})}
-              </div>
-            </div>
-
-            {error && <div className="error-msg">{error}</div>}
-
-            <button 
-              className="submit-btn" 
-              onClick={handleAction}
-              disabled={isLoading || !isConnected || !amount || !isConfigured}
-            >
-              {isLoading ? <div className="loader"></div> : (activeTab === 'stake' ? 'Stake Tokens' : 'Unstake Tokens')}
-            </button>
-
-            <div className="rewards-section">
-              <button 
-                className="claim-btn liquid-glass-btn"
-                onClick={claimRewards}
-                disabled={isLoading || Number(pendingRewards) <= 0 || !isConfigured || !isConnected}
-              >
-                Claim Rewards
-              </button>
-            </div>
-          </main>
-
-          {leaderboard.length > 0 && (
-            <div className="leaderboard-card">
-              <div className="leaderboard-header" style={{ justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <Trophy color="var(--primary)" size={24} />
-                  <h3>Top Stakers</h3>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Global Total Staked</div>
-                  <div style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem', textShadow: '0 0 10px rgba(254, 60, 114, 0.2)' }}>
-                    {Number(totalStaked).toLocaleString(undefined, {maximumFractionDigits: 2})} $SWINDLER
-                  </div>
-                </div>
-              </div>
-              <div className="leaderboard-list">
-                {leaderboard.map((staker, index) => (
-                  <div key={staker.address} className="leaderboard-item">
-                    <div className="staker-rank">#{index + 1}</div>
-                    <div className="staker-address">
-                      {staker.address === account ? (
-                        <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>You</span>
-                      ) : (
-                        `${staker.address.substring(0, 6)}...${staker.address.substring(staker.address.length - 4)}`
-                      )}
-                    </div>
-                    <div className="staker-amount">
-                      {staker.staked.toLocaleString(undefined, {maximumFractionDigits: 2})} $SWINDLER
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      ) : (
-        <SwipeAlpha 
-          walletClient={walletClient} 
-          account={account} 
-          mode="desktop" 
-          archetype={selectedArchetype} 
-          setArchetype={(val) => {
-            setSelectedArchetype(val);
-            if (val) localStorage.setItem('swindler_archetype', val);
-            else localStorage.removeItem('swindler_archetype');
-          }} 
-        />
-      )}
-    </div>
-  );
+  // Fallback to Apple-style Landing Page
+  return <LandingPage navigate={navigate} />;
 }
 
 export default App;

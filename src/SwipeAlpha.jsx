@@ -29,7 +29,7 @@ const TOKENS = [
     standard: "ERC-8004",
     creator: "TuringLabs",
     model: "Claude 3.5 Sonnet",
-    logoUrl: "https://assets.coingecko.com/coins/images/42490/large/virtual_protocol.png",
+    logoUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=Dave",
     description: "Multi-strategy yield optimization agent running on Mantle Network. Dynamically allocates liquidity into Moe vaults.",
     winRate: "84.5%",
     avgHolding: "4.2 hours",
@@ -70,7 +70,7 @@ const TOKENS = [
     standard: "ERC-8004",
     creator: "AgentRegistry",
     model: "GPT-4o",
-    logoUrl: "https://assets.coingecko.com/coins/images/32822/large/virtual.png",
+    logoUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=Swindler",
     description: "Arbitrage & High-Frequency Meme-coin hunter. Auto-buys base/mantle narratives before retail.",
     winRate: "72.8%",
     avgHolding: "18 mins",
@@ -111,7 +111,7 @@ const TOKENS = [
     standard: "ERC-8004",
     creator: "NansenAI Labs",
     model: "Gemini 1.5 Pro",
-    logoUrl: "https://assets.coingecko.com/coins/images/12645/large/AAVE.png",
+    logoUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=Scout",
     description: "Tracks Smart Money wallet clusters on-chain and copy-trades institutional flow signals in real time.",
     winRate: "89.1%",
     avgHolding: "2.5 days",
@@ -152,7 +152,7 @@ const TOKENS = [
     standard: "ERC-8004",
     creator: "MerchantMoe Contributor",
     model: "Llama-3-70B",
-    logoUrl: "https://assets.coingecko.com/coins/images/16185/large/pendle.png",
+    logoUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=Guard",
     description: "Rebalances concentrated liquidity pools dynamically to capture maximum trading fees while minimizing impermanent loss.",
     winRate: "91.2%",
     avgHolding: "7.0 days",
@@ -193,7 +193,7 @@ const TOKENS = [
     standard: "ERC-8004",
     creator: "SentinelDAO",
     model: "DeepSeek-V3",
-    logoUrl: "https://assets.coingecko.com/coins/images/36399/large/ENA.png",
+    logoUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=Sentinel",
     description: "Volatility hedge agent. Automatically opens delta-neutral positions and short hedges during market dips.",
     winRate: "78.4%",
     avgHolding: "1.2 days",
@@ -279,6 +279,10 @@ const AGENTS = [
 ];
 
 export default function SwipeAlpha({ walletClient, account, mode = 'desktop', archetype, setArchetype }) {
+  const memeImg = localStorage.getItem('custom_archetype_meme') || archetypeMeme;
+  const balancedImg = localStorage.getItem('custom_archetype_balanced') || archetypeBalanced;
+  const bluechipImg = localStorage.getItem('custom_archetype_bluechip') || archetypeBluechip;
+
   const [screen, setScreen] = useState('swipe'); // swipe, detail, agents, agentDetail, rateAgent
   const [showOnboarding, setShowOnboarding] = useState(false);
 
@@ -299,12 +303,12 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
   }, [archetype]);
 
   useEffect(() => {
-    if (account && !archetype) {
+    if (!archetype) {
       setShowOnboarding(true);
     } else {
       setShowOnboarding(false);
     }
-  }, [account, archetype]);
+  }, [archetype]);
 
   const [selectedTokenIdx, setSelectedTokenIdx] = useState(0);
   const [selectedAgentIdx, setSelectedAgentIdx] = useState(0);
@@ -319,10 +323,98 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
   const [cardIndex, setCardIndex] = useState(0);
   const [activeAgent, setActiveAgent] = useState(AGENTS[0]);
   const [isSwapping, setIsSwapping] = useState(false);
-
-  // Desktop states
   const [swappingToken, setSwappingToken] = useState(null);
   const [showRateModal, setShowRateModal] = useState(false);
+  const [matchOverlayAgent, setMatchOverlayAgent] = useState(null);
+  
+  const [swipedAgents, setSwipedAgents] = useState(() => {
+    // Pre-populate with first two tokens for mockup design
+    return [TOKENS[0], TOKENS[1]];
+  });
+
+  const [liveTransactions, setLiveTransactions] = useState([
+    {
+      id: 1,
+      agentSymbol: 'TDAVE',
+      agentName: 'Turing Dave',
+      type: 'BUY',
+      token: 'MOE',
+      amount: '154',
+      price: '$0.14',
+      time: '3s ago',
+      txHash: '0x3a1b...c92d'
+    },
+    {
+      id: 2,
+      agentSymbol: 'SWINDLER',
+      agentName: 'Alpha Swindler',
+      type: 'SELL',
+      token: 'PENDLE',
+      amount: '38',
+      price: '$4.18',
+      time: '1m ago',
+      txHash: '0x8f2e...9a4c'
+    },
+    {
+      id: 3,
+      agentSymbol: 'TDAVE',
+      agentName: 'Turing Dave',
+      type: 'BUY',
+      token: 'MNT',
+      amount: '22',
+      price: '$0.87',
+      time: '3m ago',
+      txHash: '0x1c8b...4f7d'
+    }
+  ]);
+
+  useEffect(() => {
+    if (screen !== 'agents' || swipedAgents.length === 0) return;
+
+    const interval = setInterval(() => {
+      const randomAgent = swipedAgents[Math.floor(Math.random() * swipedAgents.length)];
+      const tokensList = ['MOE', 'PENDLE', 'MNT', 'AAVE', 'ENA', 'VIRTUAL'];
+      const randomToken = tokensList[Math.floor(Math.random() * tokensList.length)];
+      const type = Math.random() > 0.4 ? 'BUY' : 'SELL';
+      const prices = {
+        MOE: '$0.14',
+        PENDLE: '$4.18',
+        MNT: '$0.87',
+        AAVE: '$85.40',
+        ENA: '$0.52',
+        VIRTUAL: '$1.45'
+      };
+      
+      const amount = Math.floor(Math.random() * 500) + 10;
+      const mockHash = "0x" + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('') + "..." + Array.from({length: 4}, () => Math.floor(Math.random()*16).toString(16)).join('');
+      
+      const newTx = {
+        id: Date.now(),
+        agentSymbol: randomAgent.symbol,
+        agentName: randomAgent.name,
+        type,
+        token: randomToken,
+        amount: amount.toString(),
+        price: prices[randomToken] || '$1.00',
+        time: 'Just now',
+        txHash: mockHash,
+        isNew: true
+      };
+
+      setLiveTransactions(prev => {
+        const updated = prev.map(tx => {
+          if (tx.time === 'Just now') return { ...tx, time: '5s ago', isNew: false };
+          if (tx.time === '5s ago') return { ...tx, time: '15s ago' };
+          if (tx.time === '15s ago') return { ...tx, time: '30s ago' };
+          if (tx.time === '30s ago') return { ...tx, time: '1m ago' };
+          return tx;
+        });
+        return [newTx, ...updated.slice(0, 15)];
+      });
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [screen, swipedAgents]);
   
   const MOCK_REVIEWS = [
     { agentName: "Yield Sniper", rating: 5, comment: "Accurate alerts, caught the PENDLE vault yield spike perfectly!", user: "0x3f5c...921a", time: "2 hours ago" },
@@ -353,9 +445,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
     if (!isDragging || isSwapping) return;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const offsetX = clientX - dragStart.x;
-    const offsetY = clientY - dragStart.y;
-    setDragOffset({ x: offsetX, y: offsetY });
+    setDragOffset({
+      x: clientX - dragStart.x,
+      y: clientY - dragStart.y
+    });
   };
 
   const handleDragEnd = () => {
@@ -369,24 +462,22 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       return;
     }
     
-    const threshold = 120;
-    if (dragOffset.x > threshold) {
+    // Swipe threshold 100px
+    if (dragOffset.x > 100) {
       handleSwipe('right');
-    } else if (dragOffset.x < -threshold) {
+    } else if (dragOffset.x < -100) {
       handleSwipe('left');
     }
     setDragOffset({ x: 0, y: 0 });
   };
 
+  const handleKeyDown = (e) => {
+    if (isSwapping || screen !== 'swipe') return;
+    if (e.key === 'ArrowRight') handleSwipe('right');
+    if (e.key === 'ArrowLeft') handleSwipe('left');
+  };
+
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (mode !== 'demo' || screen !== 'swipe' || isSwapping) return;
-      if (e.key === 'ArrowLeft') {
-        handleSwipe('left');
-      } else if (e.key === 'ArrowRight') {
-        handleSwipe('right');
-      }
-    };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [cardIndex, isSwapping, mode, screen]);
@@ -395,56 +486,31 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
   const handleSwipe = async (direction) => {
     if (direction === 'right' && currentToken) {
-      if (!walletClient) {
-        alert("Please connect your wallet first at the top of the page!");
-        return;
-      }
-      setIsSwapping(true);
-      try {
-        const { transport, chain } = walletClient;
-        const network = {
-          chainId: chain.id,
-          name: chain.name,
-        };
-        const provider = new ethers.BrowserProvider(transport, network);
-        const signer = new ethers.JsonRpcSigner(provider, account);
+      // Add to matched agents list
+      setSwipedAgents(prev => {
+        if (prev.some(a => a.symbol === currentToken.symbol)) return prev;
+        return [...prev, currentToken];
+      });
 
-        // Verify correct network (Mantle Sepolia: 5003)
-        if (chain.id !== 5003) {
-          alert("Please switch network to Mantle Sepolia at the header.");
-          setIsSwapping(false);
-          return;
-        }
-
-        const routerContract = new ethers.Contract(MOCK_MOE_ROUTER_ADDRESS, MOCK_MOE_ROUTER_ABI, signer);
-        
-        console.log(`Executing real on-chain mock swap via MockMerchantMoeRouter for ${currentToken.symbol}`);
-        
-        // Swap 0.1 MNT
-        const swapValue = ethers.parseEther("0.1");
-        const tx = await routerContract.swapMNT(
-          currentToken.symbol,
-          account,
-          { value: swapValue }
-        );
-        
-        await tx.wait();
-        alert(`🛒 Swap transaction executed successfully via MerchantMoe (Mock Router) on Mantle Sepolia!\nToken: ${currentToken.name} ($${currentToken.symbol})\nAmount In: 0.1 MNT\nTx Hash: ${tx.hash}`);
-      } catch (e) {
-        console.error(e);
-        alert(`❌ Error executing swap transaction: ${e.reason || e.message}`);
-        setIsSwapping(false);
-        return; // Don't advance card if failed
-      } finally {
-        setIsSwapping(false);
-      }
+      // Set matched agent to trigger custom overlay inside phone mockup
+      setMatchOverlayAgent(currentToken);
     }
     setCardIndex(prev => prev + 1);
   };
 
   const handleDesktopSwap = async (token) => {
     if (!walletClient) {
-      alert("Please connect your wallet first at the top of the page!");
+      // Wallet not connected - Run Simulated Transaction for Mockup Demo!
+      setSwappingToken(token.symbol);
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate loading
+        const mockHash = "0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
+        alert(`🛒 [SIMULATION] Swap transaction simulated successfully via MerchantMoe (Mock Router)!\n(Demo Mode - Wallet not connected)\n\nToken: ${token.name} ($${token.symbol})\nAmount In: 0.1 MNT\nSimulated Tx Hash: ${mockHash.substring(0, 10)}...${mockHash.substring(60)}\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setSwappingToken(null);
+      }
       return;
     }
     setSwappingToken(token.symbol);
@@ -455,7 +521,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         name: chain.name,
       };
       const provider = new ethers.BrowserProvider(transport, network);
-      const signer = new ethers.JsonRpcSigner(provider, account);
+      const signer = await provider.getSigner(account);
 
       if (chain.id !== 5003) {
         alert("Please switch network to Mantle Sepolia at the header.");
@@ -483,7 +549,17 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
   const handleRecentTradeSwap = async (tradeTokenSymbol, tradeType) => {
     if (!walletClient) {
-      alert("Please connect your wallet first at the top of the page!");
+      // Wallet not connected - Run Simulated Transaction for Mockup Demo!
+      setIsSwapping(true);
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate loading
+        const mockHash = "0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
+        alert(`🛒 [SIMULATION] Copy Trade transaction simulated successfully!\n(Demo Mode - Wallet not connected)\n\nAction: ${tradeType} ${tradeTokenSymbol}\nValue: 0.1 MNT\nSimulated Tx Hash: ${mockHash.substring(0, 10)}...${mockHash.substring(60)}\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsSwapping(false);
+      }
       return;
     }
     setIsSwapping(true);
@@ -494,7 +570,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         name: chain.name,
       };
       const provider = new ethers.BrowserProvider(transport, network);
-      const signer = new ethers.JsonRpcSigner(provider, account);
+      const signer = await provider.getSigner(account);
 
       if (chain.id !== 5003) {
         alert("Please switch network to Mantle Sepolia at the header.");
@@ -537,18 +613,44 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       return;
     }
     setIsSubmittingRating(true);
-    try {
-      if (!walletClient) {
-        throw new Error("Wallet not connected. Please connect wallet at top of the page.");
-      }
+    
+    if (!walletClient) {
+      // Wallet not connected - Run Simulated Reputation Submission!
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate loading
+        const mockHash = "0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
+        alert(`⭐ [SIMULATION] Rating submitted successfully to Reputation Registry!\n(Demo Mode - Wallet not connected)\n\nAgent: ${AGENTS[selectedAgentIdx].name}\nScore: ${ratingVal} Stars\nSimulated Tx Hash: ${mockHash.substring(0, 10)}...${mockHash.substring(60)}\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`);
+        
+        const finalComment = activeTags.length > 0 ? activeTags.join(', ') + ' - ' + ratingComment : ratingComment || "Rated via SwipeAlpha App";
+        const newUserReview = {
+          agentName: AGENTS[selectedAgentIdx].name,
+          rating: ratingVal,
+          comment: finalComment,
+          user: "You (Demo)",
+          time: "Just now"
+        };
+        setReviewsList(prev => [newUserReview, ...prev]);
 
+        setScreen('swipe');
+        setRatingVal(0);
+        setActiveTags([]);
+        setRatingComment('');
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsSubmittingRating(false);
+      }
+      return;
+    }
+    
+    try {
       const { transport, chain } = walletClient;
       const network = {
         chainId: chain.id,
         name: chain.name,
       };
       const provider = new ethers.BrowserProvider(transport, network);
-      const signer = new ethers.JsonRpcSigner(provider, account);
+      const signer = await provider.getSigner(account);
 
       // Verify correct network (Mantle Sepolia: 5003)
       if (chain.id !== 5003) {
@@ -591,6 +693,90 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
     }
   };
 
+  const renderMatchOverlay = () => {
+    if (!matchOverlayAgent) return null;
+
+    let waifuImg = memeImg;
+    let waifuName = "Sakura";
+    if (archetype === 'balanced') {
+      waifuImg = balancedImg;
+      waifuName = "Rin";
+    } else if (archetype === 'bluechip') {
+      waifuImg = bluechipImg;
+      waifuName = "Yuki";
+    }
+
+    return (
+      <div className="match-overlay-container">
+        {/* Match Title */}
+        <h2 className="match-glowing-title">
+          It's a Match!
+        </h2>
+        
+        <p style={{
+          fontSize: '0.75rem',
+          color: 'rgba(255, 255, 255, 0.6)',
+          margin: '8px 0 20px 0',
+          maxWidth: '85%'
+        }}>
+          You and <strong>{matchOverlayAgent.name}</strong> are a perfect pair!
+        </p>
+
+        {/* Avatars Row */}
+        <div className="match-avatars-row">
+          {/* Waifu Avatar */}
+          <div className="match-avatar-waifu">
+            <img src={waifuImg} alt={waifuName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+
+          {/* Glowing Pulse Heart */}
+          <div className="match-heart-pulse">
+            <Heart size={22} color="#fe3c72" fill="#fe3c72" />
+          </div>
+
+          {/* Agent Avatar */}
+          <div className="match-avatar-agent" style={{ background: matchOverlayAgent.iconBg || 'linear-gradient(135deg, #fe3c72, #ff7854)' }}>
+            {matchOverlayAgent.logoUrl ? (
+              <img src={matchOverlayAgent.logoUrl} alt={matchOverlayAgent.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            ) : (
+              <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fff' }}>{matchOverlayAgent.emoji}</span>
+            )}
+          </div>
+        </div>
+
+        {/* Info Box */}
+        <div className="match-info-card">
+          <div style={{ fontSize: '0.72rem', color: '#22c55e', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
+            Agent Connected
+          </div>
+          <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.5)', lineHeight: '1.4' }}>
+            {matchOverlayAgent.name} is now providing live trading signal updates to your feed.
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="match-action-buttons-group">
+          <button 
+            className="match-action-btn-primary"
+            onClick={() => {
+              setMatchOverlayAgent(null);
+              setScreen('agents');
+            }}
+          >
+            View Live Signals ✨
+          </button>
+          
+          <button 
+            className="match-action-btn-secondary"
+            onClick={() => setMatchOverlayAgent(null)}
+          >
+            Keep Swiping
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const renderOnboardingModal = () => {
     if (!showOnboarding) return null;
 
@@ -600,7 +786,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         name: 'Sakura "Degen"',
         style: 'High Risk · Meme Sniper',
         desc: 'Loves high-volatility micro-caps, sniper setups, and hype narratives. Perfect for degen plays.',
-        image: archetypeMeme,
+        image: memeImg,
         color: '#fe3c72',
         shadowClass: 'card-meme'
       },
@@ -609,7 +795,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         name: 'Rin "Tech-Wear"',
         style: 'Medium Risk · Balanced',
         desc: 'Focuses on automated yield strategies, staking, and mid-cap agents. Steady growth with smart hedges.',
-        image: archetypeBalanced,
+        image: balancedImg,
         color: '#06b6d4',
         shadowClass: 'card-balanced'
       },
@@ -618,7 +804,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         name: 'Yuki "Goddess"',
         style: 'Low Risk · Blue Chip',
         desc: 'Focuses on highly audited, institutional-grade assets. Safest allocations for long-term growth.',
-        image: archetypeBluechip,
+        image: bluechipImg,
         color: '#eab308',
         shadowClass: 'card-bluechip'
       }
@@ -774,7 +960,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                           pointerEvents: 'none',
                           background: 'rgba(0,0,0,0.6)'
                         }}>
-                          BUY
+                          MATCH
                         </div>
                       )}
                       {dragOffset.x < -25 && (
@@ -795,7 +981,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                           pointerEvents: 'none',
                           background: 'rgba(0,0,0,0.6)'
                         }}>
-                          SKIP
+                          PASS
                         </div>
                       )}
                       {/* Tinder-style top tab indicators */}
@@ -1043,9 +1229,8 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     <button className="control-btn super-action" onClick={() => { setSelectedAgentIdx(0); setScreen('rateAgent'); }} disabled={isSwapping} style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(59, 130, 246, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rate Agent">
                       <Star size={18} color="#3b82f6" />
                     </button>
-                    <button className="control-btn like-action" onClick={() => handleSwipe('right')} disabled={isSwapping} style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(254, 60, 114, 0.1)', border: '2px solid #22c55e', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s', position: 'relative' }} title="Buy 0.1 MNT">
-                      {isSwapping ? <div className="buy-spinner" style={{ width: '16px', height: '16px', border: '2px solid #22c55e', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> : <Heart size={22} color="#22c55e" fill="#22c55e" />}
-                      {!isSwapping && <span style={{ fontSize: '0.5rem', color: '#22c55e', fontWeight: 'bold', marginTop: '0px' }}>0.1 MNT</span>}
+                    <button className="control-btn like-action" onClick={() => handleSwipe('right')} disabled={isSwapping} style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(254, 60, 114, 0.1)', border: '2px solid #fe3c72', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s', position: 'relative' }} title="Match Agent">
+                      {isSwapping ? <div className="buy-spinner" style={{ width: '16px', height: '16px', border: '2px solid #fe3c72', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> : <Heart size={22} color="#fe3c72" fill="#fe3c72" />}
                     </button>
                     <button className="control-btn info-action" onClick={() => { setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168, 85, 247, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Token Info">
                       <Info size={16} color="#a855f7" />
@@ -1125,35 +1310,180 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
             {/* Agents Screen */}
             {screen === 'agents' && (
-              <div className="phone-screen active scrollable">
-                <div className="screen-nav">
+              <div className="phone-screen active scrollable" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <div className="screen-nav" style={{ flexShrink: 0 }}>
                   <button className="nav-back" onClick={() => setScreen('swipe')}>
                     <ArrowLeft size={18} /> Back
                   </button>
-                  <span>AI Agents</span>
+                  <span>My Active Agents ({swipedAgents.length})</span>
                   <div style={{ width: 18 }}></div>
                 </div>
 
-                <div className="agents-marketplace-list">
-                  {AGENTS.map((agent, idx) => (
-                    <div key={agent.name} className="marketplace-agent-card" onClick={() => { setSelectedAgentIdx(idx); setScreen('agentDetail'); }}>
-                      <div className="avatar-side" style={{ background: agent.bg }}>
-                        {agent.emoji}
-                      </div>
-                      <div className="agent-text-side">
-                        <h4>{agent.name}</h4>
-                        <span className="strategy-tag">{agent.strategy}</span>
-                        <div className="agent-min-stats">
-                          <span>🎯 {agent.winRate}% Win</span>
-                          <span>⭐ {agent.rating}</span>
+                <div className="agents-marketplace-list" style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '14px', flex: 1, overflowY: 'auto' }}>
+                  
+                  {/* Part 1: List of Swiped/Matched Agents */}
+                  <div className="agents-section-title" style={{ fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span>💖 matched trading partners</span>
+                  </div>
+
+                  {swipedAgents.length === 0 ? (
+                    <div style={{ padding: '20px 10px', textAlign: 'center', background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+                      <span style={{ fontSize: '1.4rem' }}>🛸</span>
+                      <h4 style={{ fontSize: '0.82rem', color: '#fff', margin: '8px 0 4px 0' }}>No active partners</h4>
+                      <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', margin: 0 }}>Swipe right on agents in the deck to pair with them.</p>
+                      <button onClick={() => setScreen('swipe')} style={{ marginTop: '10px', background: 'var(--primary)', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 'bold', cursor: 'pointer' }}>Go Swipe</button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {swipedAgents.map((agent) => (
+                        <div key={agent.symbol} className="swiped-agent-item" style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
+                          padding: '10px 12px',
+                          borderRadius: '14px',
+                          border: '1px solid rgba(255,255,255,0.04)',
+                          position: 'relative',
+                          overflow: 'hidden'
+                        }}>
+                          <div className="swiped-agent-avatar" style={{
+                            background: agent.iconBg || 'linear-gradient(135deg, #fe3c72, #ff7854)',
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            overflow: 'hidden',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            flexShrink: 0
+                          }}>
+                            {agent.logoUrl ? (
+                              <img src={agent.logoUrl} alt={agent.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            ) : (
+                              <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#fff' }}>{agent.symbol.substring(0, 1)}</span>
+                            )}
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
+                            <h4 style={{ fontSize: '0.78rem', fontWeight: '800', color: '#fff', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {agent.name}
+                              <span style={{ fontSize: '0.55rem', color: '#22c55e', background: 'rgba(34,197,94,0.1)', padding: '1px 5px', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.15)' }}>Active</span>
+                            </h4>
+                            <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)' }}>{agent.creator} · {agent.model}</span>
+                          </div>
+                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                            <div style={{ fontSize: '0.78rem', fontWeight: '800', color: '#22c55e' }}>{agent.winRate}</div>
+                            <div style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.35)' }}>Hold: {agent.avgHolding}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Part 2: Real-time Transaction Feed */}
+                  <div className="agents-section-title" style={{ fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span className="live-pulse" style={{ display: 'inline-block', width: '6px', height: '6px', background: '#22c55e', borderRadius: '50%', boxShadow: '0 0 6px #22c55e' }}></span>
+                      <span>real-time transaction feed</span>
+                    </div>
+                    <span style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.3)', textTransform: 'none', fontWeight: 'normal' }}>Matched Agents Only</span>
+                  </div>
+
+                  <div className="live-tx-feed-container" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                    maxHeight: '320px',
+                    overflowY: 'auto',
+                    paddingRight: '2px'
+                  }}>
+                    {liveTransactions.map((tx) => (
+                      <div 
+                        key={tx.id} 
+                        className={`live-tx-card ${tx.isNew ? 'tab-fade-in' : ''}`}
+                        style={{
+                          background: 'rgba(255,255,255,0.015)',
+                          border: '1px solid rgba(255,255,255,0.03)',
+                          borderRadius: '12px',
+                          padding: '8px 10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '10px',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        {(() => {
+                          const agentInfo = TOKENS.find(t => t.symbol === tx.agentSymbol || t.name === tx.agentName);
+                          return (
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                              <div className="swiped-agent-avatar" style={{
+                                background: agentInfo?.iconBg || 'linear-gradient(135deg, #fe3c72, #ff7854)',
+                                width: '28px',
+                                height: '28px',
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                overflow: 'hidden',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                flexShrink: 0
+                              }}>
+                                {agentInfo?.logoUrl ? (
+                                  <img src={agentInfo.logoUrl} alt={tx.agentName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                ) : (
+                                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#fff' }}>🤖</span>
+                                )}
+                              </div>
+                              <div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: '#fff' }}>{tx.agentName}</span>
+                                  <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.05)', padding: '1px 4px', borderRadius: '3px' }}>{tx.agentSymbol}</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                                  <span style={{ 
+                                    fontSize: '0.58rem', 
+                                    fontWeight: '800', 
+                                    padding: '1px 4px', 
+                                    borderRadius: '3px', 
+                                    color: tx.type === 'BUY' ? '#22c55e' : '#ef4444', 
+                                    background: tx.type === 'BUY' ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)' 
+                                  }}>{tx.type}</span>
+                                  <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: '600' }}>{tx.amount} {tx.token}</span>
+                                  <span style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.35)' }}>@ {tx.price}</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })()}
+
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'end', gap: '4px' }}>
+                          <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)' }}>{tx.time}</span>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRecentTradeSwap(tx.token, tx.type);
+                            }}
+                            style={{
+                              fontSize: '0.62rem',
+                              fontWeight: 'bold',
+                              padding: '3.5px 8px',
+                              borderRadius: '5px',
+                              background: tx.type === 'BUY' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                              border: tx.type === 'BUY' ? '1px solid rgba(34, 197, 94, 0.25)' : '1px solid rgba(239, 68, 68, 0.25)',
+                              color: tx.type === 'BUY' ? '#22c55e' : '#ef4444',
+                              cursor: 'pointer',
+                              transition: 'all 0.15s'
+                            }}
+                          >
+                            {tx.type === 'BUY' ? 'Buy' : 'Sell'} 0.1 $MNT
+                          </button>
                         </div>
                       </div>
-                      <div className="price-side">
-                        <span className="price-num">{agent.price}</span>
-                        <span className="price-lbl">{agent.period}</span>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+
                 </div>
               </div>
             )}
@@ -1293,6 +1623,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                 </div>
               </div>
             )}
+            {renderMatchOverlay()}
           </div>
         </div>
       </div>
