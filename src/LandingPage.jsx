@@ -1,8 +1,98 @@
 import React from 'react';
-import { Flame, Shield, Cpu, Sparkles, ArrowRight, Zap, Database, Lock, Settings } from 'lucide-react';
+import { Flame, Shield, Cpu, Sparkles, ArrowRight, Zap, Database, Lock, Settings, RotateCcw, X, Star, Heart } from 'lucide-react';
 import './LandingPage.css';
+import archetypeMeme from './assets/archetype_meme.png';
+import archetypeBalanced from './assets/archetype_balanced.png';
+import archetypeBluechip from './assets/archetype_bluechip.png';
 
 export default function LandingPage({ navigate }) {
+  // Retrieve custom uploaded waifus from localStorage or use fallback images
+  const memeImg = localStorage.getItem('custom_archetype_meme') || archetypeMeme;
+  const balancedImg = localStorage.getItem('custom_archetype_balanced') || archetypeBalanced;
+  const bluechipImg = localStorage.getItem('custom_archetype_bluechip') || archetypeBluechip;
+
+  // Profile cards data for Tinder phone mockups background
+  const profiles = [
+    { name: "Sakura", age: 21, image: memeImg, category: "Degen AI" },
+    { name: "Rin", age: 22, image: balancedImg, category: "Balanced AI" },
+    { name: "Yuki", age: 23, image: bluechipImg, category: "Bluechip AI" },
+    { name: "Lan", age: 21, image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80", category: "AI Scalper" },
+    { name: "Tuệ", age: 21, image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80", category: "Yield Sniper" },
+    { name: "Ngọc", age: 22, image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop&q=80", category: "Arbitrage Bot" },
+    { name: "Thanh", age: 23, image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&auto=format&fit=crop&q=80", category: "Sentiment Bot" },
+    { name: "Phượng", age: 18, image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop&q=80", category: "Meme Sniper" },
+    { name: "Tú", age: 24, image: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=500&auto=format&fit=crop&q=80", category: "Hedge Bot" },
+    { name: "Linh", age: 21, image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80", category: "Volume Bot" },
+    { name: "Mai", age: 21, image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=500&auto=format&fit=crop&q=80", category: "LP Rebalancer" },
+  ];
+
+  // Distribute profiles into 5 columns
+  const col1 = [profiles[0], profiles[3], profiles[6], profiles[9]];
+  const col2 = [profiles[1], profiles[4], profiles[7], profiles[10]];
+  const col3 = [profiles[2], profiles[5], profiles[8], profiles[0]];
+  const col4 = [profiles[3], profiles[6], profiles[9], profiles[1]];
+  const col5 = [profiles[4], profiles[7], profiles[10], profiles[2]];
+
+  const renderColumn = (colData, colIndex, isScrollUp) => {
+    return (
+      <div className={`marquee-column ${isScrollUp ? 'scroll-up' : 'scroll-down'}`}>
+        <div className="marquee-track">
+          {colData.map((p, idx) => (
+            <div key={`col-${colIndex}-${idx}`} className="phone-mockup-card">
+              <div className="phone-screen">
+                <div className="phone-header">
+                  <Flame size={14} color="#fe3c72" fill="#fe3c72" className="phone-flame-logo" />
+                </div>
+                <img src={p.image} alt={p.name} className="phone-photo" />
+                <div className="phone-gradient-overlay"></div>
+                <div className="phone-profile-info">
+                  <div className="phone-profile-info-left">
+                    <span className="phone-name">{p.name} <span className="phone-age">{p.age}</span></span>
+                    <span className="phone-verified-badge">✓</span>
+                  </div>
+                  <span className="phone-category-tag">{p.category}</span>
+                </div>
+                <div className="phone-actions">
+                  <div className="phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
+                  <div className="phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
+                  <div className="phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
+                  <div className="phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
+                  <div className="phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
+                </div>
+              </div>
+            </div>
+          ))}
+          {/* Duplicate for seamless looping */}
+          {colData.map((p, idx) => (
+            <div key={`col-${colIndex}-dup-${idx}`} className="phone-mockup-card">
+              <div className="phone-screen">
+                <div className="phone-header">
+                  <Flame size={14} color="#fe3c72" fill="#fe3c72" className="phone-flame-logo" />
+                </div>
+                <img src={p.image} alt={p.name} className="phone-photo" />
+                <div className="phone-gradient-overlay"></div>
+                <div className="phone-profile-info">
+                  <div className="phone-profile-info-left">
+                    <span className="phone-name">{p.name} <span className="phone-age">{p.age}</span></span>
+                    <span className="phone-verified-badge">✓</span>
+                  </div>
+                  <span className="phone-category-tag">{p.category}</span>
+                </div>
+                <div className="phone-actions">
+                  <div className="phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
+                  <div className="phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
+                  <div className="phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
+                  <div className="phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
+                  <div className="phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="landing-page">
       {/* Background glow effects */}
@@ -31,36 +121,38 @@ export default function LandingPage({ navigate }) {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="landing-hero">
-        <div className="hero-badge">
-          <Sparkles size={12} color="#fe3c72" /> Powered by Mantle Testnet
-        </div>
-        <h1 className="hero-title">
-          Swipe. Match.<br />
-          <span>Trade. AI.</span>
-        </h1>
-        <p className="hero-subtitle">
-          The first decentralized Tinder-style matching platform for autonomous AI trading agents.
-          Select your strategy archetype, match with curated agents, and deploy mock transactions securely.
-        </p>
-        <div className="hero-cta-group">
-          <button className="cta-btn-primary" onClick={() => navigate('/demo')}>
-            Launch Live Demo
-          </button>
-          <button className="cta-btn-secondary" onClick={() => navigate('/profile')}>
-            Setup LLM API Keys
-          </button>
-        </div>
-      </section>
-
-      {/* Mockup Preview Section */}
-      <section className="landing-mockup-section">
-        <div className="mockup-container">
-          <div className="mockup-frame">
-            <img src="/agent_swipe_mockup.png" alt="Agent Swindler Mockup" className="mockup-image" />
+      {/* Hero Section with Tilted Phone Grid */}
+      <section className="landing-hero-container">
+        <div className="hero-bg-grid-wrapper">
+          <div className="hero-bg-grid">
+            {renderColumn(col1, 1, false)}
+            {renderColumn(col2, 2, true)}
+            {renderColumn(col3, 3, false)}
+            {renderColumn(col4, 4, true)}
+            {renderColumn(col5, 5, false)}
           </div>
-          <div className="mockup-glow"></div>
+        </div>
+
+        {/* Dark radial overlay for readability */}
+        <div className="hero-vignette"></div>
+
+        {/* Shimmering overlays for glamorous look */}
+        <div className="hero-grid-glow glow-pink"></div>
+        <div className="hero-grid-glow glow-blue"></div>
+
+        {/* Content Overlay */}
+        <div className="hero-overlay-content">
+          <h1 className="hero-main-title">
+            Swipe Right AI<span className="title-tm">™</span>
+          </h1>
+          <button className="hero-cta-btn" onClick={() => navigate('/demo')}>
+            Connect Wallet
+          </button>
+        </div>
+
+        {/* Legal/Attribution Text */}
+        <div className="hero-mockup-caption">
+          All photos are of models and used for illustrative purposes only
         </div>
       </section>
 
