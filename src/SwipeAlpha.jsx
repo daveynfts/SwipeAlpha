@@ -278,7 +278,7 @@ const AGENTS = [
   }
 ];
 
-export default function SwipeAlpha({ walletClient, account, mode = 'desktop', archetype, setArchetype }) {
+export default function SwipeAlpha({ walletClient, account, mode = 'desktop', archetype, setArchetype, addNotification }) {
   const memeImg = localStorage.getItem('custom_archetype_meme') || archetypeMeme;
   const balancedImg = localStorage.getItem('custom_archetype_balanced') || archetypeBalanced;
   const bluechipImg = localStorage.getItem('custom_archetype_bluechip') || archetypeBluechip;
@@ -324,6 +324,9 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
   const showCustomAlert = (type, title, message, txHash = '', actionText = 'OK') => {
     setCustomAlert({ type, title, message, txHash, actionText });
     setCopiedHash(false);
+    if ((type === 'success' || type === 'warning') && addNotification) {
+      addNotification(type, title, message, txHash);
+    }
   };
   
   // Swipe states

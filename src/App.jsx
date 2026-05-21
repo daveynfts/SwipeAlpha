@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ethers } from 'ethers';
-import { TrendingUp, AlertCircle, Cpu, Trophy, Landmark, Flame } from 'lucide-react';
+import { TrendingUp, AlertCircle, Cpu, Trophy, Landmark, Flame, Bell, Trash2, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 import { TOKEN_ADDRESS, STAKING_ADDRESS, TOKEN_ABI, STAKING_ABI } from './constants';
@@ -26,6 +26,47 @@ function App() {
   
   const [tokenContract, setTokenContract] = useState(null);
   const [stakingContract, setStakingContract] = useState(null);
+
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const saved = localStorage.getItem('swindler_notifications');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  });
+
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notificationRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem('swindler_notifications', JSON.stringify(notifications));
+  }, [notifications]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const addNotification = (type, title, message, txHash = '') => {
+    const newNotif = {
+      id: Date.now(),
+      type,
+      title,
+      message: message.replace(/\n/g, ' '),
+      txHash,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      read: false,
+      timestamp: Date.now()
+    };
+    setNotifications(prev => [newNotif, ...prev].slice(0, 50));
+  };
   
   const [currentView, setCurrentView] = useState('swipealpha'); // 'swipealpha' or 'staking'
   
@@ -315,8 +356,111 @@ function App() {
           <ConnectButton.Custom>
             {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
               const connected = mounted && account && chain;
+              const unreadCount = notifications.filter(n => !n.read).length;
               return (
-                <div {...(!mounted && { style: { opacity: 0 } })}>
+                <div {...(!mounted && { style: { opacity: 0 } })} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', position: 'relative' }} ref={notificationRef}>
+                  {/* Notification Bell Icon & Dropdown */}
+                  {mounted && (
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <button 
+                        onClick={() => {
+                          setShowNotifications(!showNotifications);
+                          if (!showNotifications) {
+                            // Mark all as read when opening
+                            setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+                          }
+                        }} 
+                        className="liquid-glass-btn" 
+                        style={{ 
+                          padding: '0.4rem 0.6rem', 
+                          fontSize: '0.8rem', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          position: 'relative',
+                          background: showNotifications ? 'rgba(254, 60, 114, 0.15)' : 'rgba(0, 0, 0, 0.3)',
+                          borderColor: showNotifications ? 'rgba(254, 60, 114, 0.4)' : 'rgba(255, 255, 255, 0.08)'
+                        }}
+                        title="Notifications"
+                      >
+                        <Bell size={16} color={unreadCount > 0 ? '#fe3c72' : '#ffffff'} style={{ filter: unreadCount > 0 ? 'drop-shadow(0 0 5px rgba(254, 60, 114, 0.5))' : 'none' }} />
+                        {unreadCount > 0 && (
+                          <span className="notification-badge" style={{
+                            position: 'absolute',
+                            top: '-5px',
+                            right: '-5px',
+                            background: 'var(--primary)',
+                            color: 'white',
+                            borderRadius: '50%',
+                            padding: '1px 5px',
+                            fontSize: '0.65rem',
+                            fontWeight: 'bold',
+                            border: '1px solid #000',
+                            minWidth: '16px',
+                            textAlign: 'center'
+                          }}>{unreadCount}</span>
+                        )}
+                      </button>
+                      
+                      {showNotifications && (
+                        <div className="notifications-dropdown">
+                          <div className="notifications-header">
+                            <h4>Activity Logs</h4>
+                            {notifications.length > 0 && (
+                              <button 
+                                className="notifications-clear-btn" 
+                                onClick={() => {
+                                  setNotifications([]);
+                                  setShowNotifications(false);
+                                }}
+                              >
+                                <Trash2 size={12} /> Clear All
+                              </button>
+                            )}
+                          </div>
+                          <div className="notifications-list">
+                            {notifications.length === 0 ? (
+                              <div className="notifications-empty-state">
+                                <Bell size={24} style={{ color: 'var(--text-muted)', opacity: 0.5 }} />
+                                <span>No activity recorded yet</span>
+                              </div>
+                            ) : (
+                              notifications.map((notif) => (
+                                <div key={notif.id} className={`notification-item ${notif.read ? '' : 'unread'}`}>
+                                  <div className="notification-icon-container">
+                                    <CheckCircle2 size={16} color="#10b981" />
+                                  </div>
+                                  <div className="notification-content">
+                                    <div className="notification-title-row">
+                                      <span className="notification-item-title">{notif.title}</span>
+                                      <span className="notification-item-time">{notif.time}</span>
+                                    </div>
+                                    <span className="notification-item-message">{notif.message}</span>
+                                    {notif.txHash && (
+                                      <div className="notification-tx-hash-row">
+                                        <span className="notification-tx-hash-text" title={notif.txHash}>
+                                          Hash: {notif.txHash.substring(0, 6)}...{notif.txHash.substring(notif.txHash.length - 4)}
+                                        </span>
+                                        <a 
+                                          href={`https://explorer.sepolia.mantle.xyz/tx/${notif.txHash}`} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer" 
+                                          className="notification-explorer-link"
+                                        >
+                                          View <ExternalLink size={10} />
+                                        </a>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {(() => {
                     if (!connected) {
                       return (
@@ -360,6 +504,7 @@ function App() {
               if (val) localStorage.setItem('swindler_archetype', val);
               else localStorage.removeItem('swindler_archetype');
             }} 
+            addNotification={addNotification}
           />
         </div>
       </div>
