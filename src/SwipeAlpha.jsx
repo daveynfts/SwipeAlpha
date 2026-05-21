@@ -318,6 +318,13 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
   const [activeTags, setActiveTags] = useState([]);
   const [ratingComment, setRatingComment] = useState('');
   const [isSubmittingRating, setIsSubmittingRating] = useState(false);
+  const [customAlert, setCustomAlert] = useState(null); // { type, title, message, txHash, actionText }
+  const [copiedHash, setCopiedHash] = useState(false);
+
+  const showCustomAlert = (type, title, message, txHash = '', actionText = 'OK') => {
+    setCustomAlert({ type, title, message, txHash, actionText });
+    setCopiedHash(false);
+  };
   
   // Swipe states
   const [cardIndex, setCardIndex] = useState(0);
@@ -505,7 +512,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       try {
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate loading
         const mockHash = "0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-        alert(`🛒 [SIMULATION] Swap transaction simulated successfully via MerchantMoe (Mock Router)!\n(Demo Mode - Wallet not connected)\n\nToken: ${token.name} ($${token.symbol})\nAmount In: 0.1 MNT\nSimulated Tx Hash: ${mockHash.substring(0, 10)}...${mockHash.substring(60)}\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`);
+        showCustomAlert('warning', 'Simulation Success', `Swap transaction simulated successfully via MerchantMoe (Mock Router)!\n(Demo Mode - Wallet not connected)\n\nToken: ${token.name} ($${token.symbol})\nAmount In: 0.1 MNT\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`, mockHash);
       } catch (err) {
         console.error(err);
       } finally {
@@ -524,7 +531,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       const signer = await provider.getSigner(account);
 
       if (chain.id !== 5003) {
-        alert("Please switch network to Mantle Sepolia at the header.");
+        showCustomAlert('info', 'Wrong Network', 'Please switch your wallet network to Mantle Sepolia at the header of the page.');
         setSwappingToken(null);
         return;
       }
@@ -538,10 +545,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       );
       
       await tx.wait();
-      alert(`🛒 Swap transaction executed successfully via MerchantMoe (Mock Router) on Mantle Sepolia!\nToken: ${token.name} ($${token.symbol})\nAmount In: 0.1 MNT\nTx Hash: ${tx.hash}`);
+      showCustomAlert('success', 'Swap Executed', `Swap transaction executed successfully via MerchantMoe (Mock Router) on Mantle Sepolia!\n\nToken: ${token.name} ($${token.symbol})\nAmount In: 0.1 MNT`, tx.hash);
     } catch (e) {
       console.error(e);
-      alert(`❌ Error executing swap transaction: ${e.reason || e.message}`);
+      showCustomAlert('error', 'Transaction Failed', `Error executing swap transaction: ${e.reason || e.message}`);
     } finally {
       setSwappingToken(null);
     }
@@ -554,7 +561,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       try {
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate loading
         const mockHash = "0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-        alert(`🛒 [SIMULATION] Copy Trade transaction simulated successfully!\n(Demo Mode - Wallet not connected)\n\nAction: ${tradeType} ${tradeTokenSymbol}\nValue: 0.1 MNT\nSimulated Tx Hash: ${mockHash.substring(0, 10)}...${mockHash.substring(60)}\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`);
+        showCustomAlert('warning', 'Simulation Success', `Copy Trade transaction simulated successfully!\n(Demo Mode - Wallet not connected)\n\nAction: ${tradeType} ${tradeTokenSymbol}\nValue: 0.1 MNT\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`, mockHash);
       } catch (err) {
         console.error(err);
       } finally {
@@ -573,7 +580,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       const signer = await provider.getSigner(account);
 
       if (chain.id !== 5003) {
-        alert("Please switch network to Mantle Sepolia at the header.");
+        showCustomAlert('info', 'Wrong Network', 'Please switch your wallet network to Mantle Sepolia at the header of the page.');
         setIsSwapping(false);
         return;
       }
@@ -590,10 +597,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       );
       
       await tx.wait();
-      alert(`🛒 Copy Trade transaction executed successfully via MerchantMoe (Mock Router) on Mantle Sepolia!\nAction: ${tradeType} ${tradeTokenSymbol}\nValue: 0.1 MNT\nTx Hash: ${tx.hash}`);
+      showCustomAlert('success', 'Trade Executed', `Copy Trade transaction executed successfully via MerchantMoe (Mock Router) on Mantle Sepolia!\n\nAction: ${tradeType} ${tradeTokenSymbol}\nValue: 0.1 MNT`, tx.hash);
     } catch (e) {
       console.error(e);
-      alert(`❌ Error executing ${tradeType.toLowerCase()} transaction: ${e.reason || e.message}`);
+      showCustomAlert('error', 'Transaction Failed', `Error executing ${tradeType.toLowerCase()} transaction: ${e.reason || e.message}`);
     } finally {
       setIsSwapping(false);
     }
@@ -609,7 +616,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
   const handleOnChainRating = async () => {
     if (ratingVal === 0) {
-      alert('Please select stars to rate');
+      showCustomAlert('info', 'Rating Required', 'Please select a star rating first.');
       return;
     }
     setIsSubmittingRating(true);
@@ -619,7 +626,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       try {
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate loading
         const mockHash = "0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-        alert(`⭐ [SIMULATION] Rating submitted successfully to Reputation Registry!\n(Demo Mode - Wallet not connected)\n\nAgent: ${AGENTS[selectedAgentIdx].name}\nScore: ${ratingVal} Stars\nSimulated Tx Hash: ${mockHash.substring(0, 10)}...${mockHash.substring(60)}\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`);
+        showCustomAlert('warning', 'Simulation Success', `Rating submitted successfully to Reputation Registry!\n(Demo Mode - Wallet not connected)\n\nAgent: ${AGENTS[selectedAgentIdx].name}\nScore: ${ratingVal} Stars\n\nConnect your wallet at the top of the page to execute real transactions on Mantle Sepolia testnet!`, mockHash);
         
         const finalComment = activeTags.length > 0 ? activeTags.join(', ') + ' - ' + ratingComment : ratingComment || "Rated via SwipeAlpha App";
         const newUserReview = {
@@ -654,7 +661,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
       // Verify correct network (Mantle Sepolia: 5003)
       if (chain.id !== 5003) {
-        alert("Please switch network to Mantle Sepolia at the header.");
+        showCustomAlert('info', 'Wrong Network', 'Please switch your wallet network to Mantle Sepolia at the header of the page.');
         setIsSubmittingRating(false);
         return;
       }
@@ -670,7 +677,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       // Wait for block verification
       await tx.wait();
 
-      alert(`🎉 Rating published on-chain successfully!\nTx Hash: ${tx.hash}`);
+      showCustomAlert('success', 'Rating Published', `Rating published on-chain successfully!`, tx.hash);
       
       const newUserReview = {
         agentName: AGENTS[selectedAgentIdx].name,
@@ -687,7 +694,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       setRatingComment('');
     } catch (e) {
       console.error(e);
-      alert(`❌ Error submitting rating: ${e.reason || e.message}`);
+      showCustomAlert('error', 'Rating Failed', `Error submitting rating: ${e.reason || e.message}`);
     } finally {
       setIsSubmittingRating(false);
     }
@@ -1543,7 +1550,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                       </div>
                       <button className="rent-now-btn" onClick={() => {
                         setActiveAgent(AGENTS[selectedAgentIdx]);
-                        alert(`✅ Successfully rented ${AGENTS[selectedAgentIdx].name}!\nYour feed will now show signals from this agent.`);
+                        showCustomAlert('success', 'Agent Subscribed', `Successfully rented ${AGENTS[selectedAgentIdx].name}!\nYour feed will now show signals from this agent.`);
                         setScreen('swipe');
                       }}>Rent Agent</button>
                     </div>
@@ -1910,6 +1917,55 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                 {isSubmittingRating ? "Publishing..." : "Publish to Mantle"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Dapp Notification Alert */}
+      {customAlert && (
+        <div className="custom-alert-backdrop" onClick={() => setCustomAlert(null)}>
+          <div className={`custom-alert-content ${customAlert.type}`} onClick={(e) => e.stopPropagation()}>
+            <div className="custom-alert-glow"></div>
+            <button className="custom-alert-close" onClick={() => setCustomAlert(null)}>×</button>
+            <div className="custom-alert-icon-wrapper">
+              {customAlert.type === 'success' && <Check size={28} className="icon-success" />}
+              {customAlert.type === 'error' && <X size={28} className="icon-error" />}
+              {customAlert.type === 'info' && <Info size={28} className="icon-info" />}
+              {customAlert.type === 'warning' && <Info size={28} className="icon-warning" />}
+            </div>
+            <h3>{customAlert.title}</h3>
+            <p className="custom-alert-message">{customAlert.message}</p>
+            
+            {customAlert.txHash && (
+              <div className="custom-alert-tx-box">
+                <span className="tx-label">Mantle Transaction Hash</span>
+                <div className="tx-hash-row">
+                  <code className="tx-hash-text">{customAlert.txHash}</code>
+                  <button 
+                    className={`tx-copy-btn ${copiedHash ? 'copied' : ''}`}
+                    onClick={() => {
+                      navigator.clipboard.writeText(customAlert.txHash);
+                      setCopiedHash(true);
+                      setTimeout(() => setCopiedHash(false), 2000);
+                    }}
+                  >
+                    {copiedHash ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
+                <a 
+                  href={`https://explorer.sepolia.mantle.xyz/tx/${customAlert.txHash}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="tx-explorer-link"
+                >
+                  View on Mantle Sepolia Explorer →
+                </a>
+              </div>
+            )}
+            
+            <button className="custom-alert-btn" onClick={() => setCustomAlert(null)}>
+              {customAlert.actionText || 'OK'}
+            </button>
           </div>
         </div>
       )}
