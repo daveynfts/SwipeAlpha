@@ -4,6 +4,10 @@ import './LandingPage.css';
 import archetypeMeme from './assets/archetype_meme.png';
 import archetypeBalanced from './assets/archetype_balanced.png';
 import archetypeBluechip from './assets/archetype_bluechip.png';
+import waifu1 from './assets/waifu_1.png';
+import waifu2 from './assets/waifu_2.png';
+import waifu3 from './assets/waifu_3.png';
+import waifu4 from './assets/waifu_4.png';
 
 export default function LandingPage({ navigate }) {
   // Retrieve custom uploaded waifus from localStorage or use fallback images
@@ -16,14 +20,14 @@ export default function LandingPage({ navigate }) {
     { name: "Sakura", age: 21, image: memeImg, category: "Degen AI" },
     { name: "Rin", age: 22, image: balancedImg, category: "Balanced AI" },
     { name: "Yuki", age: 23, image: bluechipImg, category: "Bluechip AI" },
-    { name: "Lan", age: 21, image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80", category: "AI Scalper" },
-    { name: "Tuệ", age: 21, image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80", category: "Yield Sniper" },
-    { name: "Ngọc", age: 22, image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop&q=80", category: "Arbitrage Bot" },
-    { name: "Thanh", age: 23, image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&auto=format&fit=crop&q=80", category: "Sentiment Bot" },
-    { name: "Phượng", age: 18, image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop&q=80", category: "Meme Sniper" },
-    { name: "Tú", age: 24, image: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=500&auto=format&fit=crop&q=80", category: "Hedge Bot" },
-    { name: "Linh", age: 21, image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80", category: "Volume Bot" },
-    { name: "Mai", age: 21, image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=500&auto=format&fit=crop&q=80", category: "LP Rebalancer" },
+    { name: "Lan", age: 21, image: waifu1, category: "AI Scalper" },
+    { name: "Ami", age: 22, image: waifu2, category: "Yield Sniper" },
+    { name: "Ngọc", age: 22, image: waifu3, category: "Arbitrage Bot" },
+    { name: "Thanh", age: 23, image: waifu4, category: "Sentiment Bot" },
+    { name: "Phượng", age: 20, image: waifu1, category: "Meme Sniper" },
+    { name: "Yumi", age: 21, image: waifu2, category: "Hedge Bot" },
+    { name: "Linh", age: 21, image: waifu3, category: "Volume Bot" },
+    { name: "Mai", age: 22, image: waifu4, category: "LP Rebalancer" },
   ];
 
   // Distribute profiles into 5 columns
