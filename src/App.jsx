@@ -40,6 +40,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showRain, setShowRain] = useState(false);
+  const [selectedArchetype, setSelectedArchetype] = useState(() => {
+    return localStorage.getItem('swindler_archetype') || null;
+  });
 
   const isConfigured = TOKEN_ADDRESS !== "0xYOUR_TOKEN_ADDRESS_HERE" && STAKING_ADDRESS !== "0xYOUR_STAKING_CONTRACT_ADDRESS_HERE";
 
@@ -336,7 +339,17 @@ function App() {
           </ConnectButton.Custom>
         </header>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '6.5rem 1rem 2rem 1rem', minHeight: '100vh' }}>
-          <SwipeAlpha walletClient={walletClient} account={account} mode="demo" />
+          <SwipeAlpha 
+            walletClient={walletClient} 
+            account={account} 
+            mode="demo" 
+            archetype={selectedArchetype} 
+            setArchetype={(val) => {
+              setSelectedArchetype(val);
+              if (val) localStorage.setItem('swindler_archetype', val);
+              else localStorage.removeItem('swindler_archetype');
+            }} 
+          />
         </div>
       </div>
     );
@@ -592,7 +605,17 @@ function App() {
           )}
         </>
       ) : (
-        <SwipeAlpha walletClient={walletClient} account={account} mode="desktop" />
+        <SwipeAlpha 
+          walletClient={walletClient} 
+          account={account} 
+          mode="desktop" 
+          archetype={selectedArchetype} 
+          setArchetype={(val) => {
+            setSelectedArchetype(val);
+            if (val) localStorage.setItem('swindler_archetype', val);
+            else localStorage.removeItem('swindler_archetype');
+          }} 
+        />
       )}
     </div>
   );

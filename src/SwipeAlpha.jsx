@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ethers } from 'ethers';
 import { Star, ThumbsUp, ThumbsDown, Info, ArrowLeft, Check, Sparkles, MessageSquare, Flame, Heart, X, RotateCcw } from 'lucide-react';
 import './SwipeAlpha.css';
@@ -275,8 +275,34 @@ const AGENTS = [
   }
 ];
 
-export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) {
+export default function SwipeAlpha({ walletClient, account, mode = 'desktop', archetype, setArchetype }) {
   const [screen, setScreen] = useState('swipe'); // swipe, detail, agents, agentDetail, rateAgent
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  const sortedTokens = useMemo(() => {
+    if (!archetype) return TOKENS;
+    return [...TOKENS].sort((a, b) => {
+      const riskPriority = {
+        meme: { HIGH: 3, MEDIUM: 2, LOW: 1 },
+        balanced: { MEDIUM: 3, LOW: 2, HIGH: 1 },
+        bluechip: { LOW: 3, MEDIUM: 2, HIGH: 1 }
+      }[archetype];
+      
+      const aPriority = riskPriority[a.risk] || 0;
+      const bPriority = riskPriority[b.risk] || 0;
+      
+      return bPriority - aPriority;
+    });
+  }, [archetype]);
+
+  useEffect(() => {
+    if (account && !archetype) {
+      setShowOnboarding(true);
+    } else {
+      setShowOnboarding(false);
+    }
+  }, [account, archetype]);
+
   const [selectedTokenIdx, setSelectedTokenIdx] = useState(0);
   const [selectedAgentIdx, setSelectedAgentIdx] = useState(0);
   
@@ -362,7 +388,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [cardIndex, isSwapping, mode, screen]);
 
-  const currentToken = TOKENS[cardIndex] || null;
+  const currentToken = sortedTokens[cardIndex] || null;
 
   const handleSwipe = async (direction) => {
     if (direction === 'right' && currentToken) {
@@ -562,9 +588,79 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
     }
   };
 
+  const renderOnboardingModal = () => {
+    if (!showOnboarding) return null;
+
+    const options = [
+      {
+        id: 'meme',
+        name: 'Sakura "Degen"',
+        style: 'High Risk · Meme Sniper',
+        desc: 'Loves high-volatility micro-caps, sniper setups, and hype narratives. Perfect for fast degen plays.',
+        image: '/src/assets/archetype_meme.png',
+        color: '#fe3c72',
+        shadowClass: 'card-meme'
+      },
+      {
+        id: 'balanced',
+        name: 'Rin "Tech-Wear"',
+        style: 'Medium Risk · Balanced',
+        desc: 'Focuses on automated yield strategies, staking, and mid-cap agents. Steady growth with smart hedges.',
+        image: '/src/assets/archetype_balanced.png',
+        color: '#06b6d4',
+        shadowClass: 'card-balanced'
+      },
+      {
+        id: 'bluechip',
+        name: 'Yuki "Goddess"',
+        style: 'Low Risk · Blue Chip',
+        desc: 'Focuses on highly audited, institutional-grade assets. Safest allocations for long-term growth.',
+        image: '/src/assets/archetype_bluechip.png',
+        color: '#eab308',
+        shadowClass: 'card-bluechip'
+      }
+    ];
+
+    return (
+      <div className="onboarding-backdrop">
+        <div className="onboarding-modal">
+          <div className="onboarding-header">
+            <h2>CHOOSE YOUR TRADING WAIFU</h2>
+            <p>Select your matched archetype. Your swipe deck will prioritize agents matching her profile.</p>
+          </div>
+          <div className="archetype-card-grid">
+            {options.map((opt) => (
+              <div 
+                key={opt.id} 
+                className={`archetype-card ${opt.shadowClass}`}
+                onClick={() => {
+                  setArchetype(opt.id);
+                  setShowOnboarding(false);
+                }}
+              >
+                <div className="archetype-img-wrapper">
+                  <img src={opt.image} alt={opt.name} />
+                </div>
+                <div className="archetype-info">
+                  <h3>{opt.name}</h3>
+                  <span className="archetype-style" style={{ color: opt.color }}>{opt.style}</span>
+                  <p>{opt.desc}</p>
+                </div>
+                <button className="match-btn" style={{ background: `linear-gradient(135deg, ${opt.color}, #ff7854)` }}>
+                  Match with {opt.name.split(' ')[0]} 💖
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (mode === 'demo') {
     return (
       <div className="swipealpha-demo-view">
+        {renderOnboardingModal()}
         <div className="swipealpha-phone-container">
           <div className="phone-mockup">
             {/* Notch */}
@@ -578,6 +674,33 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                     <Flame size={18} color="#fe3c72" fill="#fe3c72" style={{ filter: 'drop-shadow(0 0 4px rgba(254, 60, 114, 0.5))' }} />
                     <span>Agent<span style={{ color: '#ff7854' }}>Swindler</span></span>
                   </span>
+                  
+                  {archetype && (
+                    <div 
+                      className="mobile-waifu-badge" 
+                      onClick={() => setShowOnboarding(true)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: archetype === 'meme' ? 'rgba(254, 60, 114, 0.15)' : archetype === 'balanced' ? 'rgba(6, 182, 212, 0.15)' : 'rgba(234, 179, 8, 0.15)',
+                        border: archetype === 'meme' ? '1px solid rgba(254, 60, 114, 0.25)' : archetype === 'balanced' ? '1px solid rgba(6, 182, 212, 0.25)' : '1px solid rgba(234, 179, 8, 0.25)',
+                        color: archetype === 'meme' ? '#fe3c72' : archetype === 'balanced' ? '#06b6d4' : '#eab308',
+                        padding: '2px 8px',
+                        borderRadius: '9999px',
+                        fontSize: '0.62rem',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        marginLeft: 'auto',
+                        marginRight: '6px',
+                        boxShadow: `0 0 8px ${archetype === 'meme' ? 'rgba(254, 60, 114, 0.1)' : archetype === 'balanced' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(234, 179, 8, 0.1)'}`,
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <span>💖 {archetype === 'meme' ? 'Sakura' : archetype === 'balanced' ? 'Rin' : 'Yuki'}</span>
+                    </div>
+                  )}
+
                   <button className="agents-btn" onClick={() => setScreen('agents')}>
                     <Sparkles size={16} /> Agents
                   </button>
@@ -942,31 +1065,31 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                 
                 <div className="detail-scroll-content">
                   <div className="detail-top-card">
-                    <div className="token-avatar large" style={{ background: TOKENS[selectedTokenIdx].iconBg, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      {TOKENS[selectedTokenIdx].logoUrl ? (
-                        <img src={TOKENS[selectedTokenIdx].logoUrl} alt={TOKENS[selectedTokenIdx].name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
+                    <div className="token-avatar large" style={{ background: sortedTokens[selectedTokenIdx].iconBg, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      {sortedTokens[selectedTokenIdx].logoUrl ? (
+                        <img src={sortedTokens[selectedTokenIdx].logoUrl} alt={sortedTokens[selectedTokenIdx].name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
                       ) : (
-                        TOKENS[selectedTokenIdx].iconLetter
+                        sortedTokens[selectedTokenIdx].symbol.substring(0,1)
                       )}
                     </div>
-                    <h2>{TOKENS[selectedTokenIdx].name}</h2>
-                    <div className="token-symbol">{TOKENS[selectedTokenIdx].symbol}</div>
-                    <div className="price-huge">{TOKENS[selectedTokenIdx].price}</div>
+                    <h2>{sortedTokens[selectedTokenIdx].name}</h2>
+                    <div className="token-symbol">{sortedTokens[selectedTokenIdx].symbol}</div>
+                    <div className="price-huge">{sortedTokens[selectedTokenIdx].price}</div>
                   </div>
 
                   <div className="detail-card-section">
                     <h3>Smart Money Flow Analytics</h3>
                     <div className="stat-row">
                       <span>Net Flow 24h</span>
-                      <span className={TOKENS[selectedTokenIdx].smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}>{TOKENS[selectedTokenIdx].smNetflow}</span>
+                      <span className={sortedTokens[selectedTokenIdx].smNetflow.startsWith('+') ? 'c-pos' : 'c-neg'}>{sortedTokens[selectedTokenIdx].smNetflow}</span>
                     </div>
                     <div className="stat-row">
                       <span>SM Addresses active</span>
-                      <span>{TOKENS[selectedTokenIdx].smTraders} wallets</span>
+                      <span>{sortedTokens[selectedTokenIdx].smTraders} wallets</span>
                     </div>
                     <div className="stat-row">
                       <span>Accumulation Trend</span>
-                      <span style={{ textTransform: 'capitalize' }}>{TOKENS[selectedTokenIdx].smSignal}</span>
+                      <span style={{ textTransform: 'capitalize' }}>{sortedTokens[selectedTokenIdx].smSignal}</span>
                     </div>
                   </div>
 
@@ -974,23 +1097,23 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
                     <h3>Token Age & Holders</h3>
                     <div className="stat-row">
                       <span>Holders</span>
-                      <span>{TOKENS[selectedTokenIdx].holders} addresses</span>
+                      <span>{sortedTokens[selectedTokenIdx].holders} addresses</span>
                     </div>
                     <div className="stat-row">
                       <span>Launch Age</span>
-                      <span>{TOKENS[selectedTokenIdx].age}</span>
+                      <span>{sortedTokens[selectedTokenIdx].age}</span>
                     </div>
                     <div className="stat-row">
                       <span>Risk Metric</span>
-                      <span>{TOKENS[selectedTokenIdx].risk}</span>
+                      <span>{sortedTokens[selectedTokenIdx].risk}</span>
                     </div>
                   </div>
 
                   <div className="detail-card-section ai-glow">
                     <h3>AI Signal Reasoning</h3>
-                    <p className="ai-reason-text">{TOKENS[selectedTokenIdx].aiSummary}</p>
+                    <p className="ai-reason-text">{sortedTokens[selectedTokenIdx].aiSummary}</p>
                     <div style={{ marginTop: '10px' }}>
-                      <span className={`sig-badge ${TOKENS[selectedTokenIdx].signalClass}`}>{TOKENS[selectedTokenIdx].signal}</span>
+                      <span className={`sig-badge ${sortedTokens[selectedTokenIdx].signalClass}`}>{sortedTokens[selectedTokenIdx].signal}</span>
                     </div>
                   </div>
                 </div>
@@ -1176,6 +1299,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
   // mode === 'desktop' (Main Dashboard)
   return (
     <div className="swipealpha-desktop-dashboard">
+      {renderOnboardingModal()}
       {/* Top Header stats */}
       <div className="dashboard-stats-header">
         <div className="stat-card glow-blue">
@@ -1186,6 +1310,27 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
           <span className="card-lbl">🤖 Active Agents</span>
           <span className="card-val">5 AI Models</span>
         </div>
+        {archetype ? (
+          <div 
+            className={`stat-card ${archetype === 'meme' ? 'glow-pink' : archetype === 'balanced' ? 'glow-teal' : 'glow-yellow'}`}
+            onClick={() => setShowOnboarding(true)}
+            style={{ cursor: 'pointer', transition: 'all 0.2s', border: '1px solid rgba(255,255,255,0.08)' }}
+          >
+            <span className="card-lbl">💖 MATCHED WAIFU (CLICK TO CHANGE)</span>
+            <span className="card-val" style={{ color: archetype === 'meme' ? '#fe3c72' : archetype === 'balanced' ? '#00efc8' : '#eab308' }}>
+              {archetype === 'meme' ? 'Sakura' : archetype === 'balanced' ? 'Rin' : 'Yuki'}
+            </span>
+          </div>
+        ) : (
+          <div 
+            className="stat-card glow-pink"
+            onClick={() => setShowOnboarding(true)}
+            style={{ cursor: 'pointer', transition: 'all 0.2s', border: '1px solid rgba(255,255,255,0.08)' }}
+          >
+            <span className="card-lbl">💖 TRADING WAIFU</span>
+            <span className="card-val-small" style={{ color: '#fe3c72' }}>Find Match</span>
+          </div>
+        )}
         <div className="stat-card glow-teal">
           <span className="card-lbl">🛡️ Registry Contract</span>
           <span className="card-val-small">0x2dEE...CAE7</span>
@@ -1205,7 +1350,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop' }) 
           </div>
           
           <div className="signals-grid">
-            {TOKENS.map((token) => (
+            {sortedTokens.map((token) => (
               <div key={token.symbol} className="desktop-signal-card">
                 <div className="token-card-top">
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
