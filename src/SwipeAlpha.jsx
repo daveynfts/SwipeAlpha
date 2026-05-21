@@ -2,6 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { ethers } from 'ethers';
 import { Star, ThumbsUp, ThumbsDown, Info, ArrowLeft, Check, Sparkles, MessageSquare, Flame, Heart, X, RotateCcw } from 'lucide-react';
 import './SwipeAlpha.css';
+import archetypeMeme from './assets/archetype_meme.png';
+import archetypeBalanced from './assets/archetype_balanced.png';
+import archetypeBluechip from './assets/archetype_bluechip.png';
 
 // === Web3 Contract Configuration ===
 const REGISTRY_CONTRACT_ADDRESS = "0x2dEE66b5638f2a92E6bBb3ceB45047e67DFfCAE7";
@@ -596,8 +599,8 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         id: 'meme',
         name: 'Sakura "Degen"',
         style: 'High Risk · Meme Sniper',
-        desc: 'Loves high-volatility micro-caps, sniper setups, and hype narratives. Perfect for fast degen plays.',
-        image: '/src/assets/archetype_meme.png',
+        desc: 'Loves high-volatility micro-caps, sniper setups, and hype narratives. Perfect for degen plays.',
+        image: archetypeMeme,
         color: '#fe3c72',
         shadowClass: 'card-meme'
       },
@@ -606,7 +609,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         name: 'Rin "Tech-Wear"',
         style: 'Medium Risk · Balanced',
         desc: 'Focuses on automated yield strategies, staking, and mid-cap agents. Steady growth with smart hedges.',
-        image: '/src/assets/archetype_balanced.png',
+        image: archetypeBalanced,
         color: '#06b6d4',
         shadowClass: 'card-balanced'
       },
@@ -615,7 +618,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         name: 'Yuki "Goddess"',
         style: 'Low Risk · Blue Chip',
         desc: 'Focuses on highly audited, institutional-grade assets. Safest allocations for long-term growth.',
-        image: '/src/assets/archetype_bluechip.png',
+        image: archetypeBluechip,
         color: '#eab308',
         shadowClass: 'card-bluechip'
       }
