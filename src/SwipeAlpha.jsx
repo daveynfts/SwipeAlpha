@@ -887,42 +887,25 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {/* Swipe Screen */}
             {screen === 'swipe' && (
               <div className="phone-screen active">
-                <div className="phone-header" style={{ gap: '6px', paddingBottom: '12px' }}>
-                  <span className="app-logo" style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.95rem', fontWeight: '800', flexShrink: 0 }}>
-                    <Flame size={16} color="#fe3c72" fill="#fe3c72" style={{ filter: 'drop-shadow(0 0 4px rgba(254, 60, 114, 0.5))' }} />
-                    <span>Agent<span style={{ color: '#ff7854' }}>Swindler</span></span>
+                <div className="phone-header">
+                  <span className="app-logo">
+                    <Flame size={16} className="logo-icon-flame" />
+                    <span>Agent<span className="logo-accent-text">Swindler</span></span>
                   </span>
                   
                   {archetype && (
                     <div 
-                      className="mobile-waifu-badge" 
+                      className={`mobile-waifu-badge archetype-${archetype}`} 
                       onClick={() => {
                         SoundEffects.play('tap');
                         setShowOnboarding(true);
-                      }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '2px',
-                        background: archetype === 'meme' ? 'rgba(254, 60, 114, 0.15)' : archetype === 'balanced' ? 'rgba(6, 182, 212, 0.15)' : 'rgba(234, 179, 8, 0.15)',
-                        border: archetype === 'meme' ? '1px solid rgba(254, 60, 114, 0.25)' : archetype === 'balanced' ? '1px solid rgba(6, 182, 212, 0.25)' : '1px solid rgba(234, 179, 8, 0.25)',
-                        color: archetype === 'meme' ? '#fe3c72' : archetype === 'balanced' ? '#06b6d4' : '#eab308',
-                        padding: '2px 6px',
-                        borderRadius: '9999px',
-                        fontSize: '0.58rem',
-                        fontWeight: '800',
-                        cursor: 'pointer',
-                        boxShadow: `0 0 8px ${archetype === 'meme' ? 'rgba(254, 60, 114, 0.1)' : archetype === 'balanced' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(234, 179, 8, 0.1)'}`,
-                        transition: 'all 0.2s',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap'
                       }}
                     >
                       <span>💖 {archetype === 'meme' ? 'Sakura' : archetype === 'balanced' ? 'Rin' : 'Yuki'}</span>
                     </div>
                   )}
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto', flexShrink: 0 }}>
+                  <div className="phone-header-actions">
                     {/* Volume Mute Toggle */}
                     <button 
                       onClick={() => {
@@ -933,18 +916,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                           SoundEffects.play('tap');
                         }
                       }}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'rgba(255, 255, 255, 0.6)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: '4px',
-                        borderRadius: '50%',
-                        transition: 'all 0.2s'
-                      }}
+                      className="phone-header-btn"
                       title={soundEnabled ? "Mute sounds" : "Unmute sounds"}
                     >
                       {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} color="rgba(255,255,255,0.3)" />}
@@ -957,40 +929,12 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                         setScreen('notifications');
                         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
                       }}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'rgba(255, 255, 255, 0.6)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: '4px',
-                        borderRadius: '50%',
-                        position: 'relative',
-                        transition: 'all 0.2s'
-                      }}
+                      className="phone-header-btn"
                       title="Notifications"
                     >
                       <Bell size={16} />
                       {unreadCount > 0 && (
-                        <span className="notif-badge-count" style={{
-                          position: 'absolute',
-                          top: '-4px',
-                          right: '-4px',
-                          background: '#ef4444',
-                          color: '#fff',
-                          borderRadius: '8px',
-                          minWidth: '12px',
-                          height: '12px',
-                          padding: '0 3px',
-                          fontSize: '0.45rem',
-                          fontWeight: '800',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          boxShadow: '0 0 6px #ef4444'
-                        }}>
+                        <span className="notif-badge-count">
                           {unreadCount}
                         </span>
                       )}
@@ -1002,22 +946,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                         onClick={() => {
                           SoundEffects.play('tap');
                         }}
-                        style={{
-                          background: 'rgba(34, 197, 94, 0.12)',
-                          border: '1px solid rgba(34, 197, 94, 0.25)',
-                          borderRadius: '8px',
-                          color: '#22c55e',
-                          padding: '3px 6px',
-                          fontSize: '0.58rem',
-                          fontWeight: '800',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '3px'
-                        }}
+                        className="phone-wallet-btn connected"
                         title={account}
                       >
-                        <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#22c55e' }}></div>
+                        <div className="wallet-status-dot"></div>
                         {account.substring(0, 4)}...
                       </button>
                     ) : (
@@ -1026,17 +958,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                           SoundEffects.play('tap');
                           if (openConnectModal) openConnectModal();
                         }}
-                        style={{
-                          background: 'linear-gradient(135deg, #fe3c72, #ff7854)',
-                          border: 'none',
-                          borderRadius: '8px',
-                          color: '#fff',
-                          padding: '3px 6px',
-                          fontSize: '0.58rem',
-                          fontWeight: '800',
-                          cursor: 'pointer',
-                          boxShadow: '0 2px 6px rgba(254, 60, 114, 0.3)'
-                        }}
+                        className="phone-wallet-btn disconnected"
                       >
                         Connect
                       </button>
@@ -1060,7 +982,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                       <div className="swap-loading-content">
                         <Sparkles className="swap-loading-icon" size={40} />
                         <h4>Executing Swap via MerchantMoe...</h4>
-                        <p style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '8px' }}>
+                        <p className="swap-loading-desc">
                           Sending 0.1 MNT to route to simulated {currentToken?.symbol} pool
                         </p>
                       </div>
@@ -1096,64 +1018,31 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     >
                       {/* Swipe overlays */}
                       {dragOffset.x > 25 && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '24px',
-                          left: '24px',
-                          border: '3px solid #22c55e',
-                          color: '#22c55e',
-                          textTransform: 'uppercase',
-                          fontSize: '1.4rem',
-                          fontWeight: '800',
-                          padding: '4px 10px',
-                          borderRadius: '6px',
-                          transform: 'rotate(-12deg)',
-                          zIndex: 100,
-                          opacity: Math.min(dragOffset.x / 80, 1),
-                          pointerEvents: 'none',
-                          background: 'rgba(0,0,0,0.6)'
-                        }}>
+                        <div 
+                          className="swipe-overlay-label swipe-overlay-match"
+                          style={{ opacity: Math.min(dragOffset.x / 80, 1) }}
+                        >
                           MATCH
                         </div>
                       )}
                       {dragOffset.x < -25 && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '24px',
-                          right: '24px',
-                          border: '3px solid #ef4444',
-                          color: '#ef4444',
-                          textTransform: 'uppercase',
-                          fontSize: '1.4rem',
-                          fontWeight: '800',
-                          padding: '4px 10px',
-                          borderRadius: '6px',
-                          transform: 'rotate(12deg)',
-                          zIndex: 100,
-                          opacity: Math.min(-dragOffset.x / 80, 1),
-                          pointerEvents: 'none',
-                          background: 'rgba(0,0,0,0.6)'
-                        }}>
+                        <div 
+                          className="swipe-overlay-label swipe-overlay-pass"
+                          style={{ opacity: Math.min(-dragOffset.x / 80, 1) }}
+                        >
                           PASS
                         </div>
                       )}
                       {/* Tinder-style top tab indicators */}
-                      <div className="card-tab-indicators" style={{ display: 'flex', gap: '5px', padding: '10px 16px 2px 16px', borderTopLeftRadius: '20px', borderTopRightRadius: '20px' }}>
+                      <div className="card-tab-indicators">
                         {[0, 1, 2].map((idx) => (
-                          <div key={idx} style={{ 
-                            flex: 1, 
-                            height: '4px', 
-                            borderRadius: '2px', 
-                            background: activeCardTab === idx ? 'linear-gradient(135deg, #fe3c72, #ff7854)' : 'rgba(255,255,255,0.15)',
-                            boxShadow: activeCardTab === idx ? '0 0 8px rgba(254, 60, 114, 0.5)' : 'none',
-                            transition: 'all 0.2s'
-                          }} />
+                          <div key={idx} className={`tab-indicator-pill ${activeCardTab === idx ? 'active' : ''}`} />
                         ))}
                       </div>
 
                       <div className="token-card-header">
                         <div className="token-meta">
-                          <div className="token-avatar" style={{ background: currentToken.iconBg, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <div className="token-avatar" style={{ background: currentToken.iconBg }}>
                             {currentToken.logoUrl ? (
                               <img src={currentToken.logoUrl} alt={currentToken.name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
                             ) : (
@@ -1164,7 +1053,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                             <div className="token-name">{currentToken.name}</div>
                             <div className="token-symbol" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                               <span>{currentToken.standard} · {currentToken.symbol} Agent</span>
-                              <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, border: '1px solid rgba(254, 60, 114, 0.25)' }}>⚡ Nansen</span>
+                              <span className="nansen-badge">⚡ Nansen</span>
                             </div>
                           </div>
                         </div>
@@ -1175,65 +1064,56 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
                       {/* Tab 0: Agent Details */}
                       {activeCardTab === 0 && (
-                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div className="card-tab-content card-tab-layout tab-fade-in">
+                          <div className="card-tab-inner">
                             {/* ROI and Risk Summary */}
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 14px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                            <div className="apple-glass-panel-roi">
                               <div>
-                                <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>30D Return</span>
-                                <div style={{ fontSize: '1.4rem', fontWeight: '800', color: '#22c55e', fontFamily: 'monospace' }}>{currentToken.roi30d}</div>
+                                <span className="panel-label">30D Return</span>
+                                <div className="roi-value">{currentToken.roi30d}</div>
                               </div>
                               <div style={{ textAlign: 'right' }}>
-                                <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Risk Class</span>
-                                <div style={{ 
-                                  fontSize: '0.75rem', 
-                                  fontWeight: '800', 
-                                  color: currentToken.risk === 'HIGH' ? '#ef4444' : currentToken.risk === 'MEDIUM' ? '#eab308' : '#22c55e',
-                                  background: currentToken.risk === 'HIGH' ? 'rgba(239, 68, 68, 0.1)' : currentToken.risk === 'MEDIUM' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                                  padding: '2px 8px',
-                                  borderRadius: '6px',
-                                  marginTop: '2px',
-                                  display: 'inline-block'
-                                }}>
+                                <span className="panel-label">Risk Class</span>
+                                <div className={`risk-badge risk-${currentToken.risk.toLowerCase()}`}>
                                   {currentToken.risk}
                                 </div>
                               </div>
                             </div>
 
                             {/* Performance Grid */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px 12px' }}>
-                                <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Win Rate</span>
-                                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', marginTop: '2px', fontFamily: 'monospace' }}>{currentToken.winRate}</div>
+                            <div className="apple-glass-panel-grid">
+                              <div className="apple-glass-panel-grid-item">
+                                <span className="panel-label">Win Rate</span>
+                                <div className="stat-value">{currentToken.winRate}</div>
                               </div>
-                              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px 12px' }}>
-                                <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Avg Hold Time</span>
-                                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', marginTop: '2px', fontFamily: 'monospace' }}>{currentToken.avgHolding}</div>
+                              <div className="apple-glass-panel-grid-item">
+                                <span className="panel-label">Avg Hold Time</span>
+                                <div className="stat-value">{currentToken.avgHolding}</div>
                               </div>
                             </div>
 
                             {/* Model and Creator */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', background: 'rgba(255,255,255,0.01)', padding: '10px 12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)', fontSize: '0.72rem' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>AI Engine</span>
-                                <span style={{ color: 'white', fontWeight: 600 }}>{currentToken.model}</span>
+                            <div className="apple-glass-panel-meta">
+                              <div className="meta-row">
+                                <span className="meta-label">AI Engine</span>
+                                <span className="meta-value">{currentToken.model}</span>
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '6px' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Creator</span>
-                                <span style={{ color: 'white', fontWeight: 600 }}>{currentToken.creator}</span>
+                              <div className="meta-row border-t">
+                                <span className="meta-label">Creator</span>
+                                <span className="meta-value">{currentToken.creator}</span>
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '6px' }}>
-                                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Primary Assets</span>
-                                <span style={{ color: 'white', fontWeight: 600 }}>{currentToken.primaryTokens.join(', ')}</span>
+                              <div className="meta-row border-t">
+                                <span className="meta-label">Primary Assets</span>
+                                <span className="meta-value">{currentToken.primaryTokens.join(', ')}</span>
                               </div>
                             </div>
 
                             {/* Agent Description */}
-                            <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.45, margin: '2px 0 0 0', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                            <p className="agent-description-text">
                               "{currentToken.description}"
                             </p>
                           </div>
-                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '10px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)', marginTop: '10px' }}>
+                          <div className="card-tab-tap-instruction">
                             👆 Tap card to view Agent Recent Trades
                           </div>
                         </div>
@@ -1241,38 +1121,23 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
                       {/* Tab 1: Recent Trades */}
                       {activeCardTab === 1 && (
-                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                              <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>📈 Agent Activity Log</span>
-                              <span style={{ fontSize: '0.58rem', background: 'rgba(34, 197, 94, 0.15)', color: '#22c55e', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>LIVE FEEDS</span>
+                        <div className="card-tab-content card-tab-layout tab-fade-in">
+                          <div className="card-tab-inner">
+                            <div className="flex-justify-between flex-align-center" style={{ marginBottom: '4px' }}>
+                              <span className="panel-label">📈 Agent Activity Log</span>
+                              <span className="live-feeds-badge">LIVE FEEDS</span>
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div className="flex-column" style={{ gap: '8px' }}>
                               {currentToken.recentTrades.map((trade, tIdx) => (
-                                <div key={tIdx} style={{ 
-                                  display: 'flex', 
-                                  justifyContent: 'space-between', 
-                                  alignItems: 'center', 
-                                  background: 'rgba(255,255,255,0.02)', 
-                                  padding: '8px 12px', 
-                                  borderRadius: '12px',
-                                  border: '1px solid rgba(255,255,255,0.04)'
-                                }}>
-                                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                    <span style={{ 
-                                      fontSize: '0.62rem', 
-                                      fontWeight: '800', 
-                                      padding: '2px 6px', 
-                                      borderRadius: '4px',
-                                      background: trade.type === 'BUY' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
-                                      color: trade.type === 'BUY' ? '#22c55e' : '#ef4444'
-                                    }}>
+                                <div key={tIdx} className="trade-row-item">
+                                  <div className="flex-align-center" style={{ gap: '10px' }}>
+                                    <span className={`trade-type-badge type-${trade.type.toLowerCase()}`}>
                                       {trade.type}
                                     </span>
                                     <div>
-                                      <div style={{ fontSize: '0.78rem', fontWeight: 'bold', color: '#fff' }}>{trade.token}</div>
-                                      <div style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.4)' }}>{trade.time} @ {trade.price}</div>
+                                      <div className="trade-token-name">{trade.token}</div>
+                                      <div className="trade-token-time">{trade.time} @ {trade.price}</div>
                                     </div>
                                   </div>
                                   
@@ -1282,17 +1147,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                                       e.stopPropagation(); // prevent cycling tab!
                                       handleRecentTradeSwap(trade.token, trade.type); 
                                     }} 
-                                    style={{ 
-                                      fontSize: '0.68rem', 
-                                      fontWeight: '700', 
-                                      padding: '6px 12px', 
-                                      borderRadius: '6px',
-                                      border: 'none',
-                                      background: trade.type === 'BUY' ? 'linear-gradient(135deg, #22c55e, #10b981)' : 'linear-gradient(135deg, #ef4444, #f43f5e)',
-                                      color: '#fff',
-                                      cursor: 'pointer',
-                                      boxShadow: trade.type === 'BUY' ? '0 0 6px rgba(34,197,94,0.2)' : '0 0 6px rgba(239,68,68,0.2)'
-                                    }}
+                                    className={`trade-swap-btn btn-${trade.type.toLowerCase()}`}
                                   >
                                     {trade.type === 'BUY' ? 'Buy 0.1 MNT' : 'Sell 0.1 MNT'}
                                   </button>
@@ -1300,7 +1155,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                               ))}
                             </div>
                           </div>
-                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '10px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)', marginTop: '10px' }}>
+                          <div className="card-tab-tap-instruction">
                             👆 Tap card to view Nansen AI Audit
                           </div>
                         </div>
@@ -1308,54 +1163,37 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
                       {/* Tab 2: Nansen AI Audit */}
                       {activeCardTab === 2 && (
-                        <div className="card-tab-content tab-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', padding: '10px 0 0 0' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            <div className="card-analyst-box smart-money" style={{ 
-                              margin: '0', 
-                              background: 'linear-gradient(135deg, rgba(254, 60, 114, 0.04), rgba(255, 120, 84, 0.04))', 
-                              border: '1px solid rgba(254, 60, 114, 0.15)', 
-                              borderRadius: '16px', 
-                              padding: '14px' 
-                            }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>🛡️ NANSEN AI AGENT AUDIT</span>
-                                <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>SECURE COOP</span>
+                        <div className="card-tab-content card-tab-layout tab-fade-in">
+                          <div className="card-tab-inner">
+                            <div className="apple-glass-panel-audit">
+                              <div className="flex-justify-between flex-align-center">
+                                <span className="panel-label">🛡️ NANSEN AI AGENT AUDIT</span>
+                                <span className="audit-coop-badge">SECURE COOP</span>
                               </div>
                               
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+                              <div className="flex-justify-between flex-align-center" style={{ marginTop: '12px' }}>
                                 <div>
-                                  <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#fff' }}>{currentToken.nansenAnalysis.status}</div>
-                                  <div style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.4)', marginTop: '2px' }}>Audited by {currentToken.nansenAnalysis.auditor}</div>
+                                  <div className="audit-status-text">{currentToken.nansenAnalysis.status}</div>
+                                  <div className="audit-auditor-text">Audited by {currentToken.nansenAnalysis.auditor}</div>
                                 </div>
-                                <div style={{ 
-                                  width: '54px', 
-                                  height: '54px', 
-                                  borderRadius: '50%', 
-                                  border: '3px solid #fe3c72', 
-                                  display: 'flex', 
-                                  flexDirection: 'column', 
-                                  alignItems: 'center', 
-                                  justifyContent: 'center',
-                                  boxShadow: '0 0 10px rgba(254,60,114,0.3)',
-                                  background: 'rgba(0,0,0,0.2)'
-                                }}>
-                                  <span style={{ fontSize: '0.85rem', fontWeight: '800', fontFamily: 'monospace', color: '#fff' }}>{currentToken.nansenAnalysis.score.split('/')[0]}</span>
-                                  <span style={{ fontSize: '0.45rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>score</span>
+                                <div className="audit-score-circle">
+                                  <span className="audit-score-number">{currentToken.nansenAnalysis.score.split('/')[0]}</span>
+                                  <span className="audit-score-label">score</span>
                                 </div>
                               </div>
                             </div>
 
-                            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px', padding: '12px 14px' }}>
-                              <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5 }}>
+                            <div className="apple-glass-panel-audit-details">
+                              <div className="audit-details-text">
                                 {currentToken.nansenAnalysis.details}
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '6px' }}>
+                              <div className="audit-rank-row flex-justify-between">
                                 <span>Security Rank</span>
-                                <span style={{ color: '#fff', fontWeight: 'bold' }}>{currentToken.nansenAnalysis.riskLevel}</span>
+                                <span className="audit-rank-value">{currentToken.nansenAnalysis.riskLevel}</span>
                               </div>
                             </div>
                           </div>
-                          <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', padding: '10px 0 2px 0', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
+                          <div className="card-tab-tap-instruction">
                             👆 Tap card to return to Agent Details
                           </div>
                         </div>
@@ -1372,20 +1210,20 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                 </div>
 
                 {currentToken && (
-                  <div className="swipe-action-controls" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', padding: '12px 0', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-                    <button className="control-btn rewind-action" onClick={() => { SoundEffects.play('tap'); setCardIndex(0); }} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(234, 179, 8, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rewind Stack">
+                  <div className="swipe-action-controls">
+                    <button className="control-btn rewind-action" onClick={() => { SoundEffects.play('tap'); setCardIndex(0); }} title="Rewind Stack">
                       <RotateCcw size={16} color="#eab308" />
                     </button>
-                    <button className="control-btn nope-action" onClick={() => handleSwipe('left')} disabled={isSwapping} style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(239, 68, 68, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Skip">
+                    <button className="control-btn nope-action" onClick={() => handleSwipe('left')} disabled={isSwapping} title="Skip">
                       <X size={24} color="#ef4444" />
                     </button>
-                    <button className="control-btn super-action" onClick={() => { SoundEffects.play('tap'); setSelectedAgentIdx(0); setScreen('rateAgent'); setRatingVal(0); setActiveTags([]); }} disabled={isSwapping} style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(59, 130, 246, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rate Agent">
+                    <button className="control-btn super-action" onClick={() => { SoundEffects.play('tap'); setSelectedAgentIdx(0); setScreen('rateAgent'); setRatingVal(0); setActiveTags([]); }} disabled={isSwapping} title="Rate Agent">
                       <Star size={18} color="#3b82f6" />
                     </button>
-                    <button className="control-btn like-action" onClick={() => handleSwipe('right')} disabled={isSwapping} style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(254, 60, 114, 0.1)', border: '2px solid #fe3c72', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s', position: 'relative' }} title="Match Agent">
+                    <button className="control-btn like-action" onClick={() => handleSwipe('right')} disabled={isSwapping} title="Match Agent">
                       {isSwapping ? <div className="buy-spinner" style={{ width: '16px', height: '16px', border: '2px solid #fe3c72', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> : <Heart size={22} color="#fe3c72" fill="#fe3c72" />}
                     </button>
-                    <button className="control-btn info-action" onClick={() => { SoundEffects.play('tap'); setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168, 85, 247, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Token Info">
+                    <button className="control-btn info-action" onClick={() => { SoundEffects.play('tap'); setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping} title="Token Info">
                       <Info size={16} color="#a855f7" />
                     </button>
                   </div>
@@ -1401,14 +1239,14 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     <ArrowLeft size={18} /> Back
                   </button>
                   <span>Token Details</span>
-                  <div style={{ width: 18 }}></div>
+                  <div className="nav-spacer-18"></div>
                 </div>
                 
                 <div className="detail-scroll-content">
                   <div className="detail-top-card">
-                    <div className="token-avatar large" style={{ background: sortedTokens[selectedTokenIdx].iconBg, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div className="token-avatar large" style={{ background: sortedTokens[selectedTokenIdx].iconBg }}>
                       {sortedTokens[selectedTokenIdx].logoUrl ? (
-                        <img src={sortedTokens[selectedTokenIdx].logoUrl} alt={sortedTokens[selectedTokenIdx].name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
+                        <img src={sortedTokens[selectedTokenIdx].logoUrl} alt={sortedTokens[selectedTokenIdx].name} />
                       ) : (
                         sortedTokens[selectedTokenIdx].symbol.substring(0,1)
                       )}
@@ -1430,7 +1268,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     </div>
                     <div className="stat-row">
                       <span>Accumulation Trend</span>
-                      <span style={{ textTransform: 'capitalize' }}>{sortedTokens[selectedTokenIdx].smSignal}</span>
+                      <span className="capitalize">{sortedTokens[selectedTokenIdx].smSignal}</span>
                     </div>
                   </div>
 
@@ -1453,7 +1291,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   <div className="detail-card-section ai-glow">
                     <h3>AI Signal Reasoning</h3>
                     <p className="ai-reason-text">{sortedTokens[selectedTokenIdx].aiSummary}</p>
-                    <div style={{ marginTop: '10px' }}>
+                    <div className="margin-top-10">
                       <span className={`sig-badge ${sortedTokens[selectedTokenIdx].signalClass}`}>{sortedTokens[selectedTokenIdx].signal}</span>
                     </div>
                   </div>
@@ -1463,71 +1301,50 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
             {/* Agents Screen */}
             {screen === 'agents' && (
-              <div className="phone-screen active scrollable" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <div className="screen-nav" style={{ flexShrink: 0 }}>
+              <div className="phone-screen active scrollable phone-screen-flex-col">
+                <div className="screen-nav flex-shrink-0">
                   <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }}>
                     <ArrowLeft size={18} /> Back
                   </button>
                   <span>My Active Agents ({swipedAgents.length})</span>
-                  <div style={{ width: 18 }}></div>
+                  <div className="nav-spacer-18"></div>
                 </div>
 
-                <div className="agents-marketplace-list" style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '14px', flex: 1, overflowY: 'auto' }}>
+                <div className="agents-marketplace-list">
                   
                   {/* Part 1: List of Swiped/Matched Agents */}
-                  <div className="agents-section-title" style={{ fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div className="agents-section-title">
                     <span>💖 matched trading partners</span>
                   </div>
 
                   {swipedAgents.length === 0 ? (
-                    <div style={{ padding: '20px 10px', textAlign: 'center', background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px' }}>
-                      <span style={{ fontSize: '1.4rem' }}>🛸</span>
-                      <h4 style={{ fontSize: '0.82rem', color: '#fff', margin: '8px 0 4px 0' }}>No active partners</h4>
-                      <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', margin: 0 }}>Swipe right on agents in the deck to pair with them.</p>
-                      <button onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }} style={{ marginTop: '10px', background: 'var(--primary)', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 'bold', cursor: 'pointer' }}>Go Swipe</button>
+                    <div className="empty-partners-card">
+                      <span className="empty-partners-emoji">🛸</span>
+                      <h4>No active partners</h4>
+                      <p>Swipe right on agents in the deck to pair with them.</p>
+                      <button onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }} className="action-btn">Go Swipe</button>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div className="flex-column gap-8">
                       {swipedAgents.map((agent) => (
-                        <div key={agent.symbol} className="swiped-agent-item" style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '12px',
-                          background: 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
-                          padding: '10px 12px',
-                          borderRadius: '14px',
-                          border: '1px solid rgba(255,255,255,0.04)',
-                          position: 'relative',
-                          overflow: 'hidden'
-                        }}>
-                          <div className="swiped-agent-avatar" style={{
-                            background: agent.iconBg || 'linear-gradient(135deg, #fe3c72, #ff7854)',
-                            width: '38px',
-                            height: '38px',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            overflow: 'hidden',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            flexShrink: 0
-                          }}>
+                        <div key={agent.symbol} className="swiped-agent-item">
+                          <div className="swiped-agent-avatar" style={{ background: agent.iconBg || 'linear-gradient(135deg, #fe3c72, #ff7854)' }}>
                             {agent.logoUrl ? (
-                              <img src={agent.logoUrl} alt={agent.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                              <img src={agent.logoUrl} alt={agent.name} />
                             ) : (
-                              <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#fff' }}>{agent.symbol.substring(0, 1)}</span>
+                              <span className="swiped-agent-avatar-text">{agent.symbol.substring(0, 1)}</span>
                             )}
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
-                            <h4 style={{ fontSize: '0.78rem', fontWeight: '800', color: '#fff', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <div className="flex-column gap-2 flex-1">
+                            <h4 className="swiped-agent-name">
                               {agent.name}
-                              <span style={{ fontSize: '0.55rem', color: '#22c55e', background: 'rgba(34,197,94,0.1)', padding: '1px 5px', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.15)' }}>Active</span>
+                              <span className="active-badge">Active</span>
                             </h4>
-                            <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)' }}>{agent.creator} · {agent.model}</span>
+                            <span className="swiped-agent-meta">{agent.creator} · {agent.model}</span>
                           </div>
-                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                            <div style={{ fontSize: '0.78rem', fontWeight: '800', color: '#22c55e' }}>{agent.winRate}</div>
-                            <div style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.35)' }}>Hold: {agent.avgHolding}</div>
+                          <div className="text-right flex-shrink-0">
+                            <div className="swiped-agent-winrate">{agent.winRate}</div>
+                            <div className="swiped-agent-hold">Hold: {agent.avgHolding}</div>
                           </div>
                         </div>
                       ))}
@@ -1535,100 +1352,56 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   )}
 
                   {/* Part 2: Real-time Transaction Feed */}
-                  <div className="agents-section-title" style={{ fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span className="live-pulse" style={{ display: 'inline-block', width: '6px', height: '6px', background: '#22c55e', borderRadius: '50%', boxShadow: '0 0 6px #22c55e' }}></span>
+                  <div className="agents-section-title feed-title">
+                    <div className="flex-align-center gap-6">
+                      <span className="live-pulse"></span>
                       <span>real-time transaction feed</span>
                     </div>
-                    <span style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.3)', textTransform: 'none', fontWeight: 'normal' }}>Matched Agents Only</span>
+                    <span className="feed-header-subtitle">Matched Agents Only</span>
                   </div>
 
-                  <div className="live-tx-feed-container" style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px',
-                    maxHeight: '320px',
-                    overflowY: 'auto',
-                    paddingRight: '2px'
-                  }}>
+                  <div className="live-tx-feed-container">
                     {liveTransactions.map((tx) => (
                       <div 
                         key={tx.id} 
                         className={`live-tx-card ${tx.isNew ? 'tab-fade-in' : ''}`}
-                        style={{
-                          background: 'rgba(255,255,255,0.015)',
-                          border: '1px solid rgba(255,255,255,0.03)',
-                          borderRadius: '12px',
-                          padding: '8px 10px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          gap: '10px',
-                          transition: 'all 0.3s ease'
-                        }}
                       >
                         {(() => {
                           const agentInfo = TOKENS.find(t => t.symbol === tx.agentSymbol || t.name === tx.agentName);
                           return (
-                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                              <div className="swiped-agent-avatar" style={{
-                                background: agentInfo?.iconBg || 'linear-gradient(135deg, #fe3c72, #ff7854)',
-                                width: '28px',
-                                height: '28px',
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                overflow: 'hidden',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                flexShrink: 0
+                            <div className="flex-align-center gap-8">
+                              <div className="swiped-agent-avatar small" style={{
+                                background: agentInfo?.iconBg || 'linear-gradient(135deg, #fe3c72, #ff7854)'
                               }}>
                                 {agentInfo?.logoUrl ? (
-                                  <img src={agentInfo.logoUrl} alt={tx.agentName} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                  <img src={agentInfo.logoUrl} alt={tx.agentName} />
                                 ) : (
                                   <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#fff' }}>🤖</span>
                                 )}
                               </div>
                               <div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: '#fff' }}>{tx.agentName}</span>
-                                  <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.05)', padding: '1px 4px', borderRadius: '3px' }}>{tx.agentSymbol}</span>
+                                <div className="flex-align-center gap-4">
+                                  <span className="feed-agent-name">{tx.agentName}</span>
+                                  <span className="feed-agent-symbol">{tx.agentSymbol}</span>
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
-                                  <span style={{ 
-                                    fontSize: '0.58rem', 
-                                    fontWeight: '800', 
-                                    padding: '1px 4px', 
-                                    borderRadius: '3px', 
-                                    color: tx.type === 'BUY' ? '#22c55e' : '#ef4444', 
-                                    background: tx.type === 'BUY' ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)' 
-                                  }}>{tx.type}</span>
-                                  <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: '600' }}>{tx.amount} {tx.token}</span>
-                                  <span style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.35)' }}>@ {tx.price}</span>
+                                <div className="feed-tx-details">
+                                  <span className={`trade-type-badge type-${tx.type.toLowerCase()}`}>{tx.type}</span>
+                                  <span className="feed-tx-amount">{tx.amount} {tx.token}</span>
+                                  <span className="feed-tx-price">@ {tx.price}</span>
                                 </div>
                               </div>
                             </div>
                           );
                         })()}
 
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'end', gap: '4px' }}>
-                          <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)' }}>{tx.time}</span>
+                        <div className="feed-tx-actions">
+                          <span className="feed-tx-time">{tx.time}</span>
                           <button 
                             onClick={(e) => {
                               e.stopPropagation();
                               handleRecentTradeSwap(tx.token, tx.type);
                             }}
-                            style={{
-                              fontSize: '0.62rem',
-                              fontWeight: 'bold',
-                              padding: '3.5px 8px',
-                              borderRadius: '5px',
-                              background: tx.type === 'BUY' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                              border: tx.type === 'BUY' ? '1px solid rgba(34, 197, 94, 0.25)' : '1px solid rgba(239, 68, 68, 0.25)',
-                              color: tx.type === 'BUY' ? '#22c55e' : '#ef4444',
-                              cursor: 'pointer',
-                              transition: 'all 0.15s'
-                            }}
+                            className={`trade-swap-btn btn-small btn-${tx.type.toLowerCase()}`}
                           >
                             {tx.type === 'BUY' ? 'Buy' : 'Sell'} 0.1 $MNT
                           </button>
@@ -1649,7 +1422,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     <ArrowLeft size={18} /> Back
                   </button>
                   <span>Agent Profiles</span>
-                  <div style={{ width: 18 }}></div>
+                  <div className="nav-spacer-18"></div>
                 </div>
 
                 <div className="agent-profile-content">
@@ -1689,10 +1462,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   </div>
 
                   <div className="profile-rental-action">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="rental-action-row">
                       <div>
-                        <label style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Rental Fee</label>
-                        <div style={{ fontSize: '18px', fontWeight: '800', color: 'var(--primary)' }}>{AGENTS[selectedAgentIdx].price}</div>
+                        <label className="rental-lbl-text">Rental Fee</label>
+                        <div className="rental-price-text">{AGENTS[selectedAgentIdx].price}</div>
                       </div>
                       <button className="rent-now-btn" onClick={() => {
                         setActiveAgent(AGENTS[selectedAgentIdx]);
@@ -1717,7 +1490,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     <ArrowLeft size={18} /> Cancel
                   </button>
                   <span>Submit Reputation</span>
-                  <div style={{ width: 18 }}></div>
+                  <div className="nav-spacer-18"></div>
                 </div>
 
                 <div className="rate-agent-form">
@@ -1771,7 +1544,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     disabled={isSubmittingRating}
                   >
                     {isSubmittingRating ? (
-                      <div className="spinner" style={{ border: '2px solid rgba(255,255,255,0.2)', borderLeftColor: 'white', borderRadius: '50%', width: 18, height: 18, animation: 'spin 1s linear infinite' }}></div>
+                      <div className="spinner"></div>
                     ) : (
                       "Publish Review to Mantle"
                     )}
@@ -1794,69 +1567,39 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                         SoundEffects.play('tap');
                         setNotifications([]);
                       }}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'rgba(255, 255, 255, 0.4)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        padding: '4px'
-                      }}
+                      className="notif-clear-btn"
                       title="Clear All"
                     >
                       <Trash2 size={16} />
                     </button>
                   ) : (
-                    <div style={{ width: 24 }}></div>
+                    <div className="nav-spacer-24"></div>
                   )}
                 </div>
 
-                <div className="notifications-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div className="notifications-body">
                   {notifications.length === 0 ? (
-                    <div style={{ 
-                      padding: '40px 10px', 
-                      textAlign: 'center', 
-                      background: 'rgba(255,255,255,0.01)', 
-                      border: '1px dashed rgba(255,255,255,0.1)', 
-                      borderRadius: '12px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}>
-                      <Bell size={32} style={{ color: 'rgba(255, 255, 255, 0.2)' }} />
-                      <h4 style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#fff' }}>No Notifications</h4>
-                      <p style={{ margin: 0, fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>Activity logs and smart money signals will appear here.</p>
+                    <div className="no-notif-placeholder">
+                      <Bell size={32} />
+                      <h4>No Notifications</h4>
+                      <p>Activity logs and smart money signals will appear here.</p>
                     </div>
                   ) : (
                     notifications.map(notif => (
-                      <div key={notif.id} className={`notification-item ${notif.type}`} style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        borderLeft: `3px solid ${notif.type === 'success' ? '#22c55e' : notif.type === 'warning' ? '#f59e0b' : notif.type === 'error' ? '#ef4444' : '#3b82f6'}`,
-                        borderRadius: '8px',
-                        padding: '10px 12px',
-                        gap: '4px',
-                        borderTop: '1px solid rgba(255,255,255,0.03)',
-                        borderRight: '1px solid rgba(255,255,255,0.03)',
-                        borderBottom: '1px solid rgba(255,255,255,0.03)'
-                      }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#fff' }}>{notif.title}</span>
-                          <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)' }}>{notif.time}</span>
+                      <div key={notif.id} className={`notification-item notif-type-${notif.type}`}>
+                        <div className="notif-row-header">
+                          <span className="notif-title-text">{notif.title}</span>
+                          <span className="notif-time-text">{notif.time}</span>
                         </div>
-                        <p style={{ margin: 0, fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>{notif.message}</p>
+                        <p className="notif-msg-text">{notif.message}</p>
                         {notif.txHash && (
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.62rem', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '4px', marginTop: '2px' }}>
-                            <span style={{ color: 'rgba(255,255,255,0.4)' }}>Hash: {notif.txHash.substring(0, 6)}...{notif.txHash.substring(notif.txHash.length - 4)}</span>
+                          <div className="notif-footer-row">
+                            <span className="notif-hash-text">Hash: {notif.txHash.substring(0, 6)}...{notif.txHash.substring(notif.txHash.length - 4)}</span>
                             <a 
                               href={`https://explorer.sepolia.mantle.xyz/tx/${notif.txHash}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold' }}
+                              className="notif-explorer-link"
                             >
                               Explorer →
                             </a>
