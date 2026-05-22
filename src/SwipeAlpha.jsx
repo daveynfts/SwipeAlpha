@@ -288,6 +288,43 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
   const [screen, setScreen] = useState('swipe'); // swipe, detail, agents, agentDetail, rateAgent
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [statusBarTime, setStatusBarTime] = useState('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      setStatusBarTime(`${hours}:${minutes}`);
+    };
+    updateTime();
+    const clockInterval = setInterval(updateTime, 1000);
+    return () => clearInterval(clockInterval);
+  }, []);
+
+  const getScreenClass = (s) => {
+    if (screen === s) return 'active';
+    
+    if (screen === 'swipe') {
+      return 'to-right';
+    }
+    if (screen === 'notifications') {
+      return s === 'swipe' ? 'to-left' : 'to-right';
+    }
+    if (screen === 'detail') {
+      return s === 'swipe' ? 'to-left' : 'to-right';
+    }
+    if (screen === 'agents') {
+      return s === 'swipe' ? 'to-left' : 'to-right';
+    }
+    if (screen === 'agentDetail') {
+      return (s === 'swipe' || s === 'agents') ? 'to-left' : 'to-right';
+    }
+    if (screen === 'rateAgent') {
+      return (s === 'swipe' || s === 'agents' || s === 'agentDetail') ? 'to-left' : 'to-right';
+    }
+    return 'to-right';
+  };
 
   const sortedTokens = useMemo(() => {
     if (!archetype) return TOKENS;
@@ -884,9 +921,31 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {/* Notch */}
             <div className="notch"></div>
 
+            {/* iOS Status Bar */}
+            <div className="phone-status-bar">
+              <span className="status-bar-time">{statusBarTime}</span>
+              <div className="status-bar-icons">
+                <svg className="status-icon" viewBox="0 0 17 11" fill="currentColor">
+                  <rect x="0" y="8" width="3" height="3" rx="0.5" />
+                  <rect x="4" y="6" width="3" height="5" rx="0.5" />
+                  <rect x="8" y="4" width="3" height="7" rx="0.5" />
+                  <rect x="12" y="1" width="3" height="10" rx="0.5" />
+                </svg>
+                <svg className="status-icon" viewBox="0 0 15 11" fill="currentColor">
+                  <path d="M7.5 11a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-3.32-3.3a4.7 4.7 0 0 1 6.64 0 .8.8 0 1 0 1.13-1.13 6.3 6.3 0 0 0-8.9 0 .8.8 0 1 0 1.13 1.13zm-2.82-2.83a8.7 8.7 0 0 1 12.28 0 .8.8 0 1 0 1.13-1.13 10.3 10.3 0 0 0-14.54 0 .8.8 0 0 0 1.13 1.13z" />
+                </svg>
+                <div className="battery-container">
+                  <svg className="battery-icon" viewBox="0 0 22 11" fill="currentColor">
+                    <rect x="0.5" y="0.5" width="18" height="10" rx="2.5" fill="none" stroke="currentColor" />
+                    <rect x="2" y="2" width="13" height="7" rx="1.5" />
+                    <path d="M19.5 3.5v4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
             {/* Swipe Screen */}
-            {screen === 'swipe' && (
-              <div className="phone-screen active">
+            <div className={`phone-screen ${getScreenClass('swipe')}`}>
                 <div className="phone-header">
                   <span className="app-logo">
                     <Flame size={16} className="logo-icon-flame" />
@@ -1229,11 +1288,9 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   </div>
                 )}
               </div>
-            )}
 
             {/* Detail Screen */}
-            {screen === 'detail' && (
-              <div className="phone-screen active scrollable">
+            <div className={`phone-screen scrollable ${getScreenClass('detail')}`}>
                 <div className="screen-nav">
                   <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }}>
                     <ArrowLeft size={18} /> Back
@@ -1297,11 +1354,9 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   </div>
                 </div>
               </div>
-            )}
 
             {/* Agents Screen */}
-            {screen === 'agents' && (
-              <div className="phone-screen active scrollable phone-screen-flex-col">
+            <div className={`phone-screen scrollable phone-screen-flex-col ${getScreenClass('agents')}`}>
                 <div className="screen-nav flex-shrink-0">
                   <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }}>
                     <ArrowLeft size={18} /> Back
@@ -1412,11 +1467,9 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
                 </div>
               </div>
-            )}
 
             {/* Agent Detail */}
-            {screen === 'agentDetail' && (
-              <div className="phone-screen active scrollable">
+            <div className={`phone-screen scrollable ${getScreenClass('agentDetail')}`}>
                 <div className="screen-nav">
                   <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('agents'); }}>
                     <ArrowLeft size={18} /> Back
@@ -1480,11 +1533,9 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   </button>
                 </div>
               </div>
-            )}
 
             {/* Rate Agent Screen */}
-            {screen === 'rateAgent' && (
-              <div className="phone-screen active scrollable">
+            <div className={`phone-screen scrollable ${getScreenClass('rateAgent')}`}>
                 <div className="screen-nav">
                   <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('agentDetail'); }}>
                     <ArrowLeft size={18} /> Cancel
@@ -1551,11 +1602,9 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   </button>
                 </div>
               </div>
-            )}
 
             {/* Notifications Screen */}
-            {screen === 'notifications' && (
-              <div className="phone-screen active scrollable">
+            <div className={`phone-screen scrollable ${getScreenClass('notifications')}`}>
                 <div className="screen-nav">
                   <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }}>
                     <ArrowLeft size={18} /> Back
@@ -1610,8 +1659,13 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   )}
                 </div>
               </div>
-            )}
+
             {renderMatchOverlay()}
+
+            {/* iOS Home Indicator */}
+            <div className="phone-home-indicator-wrapper">
+              <div className="phone-home-indicator"></div>
+            </div>
           </div>
         </div>
       </div>

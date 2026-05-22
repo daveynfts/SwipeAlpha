@@ -36,17 +36,41 @@
   left: 0;
   right: 0;
   bottom: 0;
-  display: none;
+  display: flex; /* Kept flex so transition runs */
   flex-direction: column;
   background: #06060c;
-  padding: 44px 16px 20px 16px; /* Notch safe area */
+  padding: 56px 16px 32px 16px; /* Adjusted safe area: status bar (56px) and home bar (32px) */
   font-family: var(--apple-font-stack);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Slide Transitions */
+  transition: transform 0.45s cubic-bezier(0.36, 0.66, 0.04, 1), opacity 0.45s ease;
+  transform: translate3d(100%, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
 }
 
 .phone-screen.active {
-  display: flex;
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  pointer-events: all;
+  z-index: 20;
+}
+
+.phone-screen.to-left {
+  transform: translate3d(-25%, 0, 0);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.phone-screen.to-right {
+  transform: translate3d(100%, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
 }
 
 .phone-screen.scrollable {
@@ -56,6 +80,76 @@
 .phone-screen.scrollable::-webkit-scrollbar {
   display: none;
 }
+
+/* iOS Status Bar */
+.phone-status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  z-index: 110;
+  pointer-events: none;
+  background: transparent;
+}
+
+.status-bar-time {
+  padding-top: 12px;
+}
+
+.status-bar-icons {
+  display: flex;
+  align-items: center;
+  gap: 5.5px;
+  padding-top: 12px;
+}
+
+.status-icon {
+  width: 15px;
+  height: 11px;
+  color: white;
+}
+
+.battery-container {
+  display: flex;
+  align-items: center;
+}
+
+.battery-icon {
+  width: 22px;
+  height: 11px;
+}
+
+/* iOS Home Indicator */
+.phone-home-indicator-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 110;
+  pointer-events: none;
+  background: transparent;
+}
+
+.phone-home-indicator {
+  width: 125px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+}
+
 
 /* Notch */
 .notch {
