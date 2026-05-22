@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { ethers } from 'ethers';
-import { Star, ThumbsUp, ThumbsDown, Info, ArrowLeft, Check, Sparkles, MessageSquare, Flame, Heart, X, RotateCcw } from 'lucide-react';
+import { Star, ThumbsUp, ThumbsDown, Info, ArrowLeft, Check, Sparkles, MessageSquare, Flame, Heart, X, RotateCcw, Bell, Volume2, VolumeX, Trash2 } from 'lucide-react';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import './SwipeAlpha.css';
 import archetypeMeme from './assets/archetype_meme.png';
 import archetypeBalanced from './assets/archetype_balanced.png';
 import archetypeBluechip from './assets/archetype_bluechip.png';
+import SoundEffects from './utils/soundEffects';
 
 // === Web3 Contract Configuration ===
 const REGISTRY_CONTRACT_ADDRESS = "0x2dEE66b5638f2a92E6bBb3ceB45047e67DFfCAE7";
@@ -278,7 +280,8 @@ const AGENTS = [
   }
 ];
 
-export default function SwipeAlpha({ walletClient, account, mode = 'desktop', archetype, setArchetype, addNotification }) {
+export default function SwipeAlpha({ walletClient, account, mode = 'desktop', archetype, setArchetype, addNotification, notifications = [], setNotifications, unreadCount = 0, soundEnabled = true, setSoundEnabled }) {
+  const { openConnectModal } = useConnectModal ? useConnectModal() : {};
   const memeImg = localStorage.getItem('custom_archetype_meme') || archetypeMeme;
   const balancedImg = localStorage.getItem('custom_archetype_balanced') || archetypeBalanced;
   const bluechipImg = localStorage.getItem('custom_archetype_bluechip') || archetypeBluechip;
@@ -309,6 +312,16 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
       setShowOnboarding(false);
     }
   }, [archetype]);
+
+  // Clear unread notifications when on the notifications screen
+  useEffect(() => {
+    if (screen === 'notifications' && setNotifications) {
+      const hasUnread = notifications.some(n => !n.read);
+      if (hasUnread) {
+        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      }
+    }
+  }, [screen, notifications, setNotifications]);
 
   const [selectedTokenIdx, setSelectedTokenIdx] = useState(0);
   const [selectedAgentIdx, setSelectedAgentIdx] = useState(0);
@@ -467,6 +480,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
     
     const clickThreshold = 8;
     if (Math.abs(dragOffset.x) < clickThreshold && Math.abs(dragOffset.y) < clickThreshold) {
+      SoundEffects.play('tap');
       setActiveCardTab(prev => (prev + 1) % 3);
       setDragOffset({ x: 0, y: 0 });
       return;
@@ -496,6 +510,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
   const handleSwipe = async (direction) => {
     if (direction === 'right' && currentToken) {
+      SoundEffects.play('swipeRight');
       // Add to matched agents list
       setSwipedAgents(prev => {
         if (prev.some(a => a.symbol === currentToken.symbol)) return prev;
@@ -504,6 +519,8 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
 
       // Set matched agent to trigger custom overlay inside phone mockup
       setMatchOverlayAgent(currentToken);
+    } else {
+      SoundEffects.play('swipeLeft');
     }
     setCardIndex(prev => prev + 1);
   };
@@ -610,6 +627,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
   };
 
   const toggleTag = (tag) => {
+    SoundEffects.play('tap');
     if (activeTags.includes(tag)) {
       setActiveTags(prev => prev.filter(t => t !== tag));
     } else {
@@ -833,6 +851,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                 key={opt.id} 
                 className={`archetype-card ${opt.shadowClass}`}
                 onClick={() => {
+                  SoundEffects.play('tap');
                   setArchetype(opt.id);
                   setShowOnboarding(false);
                 }}
@@ -868,44 +887,168 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {/* Swipe Screen */}
             {screen === 'swipe' && (
               <div className="phone-screen active">
-                <div className="phone-header">
-                  <span className="app-logo" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '1.05rem', fontWeight: '800' }}>
-                    <Flame size={18} color="#fe3c72" fill="#fe3c72" style={{ filter: 'drop-shadow(0 0 4px rgba(254, 60, 114, 0.5))' }} />
+                <div className="phone-header" style={{ gap: '6px', paddingBottom: '12px' }}>
+                  <span className="app-logo" style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.95rem', fontWeight: '800', flexShrink: 0 }}>
+                    <Flame size={16} color="#fe3c72" fill="#fe3c72" style={{ filter: 'drop-shadow(0 0 4px rgba(254, 60, 114, 0.5))' }} />
                     <span>Agent<span style={{ color: '#ff7854' }}>Swindler</span></span>
                   </span>
                   
                   {archetype && (
                     <div 
                       className="mobile-waifu-badge" 
-                      onClick={() => setShowOnboarding(true)}
+                      onClick={() => {
+                        SoundEffects.play('tap');
+                        setShowOnboarding(true);
+                      }}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '4px',
+                        gap: '2px',
                         background: archetype === 'meme' ? 'rgba(254, 60, 114, 0.15)' : archetype === 'balanced' ? 'rgba(6, 182, 212, 0.15)' : 'rgba(234, 179, 8, 0.15)',
                         border: archetype === 'meme' ? '1px solid rgba(254, 60, 114, 0.25)' : archetype === 'balanced' ? '1px solid rgba(6, 182, 212, 0.25)' : '1px solid rgba(234, 179, 8, 0.25)',
                         color: archetype === 'meme' ? '#fe3c72' : archetype === 'balanced' ? '#06b6d4' : '#eab308',
-                        padding: '2px 8px',
+                        padding: '2px 6px',
                         borderRadius: '9999px',
-                        fontSize: '0.62rem',
+                        fontSize: '0.58rem',
                         fontWeight: '800',
                         cursor: 'pointer',
-                        marginLeft: 'auto',
-                        marginRight: '6px',
                         boxShadow: `0 0 8px ${archetype === 'meme' ? 'rgba(254, 60, 114, 0.1)' : archetype === 'balanced' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(234, 179, 8, 0.1)'}`,
-                        transition: 'all 0.2s'
+                        transition: 'all 0.2s',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap'
                       }}
                     >
                       <span>💖 {archetype === 'meme' ? 'Sakura' : archetype === 'balanced' ? 'Rin' : 'Yuki'}</span>
                     </div>
                   )}
 
-                  <button className="agents-btn" onClick={() => setScreen('agents')}>
-                    <Sparkles size={16} /> Agents
-                  </button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto', flexShrink: 0 }}>
+                    {/* Volume Mute Toggle */}
+                    <button 
+                      onClick={() => {
+                        const newSoundState = !soundEnabled;
+                        setSoundEnabled(newSoundState);
+                        if (newSoundState) {
+                          SoundEffects.enabled = true;
+                          SoundEffects.play('tap');
+                        }
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '4px',
+                        borderRadius: '50%',
+                        transition: 'all 0.2s'
+                      }}
+                      title={soundEnabled ? "Mute sounds" : "Unmute sounds"}
+                    >
+                      {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} color="rgba(255,255,255,0.3)" />}
+                    </button>
+
+                    {/* Notification Bell */}
+                    <button 
+                      onClick={() => {
+                        SoundEffects.play('tap');
+                        setScreen('notifications');
+                        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '4px',
+                        borderRadius: '50%',
+                        position: 'relative',
+                        transition: 'all 0.2s'
+                      }}
+                      title="Notifications"
+                    >
+                      <Bell size={16} />
+                      {unreadCount > 0 && (
+                        <span className="notif-badge-count" style={{
+                          position: 'absolute',
+                          top: '-4px',
+                          right: '-4px',
+                          background: '#ef4444',
+                          color: '#fff',
+                          borderRadius: '8px',
+                          minWidth: '12px',
+                          height: '12px',
+                          padding: '0 3px',
+                          fontSize: '0.45rem',
+                          fontWeight: '800',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 0 6px #ef4444'
+                        }}>
+                          {unreadCount}
+                        </span>
+                      )}
+                    </button>
+
+                    {/* Wallet Connect */}
+                    {account ? (
+                      <button 
+                        onClick={() => {
+                          SoundEffects.play('tap');
+                        }}
+                        style={{
+                          background: 'rgba(34, 197, 94, 0.12)',
+                          border: '1px solid rgba(34, 197, 94, 0.25)',
+                          borderRadius: '8px',
+                          color: '#22c55e',
+                          padding: '3px 6px',
+                          fontSize: '0.58rem',
+                          fontWeight: '800',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '3px'
+                        }}
+                        title={account}
+                      >
+                        <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#22c55e' }}></div>
+                        {account.substring(0, 4)}...
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => {
+                          SoundEffects.play('tap');
+                          if (openConnectModal) openConnectModal();
+                        }}
+                        style={{
+                          background: 'linear-gradient(135deg, #fe3c72, #ff7854)',
+                          border: 'none',
+                          borderRadius: '8px',
+                          color: '#fff',
+                          padding: '3px 6px',
+                          fontSize: '0.58rem',
+                          fontWeight: '800',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 6px rgba(254, 60, 114, 0.3)'
+                        }}
+                      >
+                        Connect
+                      </button>
+                    )}
+
+                    <button className="agents-btn" onClick={() => { SoundEffects.play('tap'); setScreen('agents'); }} style={{ padding: '4px 8px', fontSize: '0.72rem' }}>
+                      <Sparkles size={12} /> Agents
+                    </button>
+                  </div>
                 </div>
 
-                <div className="active-agent-banner" onClick={() => { setSelectedAgentIdx(0); setScreen('agentDetail'); }}>
+                <div className="active-agent-banner" onClick={() => { SoundEffects.play('tap'); setSelectedAgentIdx(0); setScreen('agentDetail'); }}>
                   <div className="banner-pulse"></div>
                   <span>Agent: <strong>{activeAgent.name}</strong></span>
                   <span className="banner-rating">⭐ {activeAgent.rating}</span>
@@ -1223,26 +1366,26 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                       <div className="empty-icon">🎉</div>
                       <h4>You're All Caught Up!</h4>
                       <p>AI Agents are scanning more block transactions...</p>
-                      <button className="reload-btn" onClick={() => setCardIndex(0)}>Swipe Again</button>
+                      <button className="reload-btn" onClick={() => { SoundEffects.play('tap'); setCardIndex(0); }}>Swipe Again</button>
                     </div>
                   )}
                 </div>
 
                 {currentToken && (
                   <div className="swipe-action-controls" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', padding: '12px 0', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-                    <button className="control-btn rewind-action" onClick={() => setCardIndex(0)} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(234, 179, 8, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rewind Stack">
+                    <button className="control-btn rewind-action" onClick={() => { SoundEffects.play('tap'); setCardIndex(0); }} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(234, 179, 8, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rewind Stack">
                       <RotateCcw size={16} color="#eab308" />
                     </button>
                     <button className="control-btn nope-action" onClick={() => handleSwipe('left')} disabled={isSwapping} style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(239, 68, 68, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Skip">
                       <X size={24} color="#ef4444" />
                     </button>
-                    <button className="control-btn super-action" onClick={() => { setSelectedAgentIdx(0); setScreen('rateAgent'); }} disabled={isSwapping} style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(59, 130, 246, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rate Agent">
+                    <button className="control-btn super-action" onClick={() => { SoundEffects.play('tap'); setSelectedAgentIdx(0); setScreen('rateAgent'); setRatingVal(0); setActiveTags([]); }} disabled={isSwapping} style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(59, 130, 246, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Rate Agent">
                       <Star size={18} color="#3b82f6" />
                     </button>
                     <button className="control-btn like-action" onClick={() => handleSwipe('right')} disabled={isSwapping} style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(254, 60, 114, 0.1)', border: '2px solid #fe3c72', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s', position: 'relative' }} title="Match Agent">
                       {isSwapping ? <div className="buy-spinner" style={{ width: '16px', height: '16px', border: '2px solid #fe3c72', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> : <Heart size={22} color="#fe3c72" fill="#fe3c72" />}
                     </button>
-                    <button className="control-btn info-action" onClick={() => { setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168, 85, 247, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Token Info">
+                    <button className="control-btn info-action" onClick={() => { SoundEffects.play('tap'); setSelectedTokenIdx(cardIndex); setScreen('detail'); }} disabled={isSwapping} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(168, 85, 247, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.2s' }} title="Token Info">
                       <Info size={16} color="#a855f7" />
                     </button>
                   </div>
@@ -1254,7 +1397,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {screen === 'detail' && (
               <div className="phone-screen active scrollable">
                 <div className="screen-nav">
-                  <button className="nav-back" onClick={() => setScreen('swipe')}>
+                  <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }}>
                     <ArrowLeft size={18} /> Back
                   </button>
                   <span>Token Details</span>
@@ -1322,7 +1465,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {screen === 'agents' && (
               <div className="phone-screen active scrollable" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <div className="screen-nav" style={{ flexShrink: 0 }}>
-                  <button className="nav-back" onClick={() => setScreen('swipe')}>
+                  <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }}>
                     <ArrowLeft size={18} /> Back
                   </button>
                   <span>My Active Agents ({swipedAgents.length})</span>
@@ -1341,7 +1484,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                       <span style={{ fontSize: '1.4rem' }}>🛸</span>
                       <h4 style={{ fontSize: '0.82rem', color: '#fff', margin: '8px 0 4px 0' }}>No active partners</h4>
                       <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', margin: 0 }}>Swipe right on agents in the deck to pair with them.</p>
-                      <button onClick={() => setScreen('swipe')} style={{ marginTop: '10px', background: 'var(--primary)', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 'bold', cursor: 'pointer' }}>Go Swipe</button>
+                      <button onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }} style={{ marginTop: '10px', background: 'var(--primary)', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 'bold', cursor: 'pointer' }}>Go Swipe</button>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -1502,7 +1645,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {screen === 'agentDetail' && (
               <div className="phone-screen active scrollable">
                 <div className="screen-nav">
-                  <button className="nav-back" onClick={() => setScreen('agents')}>
+                  <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('agents'); }}>
                     <ArrowLeft size={18} /> Back
                   </button>
                   <span>Agent Profiles</span>
@@ -1559,7 +1702,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     </div>
                   </div>
 
-                  <button className="rate-agent-link-btn" onClick={() => { setScreen('rateAgent'); setRatingVal(0); setActiveTags([]); }}>
+                  <button className="rate-agent-link-btn" onClick={() => { SoundEffects.play('tap'); setScreen('rateAgent'); setRatingVal(0); setActiveTags([]); }}>
                     <MessageSquare size={16} /> Submit Rating to Mantle Sepolia
                   </button>
                 </div>
@@ -1570,7 +1713,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {screen === 'rateAgent' && (
               <div className="phone-screen active scrollable">
                 <div className="screen-nav">
-                  <button className="nav-back" onClick={() => setScreen('agentDetail')}>
+                  <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('agentDetail'); }}>
                     <ArrowLeft size={18} /> Cancel
                   </button>
                   <span>Submit Reputation</span>
@@ -1590,7 +1733,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                         key={starVal}
                         size={36}
                         className={`star-icon ${ratingVal >= starVal ? 'active' : ''}`}
-                        onClick={() => setRatingVal(starVal)}
+                        onClick={() => {
+                          SoundEffects.play('tap');
+                          setRatingVal(starVal);
+                        }}
                       />
                     ))}
                   </div>
@@ -1630,6 +1776,95 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                       "Publish Review to Mantle"
                     )}
                   </button>
+                </div>
+              </div>
+            )}
+
+            {/* Notifications Screen */}
+            {screen === 'notifications' && (
+              <div className="phone-screen active scrollable">
+                <div className="screen-nav">
+                  <button className="nav-back" onClick={() => { SoundEffects.play('tap'); setScreen('swipe'); }}>
+                    <ArrowLeft size={18} /> Back
+                  </button>
+                  <span>Activity Logs</span>
+                  {notifications.length > 0 ? (
+                    <button 
+                      onClick={() => {
+                        SoundEffects.play('tap');
+                        setNotifications([]);
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'rgba(255, 255, 255, 0.4)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        padding: '4px'
+                      }}
+                      title="Clear All"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  ) : (
+                    <div style={{ width: 24 }}></div>
+                  )}
+                </div>
+
+                <div className="notifications-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {notifications.length === 0 ? (
+                    <div style={{ 
+                      padding: '40px 10px', 
+                      textAlign: 'center', 
+                      background: 'rgba(255,255,255,0.01)', 
+                      border: '1px dashed rgba(255,255,255,0.1)', 
+                      borderRadius: '12px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}>
+                      <Bell size={32} style={{ color: 'rgba(255, 255, 255, 0.2)' }} />
+                      <h4 style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#fff' }}>No Notifications</h4>
+                      <p style={{ margin: 0, fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>Activity logs and smart money signals will appear here.</p>
+                    </div>
+                  ) : (
+                    notifications.map(notif => (
+                      <div key={notif.id} className={`notification-item ${notif.type}`} style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        borderLeft: `3px solid ${notif.type === 'success' ? '#22c55e' : notif.type === 'warning' ? '#f59e0b' : notif.type === 'error' ? '#ef4444' : '#3b82f6'}`,
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        gap: '4px',
+                        borderTop: '1px solid rgba(255,255,255,0.03)',
+                        borderRight: '1px solid rgba(255,255,255,0.03)',
+                        borderBottom: '1px solid rgba(255,255,255,0.03)'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#fff' }}>{notif.title}</span>
+                          <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)' }}>{notif.time}</span>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>{notif.message}</p>
+                        {notif.txHash && (
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.62rem', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '4px', marginTop: '2px' }}>
+                            <span style={{ color: 'rgba(255,255,255,0.4)' }}>Hash: {notif.txHash.substring(0, 6)}...{notif.txHash.substring(notif.txHash.length - 4)}</span>
+                            <a 
+                              href={`https://explorer.sepolia.mantle.xyz/tx/${notif.txHash}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold' }}
+                            >
+                              Explorer →
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -1821,6 +2056,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                 <button 
                   className="desktop-rate-btn"
                   onClick={() => {
+                    SoundEffects.play('tap');
                     setSelectedAgentIdx(idx);
                     setRatingVal(0);
                     setActiveTags([]);
@@ -1862,7 +2098,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
           <div className="desktop-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Rate Agent: {AGENTS[selectedAgentIdx].name}</h3>
-              <button className="close-modal-btn" onClick={() => setShowRateModal(false)}>×</button>
+              <button className="close-modal-btn" onClick={() => { SoundEffects.play('tap'); setShowRateModal(false); }}>×</button>
             </div>
             <div className="modal-body">
               <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '15px' }}>Submit reviews directly on-chain to the reputation ledger proxy contract.</p>
@@ -1874,7 +2110,10 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     size={40}
                     style={{ cursor: 'pointer', transition: 'all 0.2s' }}
                     className={`star-icon ${ratingVal >= starVal ? 'active' : ''}`}
-                    onClick={() => setRatingVal(starVal)}
+                    onClick={() => {
+                      SoundEffects.play('tap');
+                      setRatingVal(starVal);
+                    }}
                   />
                 ))}
               </div>
@@ -1907,7 +2146,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             </div>
             
             <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
-              <button className="cancel-btn" onClick={() => setShowRateModal(false)} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
+              <button className="cancel-btn" onClick={() => { SoundEffects.play('tap'); setShowRateModal(false); }} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
               <button 
                 className="submit-onchain-rating-btn" 
                 onClick={async () => {
@@ -1929,7 +2168,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
         <div className="custom-alert-backdrop" onClick={() => setCustomAlert(null)}>
           <div className={`custom-alert-content ${customAlert.type}`} onClick={(e) => e.stopPropagation()}>
             <div className="custom-alert-glow"></div>
-            <button className="custom-alert-close" onClick={() => setCustomAlert(null)}>×</button>
+            <button className="custom-alert-close" onClick={() => { SoundEffects.play('tap'); setCustomAlert(null); }}>×</button>
             <div className="custom-alert-icon-wrapper">
               {customAlert.type === 'success' && <Check size={28} className="icon-success" />}
               {customAlert.type === 'error' && <X size={28} className="icon-error" />}
@@ -1966,7 +2205,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
               </div>
             )}
             
-            <button className="custom-alert-btn" onClick={() => setCustomAlert(null)}>
+            <button className="custom-alert-btn" onClick={() => { SoundEffects.play('tap'); setCustomAlert(null); }}>
               {customAlert.actionText || 'OK'}
             </button>
           </div>

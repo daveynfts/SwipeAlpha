@@ -2366,3 +2366,67 @@
 .custom-alert-btn:active {
   transform: translateY(0);
 }
+
+/* Premium Styling for Activity Logs / Notifications */
+.notifications-body {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.notifications-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notifications-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.notifications-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.notification-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.notification-item:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Mobile Queries */
+@media (max-width: 500px) {
+  .demo-header-capsule {
+    display: none !important;
+  }
+  
+  .swipealpha-phone-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+  }
+  
+  .phone-mockup {
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+  
+  .notch {
+    display: none !important;
+  }
+  
+  .phone-screen {
+    padding-top: calc(env(safe-area-inset-top, 16px) + 12px) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 12px) !important;
+  }
+}

@@ -8,6 +8,7 @@ import SwipeAlpha from './SwipeAlpha';
 import LandingPage from './LandingPage';
 import Profile from './Profile';
 import Admin from './Admin';
+import SoundEffects from './utils/soundEffects';
 
 function clientToSigner(client) {
   const { account, chain, transport } = client;
@@ -27,18 +28,60 @@ function App() {
   const [tokenContract, setTokenContract] = useState(null);
   const [stakingContract, setStakingContract] = useState(null);
 
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    try {
+      const saved = localStorage.getItem('soundEffectsEnabled');
+      return saved !== null ? saved === 'true' : true;
+    } catch (e) {
+      return true;
+    }
+  });
+
   const [notifications, setNotifications] = useState(() => {
     try {
       const saved = localStorage.getItem('swindler_notifications');
-      return saved ? JSON.parse(saved) : [];
+      if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error(e);
-      return [];
     }
+    return [
+      {
+        id: 1,
+        type: 'info',
+        title: 'Smart Money Signal',
+        message: 'Tín hiệu Smart Money: $AAVE đang tích lũy mạnh bởi 45 ví lớn.',
+        time: new Date(Date.now() - 120000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: false,
+        timestamp: Date.now() - 120000
+      },
+      {
+        id: 2,
+        type: 'warning',
+        title: 'Bounty Opportunity',
+        message: 'Chương trình Bounty: Thuê DeFi Alpha Pro để tăng lợi nhuận.',
+        time: new Date(Date.now() - 600000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: false,
+        timestamp: Date.now() - 600000
+      },
+      {
+        id: 3,
+        type: 'info',
+        title: 'Smart Money Signal',
+        message: 'Tín hiệu Smart Money: $JUP có volume giao dịch tăng 40%.',
+        time: new Date(Date.now() - 3600000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: false,
+        timestamp: Date.now() - 3600000
+      }
+    ];
   });
 
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef(null);
+
+  useEffect(() => {
+    SoundEffects.enabled = soundEnabled;
+    localStorage.setItem('soundEffectsEnabled', soundEnabled.toString());
+  }, [soundEnabled]);
 
   useEffect(() => {
     localStorage.setItem('swindler_notifications', JSON.stringify(notifications));
@@ -66,7 +109,37 @@ function App() {
       timestamp: Date.now()
     };
     setNotifications(prev => [newNotif, ...prev].slice(0, 50));
+    if (type === 'success' || type === 'warning') {
+      SoundEffects.play('success');
+    } else {
+      SoundEffects.play('notification');
+    }
   };
+
+  const prevConnectedRef = useRef(isConnected);
+  useEffect(() => {
+    if (isConnected && !prevConnectedRef.current) {
+      SoundEffects.play('connect');
+      addNotification('success', 'Wallet Connected', `EVM wallet connected: ${account?.substring(0, 6)}...${account?.substring(account.length - 4)}`);
+    }
+    prevConnectedRef.current = isConnected;
+  }, [isConnected, account]);
+
+  useEffect(() => {
+    const mockSignals = [
+      { title: "Smart Money Signal", text: "Tín hiệu Smart Money: Cá voi rút 10,000 $AAVE ra khỏi sàn Binance." },
+      { title: "Smart Money Signal", text: "Tín hiệu Smart Money: DeFi Alpha Pro báo cáo tỉ lệ tích lũy của $ENA đạt 90%." },
+      { title: "Smart Money Signal", text: "Tín hiệu Smart Money: Lượng mua ròng $JUP đạt mốc mới từ 3 quỹ lớn." },
+      { title: "Smart Money Signal", text: "Tín hiệu Smart Money: Hệ Base xuất hiện dòng tiền mới đổ vào $VIRTUAL." }
+    ];
+
+    const interval = setInterval(() => {
+      const signal = mockSignals[Math.floor(Math.random() * mockSignals.length)];
+      addNotification('info', signal.title, signal.text);
+    }, 45000); // 45 seconds
+
+    return () => clearInterval(interval);
+  }, []);
   
   const [currentView, setCurrentView] = useState('swipealpha'); // 'swipealpha' or 'staking'
   
@@ -505,6 +578,11 @@ function App() {
               else localStorage.removeItem('swindler_archetype');
             }} 
             addNotification={addNotification}
+            notifications={notifications}
+            setNotifications={setNotifications}
+            unreadCount={notifications.filter(n => !n.read).length}
+            soundEnabled={soundEnabled}
+            setSoundEnabled={setSoundEnabled}
           />
         </div>
       </div>
