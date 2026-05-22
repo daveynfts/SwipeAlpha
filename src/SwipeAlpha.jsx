@@ -1104,7 +1104,6 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                             <div className="token-name">{currentToken.name}</div>
                             <div className="token-symbol" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                               <span>{currentToken.standard} · {currentToken.symbol} Agent</span>
-                              <span className="nansen-badge">⚡ Nansen</span>
                             </div>
                           </div>
                         </div>
@@ -1732,7 +1731,6 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     <div>
                       <h4 className="token-title" style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
                         {token.name}
-                        <span style={{ fontSize: '0.58rem', background: 'rgba(254, 60, 114, 0.15)', color: '#fe3c72', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, border: '1px solid rgba(254, 60, 114, 0.25)' }}>⚡ Nansen</span>
                       </h4>
                       <span className="token-symbol-tag">{token.standard} · {token.symbol} Agent</span>
                     </div>
