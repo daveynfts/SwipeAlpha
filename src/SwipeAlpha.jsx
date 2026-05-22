@@ -965,22 +965,6 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                   )}
 
                   <div className="phone-header-actions">
-                    {/* Volume Mute Toggle */}
-                    <button 
-                      onClick={() => {
-                        const newSoundState = !soundEnabled;
-                        setSoundEnabled(newSoundState);
-                        if (newSoundState) {
-                          SoundEffects.enabled = true;
-                          SoundEffects.play('tap');
-                        }
-                      }}
-                      className="phone-header-btn"
-                      title={soundEnabled ? "Mute sounds" : "Unmute sounds"}
-                    >
-                      {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} color="rgba(255,255,255,0.3)" />}
-                    </button>
-
                     {/* Notification Bell */}
                     <button 
                       onClick={() => {
@@ -1023,8 +1007,16 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                       </button>
                     )}
 
-                    <button className="agents-btn" onClick={() => { SoundEffects.play('tap'); setScreen('agents'); }} style={{ padding: '4px 8px', fontSize: '0.72rem' }}>
-                      <Sparkles size={12} /> Agents
+                    {/* Agents Screen Toggle */}
+                    <button 
+                      onClick={() => { 
+                        SoundEffects.play('tap'); 
+                        setScreen('agents'); 
+                      }} 
+                      className="phone-header-btn" 
+                      title="Agents"
+                    >
+                      <Sparkles size={16} />
                     </button>
                   </div>
                 </div>
