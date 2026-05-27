@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { Star, Info, ArrowLeft, Check, Sparkles, Flame, Heart, X, RotateCcw, Bell, Trash2 } from 'lucide-react';
+import { Star, Info, ArrowLeft, Check, Sparkles, Flame, Heart, X, RotateCcw, Bell, Trash2, MessageSquare } from 'lucide-react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import './SwipeAlpha.css';
 import archetypeMeme from './assets/archetype_meme.png';
