@@ -31,67 +31,72 @@ export default function LandingPage({ navigate }) {
   ];
 
   // Distribute profiles into 5 columns
-  const col1 = [profiles[0], profiles[3], profiles[6], profiles[9]];
-  const col2 = [profiles[1], profiles[4], profiles[7], profiles[10]];
-  const col3 = [profiles[2], profiles[5], profiles[8], profiles[0]];
-  const col4 = [profiles[3], profiles[6], profiles[9], profiles[1]];
-  const col5 = [profiles[4], profiles[7], profiles[10], profiles[2]];
+  // Distribute profiles into 5 columns (6 profiles per column to ensure it is taller than the viewport)
+  const col1 = [profiles[0], profiles[3], profiles[6], profiles[9], profiles[1], profiles[4]];
+  const col2 = [profiles[1], profiles[4], profiles[7], profiles[10], profiles[2], profiles[5]];
+  const col3 = [profiles[2], profiles[5], profiles[8], profiles[0], profiles[3], profiles[6]];
+  const col4 = [profiles[3], profiles[6], profiles[9], profiles[1], profiles[4], profiles[7]];
+  const col5 = [profiles[4], profiles[7], profiles[10], profiles[2], profiles[5], profiles[8]];
 
   const renderColumn = (colData, colIndex, isScrollUp) => {
     return (
       <div className={`marquee-column ${isScrollUp ? 'scroll-up' : 'scroll-down'}`}>
         <div className="marquee-track">
-          {colData.map((p, idx) => (
-            <div key={`col-${colIndex}-${idx}`} className="hero-phone-card">
-              <div className="hero-phone-screen">
-                <div className="hero-phone-header">
-                  <Flame size={14} color="#fe3c72" fill="#fe3c72" className="hero-phone-flame-logo" />
-                </div>
-                <img src={p.image} alt={p.name} className="hero-phone-photo" />
-                <div className="hero-phone-overlay"></div>
-                <div className="hero-phone-info">
-                  <div className="hero-phone-info-left">
-                    <span className="hero-phone-name">{p.name} <span className="hero-phone-age">{p.age}</span></span>
-                    <span className="hero-phone-verified-badge">✓</span>
+          <div className="marquee-group">
+            {colData.map((p, idx) => (
+              <div key={`col-${colIndex}-${idx}`} className="hero-phone-card">
+                <div className="hero-phone-screen">
+                  <div className="hero-phone-header">
+                    <Flame size={14} color="#fe3c72" fill="#fe3c72" className="hero-phone-flame-logo" />
                   </div>
-                  <span className="hero-phone-category-tag">{p.category}</span>
-                </div>
-                <div className="hero-phone-actions">
-                  <div className="hero-phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
-                  <div className="hero-phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
-                  <div className="hero-phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
-                  <div className="hero-phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
-                  <div className="hero-phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
+                  <img src={p.image} alt={p.name} className="hero-phone-photo" />
+                  <div className="hero-phone-overlay"></div>
+                  <div className="hero-phone-info">
+                    <div className="hero-phone-info-left">
+                      <span className="hero-phone-name">{p.name} <span className="hero-phone-age">{p.age}</span></span>
+                      <span className="hero-phone-verified-badge">✓</span>
+                    </div>
+                    <span className="hero-phone-category-tag">{p.category}</span>
+                  </div>
+                  <div className="hero-phone-actions">
+                    <div className="hero-phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
+                    <div className="hero-phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
+                    <div className="hero-phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
+                    <div className="hero-phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
+                    <div className="hero-phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          {/* Duplicate for seamless looping */}
-          {colData.map((p, idx) => (
-            <div key={`col-${colIndex}-dup-${idx}`} className="hero-phone-card">
-              <div className="hero-phone-screen">
-                <div className="hero-phone-header">
-                  <Flame size={14} color="#fe3c72" fill="#fe3c72" className="hero-phone-flame-logo" />
-                </div>
-                <img src={p.image} alt={p.name} className="hero-phone-photo" />
-                <div className="hero-phone-overlay"></div>
-                <div className="hero-phone-info">
-                  <div className="hero-phone-info-left">
-                    <span className="hero-phone-name">{p.name} <span className="hero-phone-age">{p.age}</span></span>
-                    <span className="hero-phone-verified-badge">✓</span>
+            ))}
+          </div>
+          {/* Duplicate group for seamless looping */}
+          <div className="marquee-group" aria-hidden="true">
+            {colData.map((p, idx) => (
+              <div key={`col-${colIndex}-dup-${idx}`} className="hero-phone-card">
+                <div className="hero-phone-screen">
+                  <div className="hero-phone-header">
+                    <Flame size={14} color="#fe3c72" fill="#fe3c72" className="hero-phone-flame-logo" />
                   </div>
-                  <span className="hero-phone-category-tag">{p.category}</span>
-                </div>
-                <div className="hero-phone-actions">
-                  <div className="hero-phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
-                  <div className="hero-phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
-                  <div className="hero-phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
-                  <div className="hero-phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
-                  <div className="hero-phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
+                  <img src={p.image} alt={p.name} className="hero-phone-photo" />
+                  <div className="hero-phone-overlay"></div>
+                  <div className="hero-phone-info">
+                    <div className="hero-phone-info-left">
+                      <span className="hero-phone-name">{p.name} <span className="hero-phone-age">{p.age}</span></span>
+                      <span className="hero-phone-verified-badge">✓</span>
+                    </div>
+                    <span className="hero-phone-category-tag">{p.category}</span>
+                  </div>
+                  <div className="hero-phone-actions">
+                    <div className="hero-phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
+                    <div className="hero-phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
+                    <div className="hero-phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
+                    <div className="hero-phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
+                    <div className="hero-phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     );

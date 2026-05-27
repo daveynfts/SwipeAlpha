@@ -183,7 +183,14 @@
 .marquee-track {
   display: flex;
   flex-direction: column;
+  width: 100%;
+}
+
+.marquee-group {
+  display: flex;
+  flex-direction: column;
   gap: 24px;
+  padding-bottom: 24px; /* Seamless gap between duplicated groups */
   width: 100%;
 }
 
@@ -248,6 +255,7 @@
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.3);
+  position: relative; /* Ensure z-index works on positioned element */
   z-index: 5;
   border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 }
