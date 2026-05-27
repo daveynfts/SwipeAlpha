@@ -63,6 +63,10 @@ export default function Profile({ navigate }) {
   };
 
   const handleSave = () => {
+    if (!displayName.trim()) {
+      setError('Display name cannot be empty');
+      return;
+    }
     setIsSaving(true);
     setError('');
 
@@ -361,6 +365,12 @@ export default function Profile({ navigate }) {
               </div>
             </div>
           </div>
+
+          {error && (
+            <div className="profile-error-message" style={{ color: '#ef4444', fontSize: '0.85rem', marginBottom: '1rem', fontWeight: 600, textAlign: 'center' }}>
+              ⚠️ {error}
+            </div>
+          )}
 
           {/* Trigger Actions */}
           <div className="profile-action-footer">

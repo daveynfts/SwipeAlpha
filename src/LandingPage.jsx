@@ -42,52 +42,52 @@ export default function LandingPage({ navigate }) {
       <div className={`marquee-column ${isScrollUp ? 'scroll-up' : 'scroll-down'}`}>
         <div className="marquee-track">
           {colData.map((p, idx) => (
-            <div key={`col-${colIndex}-${idx}`} className="phone-mockup-card">
-              <div className="phone-screen">
-                <div className="phone-header">
-                  <Flame size={14} color="#fe3c72" fill="#fe3c72" className="phone-flame-logo" />
+            <div key={`col-${colIndex}-${idx}`} className="hero-phone-card">
+              <div className="hero-phone-screen">
+                <div className="hero-phone-header">
+                  <Flame size={14} color="#fe3c72" fill="#fe3c72" className="hero-phone-flame-logo" />
                 </div>
-                <img src={p.image} alt={p.name} className="phone-photo" />
-                <div className="phone-gradient-overlay"></div>
-                <div className="phone-profile-info">
-                  <div className="phone-profile-info-left">
-                    <span className="phone-name">{p.name} <span className="phone-age">{p.age}</span></span>
-                    <span className="phone-verified-badge">✓</span>
+                <img src={p.image} alt={p.name} className="hero-phone-photo" />
+                <div className="hero-phone-overlay"></div>
+                <div className="hero-phone-info">
+                  <div className="hero-phone-info-left">
+                    <span className="hero-phone-name">{p.name} <span className="hero-phone-age">{p.age}</span></span>
+                    <span className="hero-phone-verified-badge">✓</span>
                   </div>
-                  <span className="phone-category-tag">{p.category}</span>
+                  <span className="hero-phone-category-tag">{p.category}</span>
                 </div>
-                <div className="phone-actions">
-                  <div className="phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
-                  <div className="phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
-                  <div className="phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
-                  <div className="phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
-                  <div className="phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
+                <div className="hero-phone-actions">
+                  <div className="hero-phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
+                  <div className="hero-phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
+                  <div className="hero-phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
+                  <div className="hero-phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
+                  <div className="hero-phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
                 </div>
               </div>
             </div>
           ))}
           {/* Duplicate for seamless looping */}
           {colData.map((p, idx) => (
-            <div key={`col-${colIndex}-dup-${idx}`} className="phone-mockup-card">
-              <div className="phone-screen">
-                <div className="phone-header">
-                  <Flame size={14} color="#fe3c72" fill="#fe3c72" className="phone-flame-logo" />
+            <div key={`col-${colIndex}-dup-${idx}`} className="hero-phone-card">
+              <div className="hero-phone-screen">
+                <div className="hero-phone-header">
+                  <Flame size={14} color="#fe3c72" fill="#fe3c72" className="hero-phone-flame-logo" />
                 </div>
-                <img src={p.image} alt={p.name} className="phone-photo" />
-                <div className="phone-gradient-overlay"></div>
-                <div className="phone-profile-info">
-                  <div className="phone-profile-info-left">
-                    <span className="phone-name">{p.name} <span className="phone-age">{p.age}</span></span>
-                    <span className="phone-verified-badge">✓</span>
+                <img src={p.image} alt={p.name} className="hero-phone-photo" />
+                <div className="hero-phone-overlay"></div>
+                <div className="hero-phone-info">
+                  <div className="hero-phone-info-left">
+                    <span className="hero-phone-name">{p.name} <span className="hero-phone-age">{p.age}</span></span>
+                    <span className="hero-phone-verified-badge">✓</span>
                   </div>
-                  <span className="phone-category-tag">{p.category}</span>
+                  <span className="hero-phone-category-tag">{p.category}</span>
                 </div>
-                <div className="phone-actions">
-                  <div className="phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
-                  <div className="phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
-                  <div className="phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
-                  <div className="phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
-                  <div className="phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
+                <div className="hero-phone-actions">
+                  <div className="hero-phone-btn btn-rewind"><RotateCcw size={12} color="#f5d06b" /></div>
+                  <div className="hero-phone-btn btn-dislike"><X size={12} color="#fe3c72" /></div>
+                  <div className="hero-phone-btn btn-superlike"><Star size={12} color="#2563eb" fill="#2563eb" /></div>
+                  <div className="hero-phone-btn btn-like"><Heart size={12} color="#16a34a" fill="#16a34a" /></div>
+                  <div className="hero-phone-btn btn-boost"><Zap size={12} color="#7c3aed" fill="#7c3aed" /></div>
                 </div>
               </div>
             </div>

@@ -185,27 +185,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-.agents-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  color: white;
-  padding: 6px 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.2s;
-}
-
-.agents-btn:hover {
-  background: rgba(0, 239, 200, 0.1);
-  color: var(--primary);
-  border-color: rgba(0, 239, 200, 0.3);
-}
-
 /* Active Agent Sub Header */
 .active-agent-banner {
   display: flex;
@@ -2004,11 +1983,11 @@
   }
 }
 
-.tab-fade-in {
-  animation: tabFadeIn 0.3s ease-out;
+.tx-card-fade-in {
+  animation: txCardFadeIn 0.3s ease-out;
 }
 
-@keyframes tabFadeIn {
+@keyframes txCardFadeIn {
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
@@ -2535,11 +2514,11 @@
   border-radius: 4px;
 }
 
-.notification-item {
+.sim-notification-item {
   transition: all 0.2s ease-in-out;
 }
 
-.notification-item:hover {
+.sim-notification-item:hover {
   background: rgba(255, 255, 255, 0.04) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -3076,16 +3055,6 @@
   transform: scale(0.95);
 }
 
-.nansen-badge {
-  font-size: 0.58rem;
-  background: rgba(254, 60, 114, 0.15);
-  color: #fe3c72;
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-weight: 700;
-  border: 1px solid rgba(254, 60, 114, 0.25);
-}
-
 /* Appended iOS-style classes for cleaner JSX structures */
 .notif-badge-count {
   position: absolute;
@@ -3168,7 +3137,7 @@
   border-color: rgba(255, 255, 255, 0.06);
 }
 
-.notification-item {
+.sim-notification-item {
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.02);
@@ -3179,19 +3148,19 @@
   transition: all 0.2s ease-in-out;
 }
 
-.notification-item.notif-type-success {
+.sim-notification-item.notif-type-success {
   border-left: 3px solid #22c55e;
 }
 
-.notification-item.notif-type-warning {
+.sim-notification-item.notif-type-warning {
   border-left: 3px solid #f59e0b;
 }
 
-.notification-item.notif-type-error {
+.sim-notification-item.notif-type-error {
   border-left: 3px solid #ef4444;
 }
 
-.notification-item.notif-type-info {
+.sim-notification-item.notif-type-info {
   border-left: 3px solid #3b82f6;
 }
 

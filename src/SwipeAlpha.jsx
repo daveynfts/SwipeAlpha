@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { Star, ThumbsUp, ThumbsDown, Info, ArrowLeft, Check, Sparkles, MessageSquare, Flame, Heart, X, RotateCcw, Bell, Volume2, VolumeX, Trash2 } from 'lucide-react';
+import { Star, Info, ArrowLeft, Check, Sparkles, Flame, Heart, X, RotateCcw, Bell, Trash2 } from 'lucide-react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import './SwipeAlpha.css';
 import archetypeMeme from './assets/archetype_meme.png';
@@ -281,7 +281,7 @@ const AGENTS = [
 ];
 
 export default function SwipeAlpha({ walletClient, account, mode = 'desktop', archetype, setArchetype, addNotification, notifications = [], setNotifications, unreadCount = 0, soundEnabled = true, setSoundEnabled }) {
-  const { openConnectModal } = useConnectModal ? useConnectModal() : {};
+  const { openConnectModal } = useConnectModal() || {};
   const memeImg = localStorage.getItem('custom_archetype_meme') || archetypeMeme;
   const balancedImg = localStorage.getItem('custom_archetype_balanced') || archetypeBalanced;
   const bluechipImg = localStorage.getItem('custom_archetype_bluechip') || archetypeBluechip;
@@ -493,6 +493,22 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
     setActiveCardTab(0);
   }, [cardIndex]);
 
+  const currentToken = sortedTokens[cardIndex] || null;
+
+  const handleSwipe = useCallback(async (direction) => {
+    if (direction === 'right' && currentToken) {
+      SoundEffects.play('swipeRight');
+      setSwipedAgents(prev => {
+        if (prev.some(a => a.symbol === currentToken.symbol)) return prev;
+        return [...prev, currentToken];
+      });
+      setMatchOverlayAgent(currentToken);
+    } else {
+      SoundEffects.play('swipeLeft');
+    }
+    setCardIndex(prev => prev + 1);
+  }, [currentToken, setSwipedAgents, setMatchOverlayAgent, setCardIndex]);
+
   const handleDragStart = (e) => {
     if (isSwapping) return;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -518,7 +534,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
     const clickThreshold = 8;
     if (Math.abs(dragOffset.x) < clickThreshold && Math.abs(dragOffset.y) < clickThreshold) {
       SoundEffects.play('tap');
-      setActiveCardTab(prev => (prev + 1) % 3);
+      setActiveCardTab(prev => (prev + 1) % 2);
       setDragOffset({ x: 0, y: 0 });
       return;
     }
@@ -532,35 +548,16 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
     setDragOffset({ x: 0, y: 0 });
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (isSwapping || screen !== 'swipe') return;
     if (e.key === 'ArrowRight') handleSwipe('right');
     if (e.key === 'ArrowLeft') handleSwipe('left');
-  };
+  }, [isSwapping, screen, handleSwipe]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [cardIndex, isSwapping, mode, screen]);
-
-  const currentToken = sortedTokens[cardIndex] || null;
-
-  const handleSwipe = async (direction) => {
-    if (direction === 'right' && currentToken) {
-      SoundEffects.play('swipeRight');
-      // Add to matched agents list
-      setSwipedAgents(prev => {
-        if (prev.some(a => a.symbol === currentToken.symbol)) return prev;
-        return [...prev, currentToken];
-      });
-
-      // Set matched agent to trigger custom overlay inside phone mockup
-      setMatchOverlayAgent(currentToken);
-    } else {
-      SoundEffects.play('swipeLeft');
-    }
-    setCardIndex(prev => prev + 1);
-  };
+  }, [handleKeyDown]);
 
   const handleDesktopSwap = async (token) => {
     if (!walletClient) {
@@ -1086,7 +1083,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                       )}
                       {/* Tinder-style top tab indicators */}
                       <div className="card-tab-indicators">
-                        {[0, 1, 2].map((idx) => (
+                        {[0, 1].map((idx) => (
                           <div key={idx} className={`tab-indicator-pill ${activeCardTab === idx ? 'active' : ''}`} />
                         ))}
                       </div>
@@ -1203,44 +1200,6 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                                   </button>
                                 </div>
                               ))}
-                            </div>
-                          </div>
-                          <div className="card-tab-tap-instruction">
-                            👆 Tap card to view Nansen AI Audit
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Tab 2: Nansen AI Audit */}
-                      {activeCardTab === 2 && (
-                        <div className="card-tab-content card-tab-layout tab-fade-in">
-                          <div className="card-tab-inner">
-                            <div className="apple-glass-panel-audit">
-                              <div className="flex-justify-between flex-align-center">
-                                <span className="panel-label">🛡️ NANSEN AI AGENT AUDIT</span>
-                                <span className="audit-coop-badge">SECURE COOP</span>
-                              </div>
-                              
-                              <div className="flex-justify-between flex-align-center" style={{ marginTop: '12px' }}>
-                                <div>
-                                  <div className="audit-status-text">{currentToken.nansenAnalysis.status}</div>
-                                  <div className="audit-auditor-text">Audited by {currentToken.nansenAnalysis.auditor}</div>
-                                </div>
-                                <div className="audit-score-circle">
-                                  <span className="audit-score-number">{currentToken.nansenAnalysis.score.split('/')[0]}</span>
-                                  <span className="audit-score-label">score</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="apple-glass-panel-audit-details">
-                              <div className="audit-details-text">
-                                {currentToken.nansenAnalysis.details}
-                              </div>
-                              <div className="audit-rank-row flex-justify-between">
-                                <span>Security Rank</span>
-                                <span className="audit-rank-value">{currentToken.nansenAnalysis.riskLevel}</span>
-                              </div>
                             </div>
                           </div>
                           <div className="card-tab-tap-instruction">
@@ -1410,7 +1369,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     {liveTransactions.map((tx) => (
                       <div 
                         key={tx.id} 
-                        className={`live-tx-card ${tx.isNew ? 'tab-fade-in' : ''}`}
+                        className={`live-tx-card ${tx.isNew ? 'tx-card-fade-in' : ''}`}
                       >
                         {(() => {
                           const agentInfo = TOKENS.find(t => t.symbol === tx.agentSymbol || t.name === tx.agentName);
@@ -1626,7 +1585,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                     </div>
                   ) : (
                     notifications.map(notif => (
-                      <div key={notif.id} className={`notification-item notif-type-${notif.type}`}>
+                      <div key={notif.id} className={`sim-notification-item notif-type-${notif.type}`}>
                         <div className="notif-row-header">
                           <span className="notif-title-text">{notif.title}</span>
                           <span className="notif-time-text">{notif.time}</span>

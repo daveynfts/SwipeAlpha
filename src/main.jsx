@@ -21,7 +21,7 @@ const mantleSepoliaTestnet = {
 };
 
 const config = getDefaultConfig({
-  appName: 'Davey Treasury Vault',
+  appName: 'Agent Swindler',
   projectId: '07b068da6c3e9a0fccda15a317e008ba', // Public test project ID
   chains: [mantleSepoliaTestnet],
 });

@@ -35,7 +35,8 @@ export default function Admin({ navigate }) {
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      triggerNotification('File size is over 2MB. Browser localStorage might fail to store it if it exceeds storage quotas!', 'warning');
+      triggerNotification('File size is over 2MB. Please choose a smaller image under 2MB to avoid storage errors.', 'error');
+      return;
     }
 
     const reader = new FileReader();
