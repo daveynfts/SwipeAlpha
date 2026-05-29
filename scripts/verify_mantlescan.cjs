@@ -29,17 +29,32 @@ const contracts = [
 ];
 
 function collectSources(filePath, sources = {}) {
-  const normalizedKey = filePath.replace(/\\/g, '/');
-  if (sources[normalizedKey]) return sources;
-  const content = fs.readFileSync(path.resolve(filePath), 'utf8');
-  sources[normalizedKey] = { content };
+  const absPath = path.resolve(filePath);
+  const normalized = absPath.replace(/\\/g, '/');
+  
+  // Determine the source key: use @openzeppelin/... for OZ files
+  let key;
+  const ozIndex = normalized.indexOf('node_modules/@openzeppelin/');
+  if (ozIndex !== -1) {
+    key = normalized.substring(ozIndex + 'node_modules/'.length);
+  } else {
+    key = filePath.replace(/\\/g, '/');
+  }
+  
+  if (sources[key]) return sources;
+  const content = fs.readFileSync(absPath, 'utf8');
+  sources[key] = { content };
+  
   const importRegex = /import\s+(?:.*\s+from\s+)?["']([^"']+)["']/g;
   let match;
   while ((match = importRegex.exec(content)) !== null) {
     const importPath = match[1];
-    const resolvedPath = importPath.startsWith('@')
-      ? path.join('node_modules', importPath)
-      : path.join(path.dirname(filePath), importPath);
+    let resolvedPath;
+    if (importPath.startsWith('@')) {
+      resolvedPath = path.join('node_modules', importPath);
+    } else {
+      resolvedPath = path.join(path.dirname(filePath), importPath);
+    }
     collectSources(resolvedPath, sources);
   }
   return sources;
@@ -48,9 +63,9 @@ function collectSources(filePath, sources = {}) {
 function post(params) {
   return new Promise((resolve, reject) => {
     const postData = new URLSearchParams(params).toString();
-    const url = new URL(API_URL);
+    const url = new URL(`${API_URL}?chainid=${CHAIN_ID}&apikey=${API_KEY}`);
     const req = https.request({
-      hostname: url.hostname, path: url.pathname, method: 'POST',
+      hostname: url.hostname, path: url.pathname + url.search, method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(postData) }
     }, (res) => {
       let body = '';
@@ -81,7 +96,7 @@ async function verify(c) {
   const stdInput = JSON.stringify({
     language: 'Solidity',
     sources,
-    settings: { optimizer: { enabled: false, runs: 200 }, outputSelection: { '*': { '*': ['abi', 'evm.bytecode'] } } }
+    settings: { evmVersion: 'cancun', optimizer: { enabled: true, runs: 200 }, outputSelection: { '*': { '*': ['abi', 'evm.bytecode'] } } }
   });
 
   const contractPath = c.contractFile.replace(/\\/g, '/');
@@ -94,8 +109,8 @@ async function verify(c) {
     sourceCode: stdInput,
     codeformat: 'solidity-standard-json-input',
     contractname: `${contractPath}:${c.name}`,
-    compilerversion: 'v0.8.20+commit.a1b79de6',
-    optimizationUsed: '0',
+    compilerversion: 'v0.8.35+commit.47b9dedd',
+    optimizationUsed: '1',
     runs: '200',
     constructorArguements: '',
     licenseType: '3'
