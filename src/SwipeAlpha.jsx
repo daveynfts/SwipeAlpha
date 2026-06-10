@@ -1660,8 +1660,21 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {/* Swipe Screen */}
             <div className={`phone-screen ${getScreenClass('swipe')}`}>
                 <div className="phone-header">
-                  <span className="app-logo" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <img src={logoPng} alt="Logo" className="logo-icon-img" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                  <span className="app-logo" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '18px',
+                      height: '18px',
+                      borderRadius: '4px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(254, 60, 114, 0.35)',
+                      overflow: 'hidden',
+                      flexShrink: 0
+                    }}>
+                      <img src={logoPng} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
                     <span>Agent<span className="logo-accent-text">Swindler</span></span>
                   </span>
                   

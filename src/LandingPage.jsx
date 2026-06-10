@@ -48,7 +48,20 @@ export default function LandingPage({ navigate }) {
               <div key={`col-${colIndex}-${idx}`} className="hero-phone-card">
                 <div className="hero-phone-screen">
                   <div className="hero-phone-header">
-                    <img src={logoPng} alt="Logo" className="hero-phone-flame-logo" style={{ width: '14px', height: '14px', objectFit: 'contain' }} />
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '4px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(254, 60, 114, 0.35)',
+                      overflow: 'hidden',
+                      flexShrink: 0
+                    }}>
+                      <img src={logoPng} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
                   </div>
                   <img src={p.image} alt={p.name} className="hero-phone-photo" />
                   <div className="hero-phone-overlay"></div>
@@ -76,7 +89,20 @@ export default function LandingPage({ navigate }) {
               <div key={`col-${colIndex}-dup-${idx}`} className="hero-phone-card">
                 <div className="hero-phone-screen">
                   <div className="hero-phone-header">
-                    <img src={logoPng} alt="Logo" className="hero-phone-flame-logo" style={{ width: '14px', height: '14px', objectFit: 'contain' }} />
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '4px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(254, 60, 114, 0.35)',
+                      overflow: 'hidden',
+                      flexShrink: 0
+                    }}>
+                      <img src={logoPng} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
                   </div>
                   <img src={p.image} alt={p.name} className="hero-phone-photo" />
                   <div className="hero-phone-overlay"></div>
@@ -112,8 +138,22 @@ export default function LandingPage({ navigate }) {
 
       {/* Navigation Header */}
       <header className="landing-navbar">
-        <div className="navbar-logo" onClick={() => navigate('/')}>
-          <img src={logoPng} alt="Logo" style={{ width: '28px', height: '28px', objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(254, 60, 114, 0.45))' }} />
+        <div className="navbar-logo" onClick={() => navigate('/')} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '32px',
+            height: '32px',
+            borderRadius: '6px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(254, 60, 114, 0.35)',
+            boxShadow: '0 0 10px rgba(254, 60, 114, 0.25)',
+            overflow: 'hidden',
+            flexShrink: 0
+          }}>
+            <img src={logoPng} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
           <span>AGENT <span>SWINDLER</span></span>
         </div>
         <div className="navbar-actions">
