@@ -467,6 +467,8 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
   const [isMintingNFT, setIsMintingNFT] = useState({});
   const [mintedNFTIds, setMintedNFTIds] = useState({});
   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
+  const [showNansenModal, setShowNansenModal] = useState(false);
+  const [activeNansenReport, setActiveNansenReport] = useState('');
   
   const [swipedAgents, setSwipedAgents] = useState(() => {
     // Pre-populate with first two tokens for mockup design
@@ -1503,10 +1505,42 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
     );
   };
 
+  const renderNansenReportModal = () => {
+    if (!showNansenModal) return null;
+    return (
+      <div className="nansen-modal-backdrop" onClick={() => { SoundEffects.play('tap'); setShowNansenModal(false); }}>
+        <div className="nansen-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="nansen-modal-header">
+            <div className="flex-align-center gap-6" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <img 
+                src="https://framerusercontent.com/images/X6PAJXo4BDwSFLJcxI2JZNWsQ.png" 
+                alt="Nansen Logo" 
+                className="nansen-logo-img" 
+                style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+              />
+              <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#a5b4fc', letterSpacing: '0.5px' }}>Nansen AI Security Report</span>
+            </div>
+            <button className="nansen-modal-close" onClick={() => { SoundEffects.play('tap'); setShowNansenModal(false); }}>
+              <X size={18} />
+            </button>
+          </div>
+          <div className="nansen-modal-body">
+            {activeNansenReport.split('\n').map((line, lIdx) => (
+              <p key={lIdx} style={{ margin: '0 0 10px 0', fontSize: '0.85rem', lineHeight: '1.5', color: '#e2e8f0' }}>
+                {line}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (mode === 'demo') {
     return (
       <div className="swipealpha-demo-workspace">
         {renderOnboardingModal()}
+        {renderNansenReportModal()}
 
         {/* Left Column - Workstation Control Center */}
         <div className="workspace-column workspace-left">
@@ -2013,12 +2047,27 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
                                 </div>
 
                                 <div className="nansen-chat-container">
-                                  <div className="nansen-chat-bubble">
-                                    {nansenResults[currentToken.symbol].split('\n').map((line, lIdx) => (
+                                  <div className="nansen-chat-bubble" style={{ position: 'relative', overflow: 'hidden' }}>
+                                    {nansenResults[currentToken.symbol].split('\n').slice(0, 5).map((line, lIdx) => (
                                       <p key={lIdx} style={{ margin: '0 0 8px 0', fontSize: '0.78rem', lineHeight: '1.4', color: '#e2e8f0' }}>
                                         {line}
                                       </p>
                                     ))}
+                                    <div className="nansen-view-more-container" style={{ textAlign: 'center', marginTop: '12px' }}>
+                                      <button 
+                                        className="nansen-view-more-btn"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          SoundEffects.play('tap');
+                                          setActiveNansenReport(nansenResults[currentToken.symbol]);
+                                          setShowNansenModal(true);
+                                        }}
+                                        onMouseDown={(e) => e.stopPropagation()}
+                                        onTouchStart={(e) => e.stopPropagation()}
+                                      >
+                                        View Full Report 🔍
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
 
@@ -2558,6 +2607,7 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
   return (
     <div className="swipealpha-desktop-dashboard">
       {renderOnboardingModal()}
+      {renderNansenReportModal()}
       {/* Top Header stats */}
       <div className="dashboard-stats-header">
         <div className="stat-card glow-blue">
