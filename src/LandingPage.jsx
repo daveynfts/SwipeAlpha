@@ -8,6 +8,7 @@ import waifu1 from './assets/waifu_1.png';
 import waifu2 from './assets/waifu_2.png';
 import waifu3 from './assets/waifu_3.png';
 import waifu4 from './assets/waifu_4.png';
+import logoPng from './assets/logo.png';
 
 export default function LandingPage({ navigate }) {
   // Retrieve custom uploaded waifus from localStorage or use fallback images
@@ -47,7 +48,7 @@ export default function LandingPage({ navigate }) {
               <div key={`col-${colIndex}-${idx}`} className="hero-phone-card">
                 <div className="hero-phone-screen">
                   <div className="hero-phone-header">
-                    <Flame size={14} color="#fe3c72" fill="#fe3c72" className="hero-phone-flame-logo" />
+                    <img src={logoPng} alt="Logo" className="hero-phone-flame-logo" style={{ width: '14px', height: '14px', objectFit: 'contain' }} />
                   </div>
                   <img src={p.image} alt={p.name} className="hero-phone-photo" />
                   <div className="hero-phone-overlay"></div>
@@ -75,7 +76,7 @@ export default function LandingPage({ navigate }) {
               <div key={`col-${colIndex}-dup-${idx}`} className="hero-phone-card">
                 <div className="hero-phone-screen">
                   <div className="hero-phone-header">
-                    <Flame size={14} color="#fe3c72" fill="#fe3c72" className="hero-phone-flame-logo" />
+                    <img src={logoPng} alt="Logo" className="hero-phone-flame-logo" style={{ width: '14px', height: '14px', objectFit: 'contain' }} />
                   </div>
                   <img src={p.image} alt={p.name} className="hero-phone-photo" />
                   <div className="hero-phone-overlay"></div>
@@ -112,7 +113,7 @@ export default function LandingPage({ navigate }) {
       {/* Navigation Header */}
       <header className="landing-navbar">
         <div className="navbar-logo" onClick={() => navigate('/')}>
-          <Flame color="#fe3c72" size={24} style={{ filter: 'drop-shadow(0 0 6px rgba(254, 60, 114, 0.45))' }} />
+          <img src={logoPng} alt="Logo" style={{ width: '28px', height: '28px', objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(254, 60, 114, 0.45))' }} />
           <span>AGENT <span>SWINDLER</span></span>
         </div>
         <div className="navbar-actions">

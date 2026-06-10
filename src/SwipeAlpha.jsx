@@ -6,6 +6,7 @@ import './SwipeAlpha.css';
 import archetypeMeme from './assets/archetype_meme.png';
 import archetypeBalanced from './assets/archetype_balanced.png';
 import archetypeBluechip from './assets/archetype_bluechip.png';
+import logoPng from './assets/logo.png';
 import SoundEffects from './utils/soundEffects';
 import SwipeAlphaCoreArtifact from './SwipeAlphaCore.json';
 import WalletPortfolio from './WalletPortfolio';
@@ -1659,8 +1660,8 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {/* Swipe Screen */}
             <div className={`phone-screen ${getScreenClass('swipe')}`}>
                 <div className="phone-header">
-                  <span className="app-logo">
-                    <Flame size={14} className="logo-icon-flame" />
+                  <span className="app-logo" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <img src={logoPng} alt="Logo" className="logo-icon-img" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
                     <span>Agent<span className="logo-accent-text">Swindler</span></span>
                   </span>
                   

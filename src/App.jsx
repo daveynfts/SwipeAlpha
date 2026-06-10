@@ -10,6 +10,7 @@ import Profile from './Profile';
 import Admin from './Admin';
 import SoundEffects from './utils/soundEffects';
 import WalletPortfolio from './WalletPortfolio';
+import logoPng from './assets/logo.png';
 
 function clientToSigner(client) {
   const { account, chain, transport } = client;
@@ -192,7 +193,7 @@ function App() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontSize: '0.95rem', fontWeight: '800', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Flame size={18} color="#fe3c72" style={{ filter: 'drop-shadow(0 0 5px rgba(254, 60, 114, 0.4))' }} />
+              <img src={logoPng} alt="Logo" style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
               <span style={{ background: 'linear-gradient(135deg, #fe3c72, #ff7854)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Agent Swindler 📱</span>
             </div>
             <a href="/" className="liquid-glass-btn" style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', textDecoration: 'none', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }} onClick={(e) => {
