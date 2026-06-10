@@ -177,8 +177,8 @@ function App() {
           top: '1rem',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '92%',
-          maxWidth: '1100px',
+          width: 'calc(100% - 2rem)',
+          maxWidth: '1120px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -355,7 +355,7 @@ function App() {
             }}
           </ConnectButton.Custom>
         </header>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '6.5rem 1rem 2rem 1rem', minHeight: '100vh' }}>
+        <div className="demo-workspace-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '6.5rem 1rem 2rem 1rem', minHeight: '100vh' }}>
           <SwipeAlpha 
             walletClient={walletClient} 
             account={account} 

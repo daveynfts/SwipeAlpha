@@ -2587,9 +2587,18 @@
 }
 
 /* Responsive Mobile Queries */
-@media (max-width: 500px) {
+@media (max-width: 768px) {
   .demo-header-capsule {
     display: none !important;
+  }
+  
+  .workspace-left,
+  .workspace-right {
+    display: none !important;
+  }
+  
+  .demo-workspace-wrapper {
+    padding: 0 !important;
   }
   
   .swipealpha-phone-container {
@@ -3998,11 +4007,11 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 2.5rem;
+  gap: 1.5rem;
   width: 100%;
-  max-width: 1160px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .workspace-column {
@@ -4015,7 +4024,8 @@
 .workspace-left,
 .workspace-right {
   width: 320px;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 260px;
   margin-top: 1rem;
 }
 
@@ -4321,18 +4331,7 @@
   text-decoration: underline;
 }
 
-@media (max-width: 1024px) {
-  .swipealpha-demo-workspace {
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  .workspace-left,
-  .workspace-right {
-    width: 100%;
-    max-width: 400px;
-  }
-}
+/* Removed stacked layout for demo workspace to keep side-by-side active on desktop viewports */
 
 
 

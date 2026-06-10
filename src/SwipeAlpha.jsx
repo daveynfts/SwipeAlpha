@@ -1519,9 +1519,17 @@ export default function SwipeAlpha({ walletClient, account, mode = 'desktop', ar
             {archetype ? (
               <div className="waifu-status-details">
                 <div className="waifu-avatar-glow" style={{
-                  background: archetype === 'meme' ? 'linear-gradient(135deg, #ff2d55, #ff7854)' : archetype === 'balanced' ? 'linear-gradient(135deg, #0a84ff, #00efc8)' : 'linear-gradient(135deg, #ffd60a, #ff9f0a)'
+                  background: archetype === 'meme' ? 'linear-gradient(135deg, #ff2d55, #ff7854)' : archetype === 'balanced' ? 'linear-gradient(135deg, #0a84ff, #00efc8)' : 'linear-gradient(135deg, #ffd60a, #ff9f0a)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden'
                 }}>
-                  {archetype === 'meme' ? '🌸' : archetype === 'balanced' ? '💖' : '❄️'}
+                  <img 
+                    src={archetype === 'meme' ? memeImg : archetype === 'balanced' ? balancedImg : bluechipImg} 
+                    alt="Active Waifu" 
+                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} 
+                  />
                 </div>
                 <div className="waifu-info-text">
                   <h4 className="waifu-name">{archetype === 'meme' ? 'Sakura' : archetype === 'balanced' ? 'Rin' : 'Yuki'}</h4>
